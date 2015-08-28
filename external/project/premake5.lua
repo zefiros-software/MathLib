@@ -19,22 +19,22 @@ solution "math"
 	flags "Unicode"	
 
     configuration "x32_f32"
-        targetdir( root .. "bin/" )
+        targetdir( root .. "bin/x32_f32/" )
         architecture "x32"
     	defines "REAL_PRECISION_SINGLE"
         
     configuration "x32_f64"
-        targetdir( root .. "bin/" )
+        targetdir( root .. "bin/x32_f64/" )
         architecture "x32"
         defines "REAL_PRECISION_DOUBLE"
 
     configuration "x64_f32"
-		targetdir( root .. "bin/" )
+		targetdir( root .. "bin/x64_f32/" )
 		architecture "x64"
         defines "REAL_PRECISION_SINGLE"
 	
     configuration "x64_f64"
-		targetdir( root .. "bin/" )
+		targetdir( root .. "bin/x64_f64/" )
 		architecture "x64"
         defines "REAL_PRECISION_DOUBLE"
     	
@@ -52,31 +52,7 @@ solution "math"
         targetsuffix "cd"
         flags "Symbols"
         links "gcov"
-        buildoptions "-coverage"		
-	
-    configuration { "x32_f32" }
-		targetsuffix "x32_f32"
-		
-    configuration { "x32_f64" }
-		targetsuffix "x32_f64"
-		
-    configuration { "x64_f32" }
-		targetsuffix "x64_f32"
-		
-    configuration { "x64_f64" }
-		targetsuffix "x64_f64"
-		
-    configuration { "x32_f32", "Debug" }
-		targetsuffix "dx32_f32"
-		
-    configuration { "x32_f64", "Debug" }
-		targetsuffix "dx32_f64"
-		
-    configuration { "x64_f32", "Debug" }
-		targetsuffix "dx64_f32"
-		
-    configuration { "x64_f64", "Debug" }
-		targetsuffix "dx64_f64"
+        buildoptions "-coverage"
 				
 	configuration {}
 			
@@ -105,35 +81,27 @@ solution "math"
 			links "pthread"
 			
 		configuration { "Debug", "x32_f32" }
-			targetprefix "x32_f32_"
             defines "PREFIX=x32_f32_"
 		
 		configuration { "Debug", "x64_f32" }
-			targetprefix "x64_f32_"
             defines "PREFIX=x64_f32_"
 		
 		configuration { "Release", "x32_f32" }
-			targetprefix "x32_f32_"
 		  	defines "PREFIX=x32_f32_"
               
 		configuration { "Release", "x64_f32" }
-			targetprefix "x64_f32_"
 		  	defines "PREFIX=x64_f32_"
               
         configuration { "Debug", "x32_f64" }
-			targetprefix "x32_f64_"
 		    defines "PREFIX=x32_f64_"
         
 		configuration { "Debug", "x64_f64" }
-			targetprefix "x64_f64_"
 		    defines "PREFIX=x64_f64_"
         
 		configuration { "Release", "x32_f64" }
-			targetprefix "x32_f64_"
 		    defines "PREFIX=x32_f64_"
         
 		configuration { "Release", "x64_f64" }
-			targetprefix "x64_f64_"	
             defines "PREFIX=x64_f64_"
             
     project "math"
