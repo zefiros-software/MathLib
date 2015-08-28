@@ -28,6 +28,55 @@
 #ifndef __VEC4_H__
 #define __VEC4_H__
 
+#include "floatingPointVector.h"
+
+#include "vec2.h"
+#include "vec3.h"
+
+class Vec4 : public FloatingPointVector< Real, 4 >
+{
+public:
+
+    Vec4()
+    {
+        
+    }
+    
+    Vec4( Real p1 )
+    {
+        SetValues( p1, p1, p1, p1 );
+    }
+    
+    Vec4( Real p1, Real p2, Real p3, Real p4 )
+    {
+        SetValues( p1, p2, p3, p4 );
+    }
+    
+    Vec4( const Vec2 &v1, const Vec2 &v2 )
+    {
+        SetValues( v1[0], v1[1], v2[0], v2[1] );
+    }
+    
+    Vec4( Real p1, const Vec3 &v1 )
+    {
+        SetValues( p1, v1[0], v1[1], v1[2] );
+    }
+    
+    Vec4( const Vec3 &v1, Real p1 )
+    {
+        SetValues( v1[0], v1[1], v1[2], p1 );
+    }
+    
+    template< class TYPE2 >
+    Vec4( const GenericVector< TYPE2, 4 > &v1 )
+    {
+        SetValues( (Real) v1[0], (Real) v1[1], (Real) v1[2], (Real) v1[3] );
+    }
+        
+};
+
+
+/*
 #include "math/types.h"
 #include "math/scalar/mathf.h"
 #include "math/scalar/vec4i.h"
@@ -426,5 +475,6 @@ inline Vec4 operator/( const Vec4 &v1, const Vec4 &v2 )
                  v1.mValues[2] / v2.mValues[2],
                  v1.mValues[3] / v2.mValues[3] );
 }
+*/
 
 #endif

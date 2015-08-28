@@ -28,6 +28,36 @@
 #ifndef __VEC2_H__
 #define __VEC2_H__
 
+#include "floatingPointVector.h"
+
+class Vec2 : public FloatingPointVector< Real, 2 >
+{
+public:
+
+    Vec2()
+    {
+        
+    }
+    
+    Vec2( Real p1 )
+    {
+        SetValues( p1, p1 );
+    }
+    
+    Vec2( Real p1, Real p2 )
+    {
+        SetValues( p1, p2 );
+    }
+    
+    template< class TYPE2 >
+    Vec2( const GenericVector< TYPE2, 2 > &v1 )
+    {
+        SetValues( (Real) v1[0], (Real) v1[1] );
+    }
+        
+};
+
+/*
 #include "math/types.h"
 #include "math/scalar/mathf.h"
 #include "math/scalar/vec2i.h"
@@ -350,5 +380,6 @@ inline Vec2 operator/( const Vec2 &v1, const Vec2 &v2 )
     return Vec2( v1.mValues[0] / v2.mValues[0],
                  v1.mValues[1] / v2.mValues[1] );
 }
+*/
 
 #endif

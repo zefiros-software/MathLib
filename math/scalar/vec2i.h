@@ -28,6 +28,36 @@
 #ifndef __VEC2I_H__
 #define __VEC2I_H__
 
+#include "genericVector.h"
+
+class Vec2i : public GenericVector< S32, 2 >
+{
+public:
+
+    Vec2i()
+    {
+        
+    }
+    
+    Vec2i( S32 p1 )
+    {
+        SetValues( p1, p1 );
+    }
+    
+    Vec2i( S32 p1, S32 p2 )
+    {
+        SetValues( p1, p2 );
+    }
+    
+    template< class TYPE2 >
+    Vec2i( const GenericVector< TYPE2, 2 > &v1 )
+    {
+        SetValues( (S32) v1[0], (S32) v1[1] );
+    }
+        
+};
+
+/*
 #include "math/types.h"
 
 #include <assert.h>
@@ -181,5 +211,6 @@ inline Vec2I operator/( const Vec2I &v1, const Vec2I &v2 )
     return Vec2I( v1.mValues[0] / v2.mValues[0],
                   v1.mValues[1] / v2.mValues[1] );
 }
+*/
 
 #endif

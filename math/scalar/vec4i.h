@@ -28,6 +28,54 @@
 #ifndef __VEC4I_H__
 #define __VEC4I_H__
 
+#include "genericVector.h"
+
+#include "vec2i.h"
+#include "vec3i.h"
+
+class Vec4i : public GenericVector< S32, 4 >
+{
+public:
+
+    Vec4i()
+    {
+        
+    }
+    
+    Vec4i( S32 p1 )
+    {
+        SetValues( p1, p1, p1, p1 );
+    }
+    
+    Vec4i( S32 p1, S32 p2, S32 p3, S32 p4 )
+    {
+        SetValues( p1, p2, p3, p4 );
+    }
+    
+    Vec4i( const Vec3i &v1, S32 p4 )
+    {
+        SetValues( v1[0], v1[1], v1[2], p4 );
+    }
+    
+    Vec4i( S32 p1, const Vec3i &v1 )
+    {
+        SetValues( p1, v1[0], v1[1], v1[2] );
+    }
+    
+    Vec4i( const Vec2i &v1, const Vec2i &v2 )
+    {
+        SetValues( v1[0], v1[1], v2[0], v2[1] );
+    }
+    
+    template< class TYPE2 >
+    Vec4i( const GenericVector< TYPE2, 4 > &v1 )
+    {
+        SetValues( (S32) v1[0], (S32) v1[1], (S32) v1[2], (S32) v1[3] );
+    }
+        
+};
+
+/*
 #include <cstddef>
 
 #include "math/types.h"
@@ -197,6 +245,6 @@ inline Vec4I operator/( const Vec4I &v1, const Vec4I &v2 )
                   v1.mValues[2] / v2.mValues[2],
                   v1.mValues[3] / v2.mValues[3] );
 }
-
+*/
 
 #endif

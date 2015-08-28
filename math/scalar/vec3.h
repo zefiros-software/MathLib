@@ -28,6 +28,49 @@
 #ifndef __VEC3_H__
 #define __VEC3_H__
 
+#include "floatingPointVector.h"
+
+#include "vec2.h"
+
+class Vec3 : public FloatingPointVector< Real, 3 >
+{
+public:
+
+    Vec3()
+    {
+        
+    }
+    
+    Vec3( Real p1 )
+    {
+        SetValues( p1, p1, p1 );
+    }
+    
+    Vec3( Real p1, Real p2, Real p3 )
+    {
+        SetValues( p1, p2, p3 );
+    }
+    
+    Vec3( const Vec2 &v1, Real p3 )
+    {
+        SetValues( v1[0], v1[1], p3 );
+    }
+    
+    Vec3( Real p1, const Vec2 &v1 )
+    {
+        SetValues( p1, v1[0], v1[1] );
+    }
+    
+    template< class TYPE2 >
+    Vec3( const GenericVector< TYPE2, 3 > &v1 )
+    {
+        SetValues( (Real) v1[0], (Real) v1[1], (Real) v1[2] );
+    }
+        
+};
+
+/*
+
 #include "math/types.h"
 #include "math/scalar/mathf.h"
 #include "math/scalar/vec3i.h"
@@ -409,5 +452,6 @@ inline Vec3 operator/( const Vec3 &v1, const Vec3 &v2 )
                  v1.mValues[1] / v2.mValues[1] ,
                  v1.mValues[2] / v2.mValues[2] );
 }
+*/
 
 #endif

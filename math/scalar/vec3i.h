@@ -28,6 +28,48 @@
 #ifndef __VEC3I_H__
 #define __VEC3I_H__
 
+#include "genericVector.h"
+
+#include "vec2i.h"
+
+class Vec3i : public GenericVector< S32, 3 >
+{
+public:
+
+    Vec3i()
+    {
+        
+    }
+    
+    Vec3i( S32 p1 )
+    {
+        SetValues( p1, p1, p1 );
+    }
+    
+    Vec3i( S32 p1, S32 p2, S32 p3 )
+    {
+        SetValues( p1, p2, p3 );
+    }
+    
+    Vec3i( const Vec2i &v1, S32 p3 )
+    {
+        SetValues( v1[0], v1[1], p3 );
+    }
+    
+    Vec3i( S32 p1, const Vec2i &v1 )
+    {
+        SetValues( p1, v1[0], v1[1] );
+    }
+    
+    template< class TYPE2 >
+    Vec3i( const GenericVector< TYPE2, 3 > &v1 )
+    {
+        SetValues( (S32) v1[0], (S32) v1[1], (S32) v1[2] );
+    }
+        
+};
+
+/*
 #include "math/types.h"
 
 #include <assert.h>
@@ -207,5 +249,6 @@ inline Vec3I operator/( const Vec3I &v1, const Vec3I &v2 )
                   v1.mValues[1] / v2.mValues[1] ,
                   v1.mValues[2] / v2.mValues[2] );
 }
+*/
 
 #endif

@@ -27,7 +27,7 @@
 #ifndef __MATHF_H__
 #define __MATHF_H__
 
-#include "math/types.h"
+#include "types.h"
 
 #include <assert.h>
 #include <cfloat>
@@ -91,6 +91,7 @@ namespace Mathf
     inline Real Acos( const Real f )
     {
         assert( f >= -1.0f && f <= 1.0f );
+        
 #ifdef REAL_PRECISION_DOUBLE
         return acos( f );
 #else
