@@ -284,11 +284,11 @@ namespace Mathf
     
     inline S32 Rint( Real x )
     {
-        #ifdef _PLATFORM_WIN
+#ifdef _WIN32
         return ( S32 )( x + 0.5 );
-        #else
-        return ( S32 )std::rint( x );
-        #endif
+#else
+        return ( S32 )rint( x );
+#endif
     }
   
     inline bool Equal( const Real a, const Real b )

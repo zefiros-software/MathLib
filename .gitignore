@@ -1,0 +1,14 @@
+math/math.sdf
+math/math.sln
+math/math.v11.suo
+math/math.vcxproj.filters
+math/math.vcxproj.user
+bin/*
+build/
+*.opensdf
+*.vcxproj
+*.filters
+*.user
+test/lib/
+*.orig
+documentation/out/
