@@ -91,14 +91,13 @@ solution "math"
 			root .. "external/gtest/include/",
 			root .. "external/gtest/",
 			
-			root .. "math/",
+			root .. "math/include/",
             root .. "test/",
-			root .. "test/scalar"
+			root .. "test/scalar/"
 			}	
 		
 		files { 
 			root .. "external/gtest/src/gtest-all.cc",
-			root .. "test/scalar/**.h",
 			root .. "test/scalar/*.cpp"
 			}
 			
@@ -136,4 +135,16 @@ solution "math"
 		configuration { "Release", "x64_f64" }
 			targetprefix "x64_f64_"	
             defines "PREFIX=x64_f64_"
+            
+    project "math"
+        targetname "math"   
+        kind "StaticLib"
+
+        includedirs {
+            root .. "math/include/"
+            }   
+            
+        files { 
+            root .. "math/include/math/**.h",
+            }
             
