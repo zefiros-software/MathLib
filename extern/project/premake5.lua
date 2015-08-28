@@ -64,8 +64,8 @@ solution "math"
 		defines "GTEST_HAS_TR1_TUPLE=0"
 		
 		includedirs {
-			root .. "external/gtest/include/",
-			root .. "external/gtest/",
+			root .. "extern/gtest/include/",
+			root .. "extern/gtest/",
 			
 			root .. "math/include/",
             root .. "test/",
@@ -73,7 +73,7 @@ solution "math"
 			}	
 		
 		files { 
-			root .. "external/gtest/src/gtest-all.cc",
+			root .. "extern/gtest/src/gtest-all.cc",
 			root .. "test/scalar/*.cpp"
 			}
 			
