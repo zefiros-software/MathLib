@@ -1,13 +1,4 @@
 local root      = "../../"
-local getldflags = premake.tools.gcc.getldflags;
-function premake.tools.gcc.getldflags(cfg)
-    local ldflags = { pthread = "-pthread" }
-    local r = getldflags(cfg);
-    local r2 = table.translate(cfg.flags, ldflags);
-    for _,v in ipairs(r2) do table.insert(r, v) end
-    return r;
-end
-table.insert(premake.fields.flags.allowed, "pthread");
 
 solution "zefirosMath"
 
@@ -15,7 +6,7 @@ solution "zefirosMath"
 	objdir( root .. "bin/obj/" )
 	debugdir( root .. "bin/" )
 	
-	configurations { "Debug", "Release" }
+	configurations { "Debug", "Release", "Coverage"  }
 
 	platforms { "x64_f32", "x64_f64", "x32_f32", "x32_f64" }
 
@@ -56,6 +47,12 @@ solution "zefirosMath"
     configuration "Release"		
 		flags "LinkTimeOptimization"
 		optimize "Speed"
+        
+    configuration "Coverage"
+        targetsuffix "cd"
+        flags "Symbols"
+        links "gcov"
+        buildoptions "-coverage"
 				
 	configuration {}
 			
@@ -80,6 +77,9 @@ solution "zefirosMath"
 			root .. "test/scalar/**.h",
 			root .. "test/scalar/*.cpp"
 			}
+			
+		configuration "gmake"
+			links "pthread"
 			
 		configuration { "Debug", "x32_f32" }
 			targetprefix "x32_f32_"
