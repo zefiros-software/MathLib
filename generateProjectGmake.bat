@@ -1,3 +1,3 @@
 @echo off
-cd external\project
+cd extern\project
 premake5 gmake
