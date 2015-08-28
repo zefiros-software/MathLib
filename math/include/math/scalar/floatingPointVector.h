@@ -2,7 +2,7 @@
 #ifndef __FP_VECTOR_H__
 #define __FP_VECTOR_H__
 
-#include "genericVector.h"
+#include "math/scalar/genericVector.h"
 
 template< class TYPE, U32 N >
 class FloatingPointVector : public GenericVector< TYPE, N >

@@ -28,9 +28,9 @@
 #ifndef __VEC3I_H__
 #define __VEC3I_H__
 
-#include "genericVector.h"
+#include "math/scalar/genericVector.h"
 
-#include "vec2i.h"
+#include "math/scalar/vec2i.h"
 
 class Vec3i : public GenericVector< S32, 3 >
 {

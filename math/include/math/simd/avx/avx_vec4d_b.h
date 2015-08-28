@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __AVX_VEC4D_B_H__
 #define __AVX_VEC4D_B_H__
-#include "common/types.h"
+#include "math/types.h"
 
 #include "math/scalar/mathf.h"
 

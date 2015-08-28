@@ -2,10 +2,10 @@
 #ifndef __GENERIC_VECTOR_H__
 #define __GENERIC_VECTOR_H__
 
-#include "types.h"
-#include "config.h"
+#include "math/types.h"
+#include "math/config.h"
 
-#include "scalar/mathf.h"
+#include "math/scalar/mathf.h"
 
 #include <assert.h>
 

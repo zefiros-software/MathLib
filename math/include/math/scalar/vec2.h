@@ -28,7 +28,7 @@
 #ifndef __VEC2_H__
 #define __VEC2_H__
 
-#include "floatingPointVector.h"
+#include "math/scalar/floatingPointVector.h"
 
 class Vec2 : public FloatingPointVector< Real, 2 >
 {

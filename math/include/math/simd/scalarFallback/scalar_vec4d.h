@@ -2,7 +2,7 @@
 #ifndef __SCALAR_VEC4d_H__
 #define __SCALAR_VEC4d_H__
 
-#include "common/types.h"
+#include "math/types.h"
 
 #include "math/simd/simdVectorBase.h"
 

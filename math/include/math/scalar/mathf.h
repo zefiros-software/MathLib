@@ -27,7 +27,7 @@
 #ifndef __MATHF_H__
 #define __MATHF_H__
 
-#include "types.h"
+#include "math/types.h"
 
 #include <assert.h>
 #include <cfloat>

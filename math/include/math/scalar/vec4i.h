@@ -28,10 +28,10 @@
 #ifndef __VEC4I_H__
 #define __VEC4I_H__
 
-#include "genericVector.h"
+#include "math/scalar/genericVector.h"
 
-#include "vec2i.h"
-#include "vec3i.h"
+#include "math/scalar/vec2i.h"
+#include "math/scalar/vec3i.h"
 
 class Vec4i : public GenericVector< S32, 4 >
 {

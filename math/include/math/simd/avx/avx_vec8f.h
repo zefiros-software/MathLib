@@ -2,7 +2,7 @@
 #ifndef __AVX2_VEC8f_H__
 #define __AVX2_VEC8f_H__
 
-#include "common/types.h"
+#include "math/types.h"
 
 #include "math/simd/vectorize.h"
 

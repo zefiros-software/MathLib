@@ -28,7 +28,7 @@
 #ifndef __VEC2I_H__
 #define __VEC2I_H__
 
-#include "genericVector.h"
+#include "math/scalar/genericVector.h"
 
 class Vec2i : public GenericVector< S32, 2 >
 {
