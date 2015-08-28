@@ -2,8 +2,8 @@
 
 #include "helper.h"
 
-#include "types.h"
-#include "scalar/vec2.h"
+#include "math/types.h"
+#include "math/scalar/vec2.h"
 
 #include <stdlib.h>
 #include <stdio.h>
