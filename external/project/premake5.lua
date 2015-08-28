@@ -1,8 +1,8 @@
 local root      = "../../"
 
-solution "zefirosMath"
+solution "math"
 
-	location( root )
+    location( root .. "math/" )
 	objdir( root .. "bin/obj/" )
 	debugdir( root .. "bin/" )
 	
@@ -52,7 +52,31 @@ solution "zefirosMath"
         targetsuffix "cd"
         flags "Symbols"
         links "gcov"
-        buildoptions "-coverage"
+        buildoptions "-coverage"		
+	
+    configuration { "x32_f32" }
+		targetsuffix "x32_f32"
+		
+    configuration { "x32_f64" }
+		targetsuffix "x32_f64"
+		
+    configuration { "x64_f32" }
+		targetsuffix "x64_f32"
+		
+    configuration { "x64_f64" }
+		targetsuffix "x64_f64"
+		
+    configuration { "x32_f32", "Debug" }
+		targetsuffix "dx32_f32"
+		
+    configuration { "x32_f64", "Debug" }
+		targetsuffix "dx32_f64"
+		
+    configuration { "x64_f32", "Debug" }
+		targetsuffix "dx64_f32"
+		
+    configuration { "x64_f64", "Debug" }
+		targetsuffix "dx64_f64"
 				
 	configuration {}
 			
