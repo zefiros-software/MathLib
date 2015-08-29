@@ -5,12 +5,9 @@
 #include "common/types.h"
 
 #include "math/simd/vectorize.h"
-
 #include "math/simd/simdVectorBase.h"
-
 #include "math/simd/sse4_1/sse4_1_vec4b.h"
-
-#include "memory/stackAlign.h"
+#include "math/memory/stackAlign.h"
 
 #include <iostream>
 #include <limits>

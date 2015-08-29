@@ -62,9 +62,28 @@ public:
     }
     
     template< class TYPE2 >
-    Vec3( const GenericVector< TYPE2, 3 > &v1 )
+    Vec3( const TYPE2 &v1 )
     {
         SetValues( (Real) v1[0], (Real) v1[1], (Real) v1[2] );
+    }
+
+    Vec3(const FloatingPointVector< Real, 3 > &v1)
+    {
+        SetValues(v1[0], v1[1], v1[2]);
+    }
+
+    // Vec3 specific intrinsics
+    inline Vec3 Rotate(const Vec3 &axis, const Real angle) const
+    {
+        Vec3 v1 = axis * axis.Dot(*this);
+        return v1 + (*this - v1) * Mathf::Cos(angle) + axis.Cross(*this) * Mathf::Sin(angle);
+    }
+
+    inline Vec3 Cross(const Vec3 &v) const
+    {
+        return Vec3( mValues[1] * v.mValues[2] - mValues[2] * v.mValues[1],
+                     mValues[2] * v.mValues[0] - mValues[0] * v.mValues[2],
+                     mValues[0] * v.mValues[1] - mValues[1] * v.mValues[0]);
     }
         
 };

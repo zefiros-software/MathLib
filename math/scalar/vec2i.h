@@ -28,9 +28,9 @@
 #ifndef __VEC2I_H__
 #define __VEC2I_H__
 
-#include "genericVector.h"
+#include "PrimayVectorBase.h"
 
-class Vec2i : public GenericVector< S32, 2 >
+class Vec2i : public PrimayVectorBase< S32, 2 >
 {
 public:
 
@@ -50,10 +50,16 @@ public:
     }
     
     template< class TYPE2 >
-    Vec2i( const GenericVector< TYPE2, 2 > &v1 )
+    Vec2i( const TYPE2 &v1 )
     {
         SetValues( (S32) v1[0], (S32) v1[1] );
     }
+
+    Vec2i(const PrimayVectorBase< S32, 2 > &v1)
+    {
+        SetValues(v1[0], v1[1]);
+    }
+
         
 };
 

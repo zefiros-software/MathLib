@@ -68,9 +68,14 @@ public:
     }
     
     template< class TYPE2 >
-    Vec4( const GenericVector< TYPE2, 4 > &v1 )
+    Vec4( const TYPE2 &v1 )
     {
         SetValues( (Real) v1[0], (Real) v1[1], (Real) v1[2], (Real) v1[3] );
+    }
+
+    Vec4(const FloatingPointVector< Real, 4 > &v1)
+    {
+        SetValues(v1[0], v1[1], v1[2], v1[3]);
     }
         
 };

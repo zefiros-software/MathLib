@@ -28,12 +28,12 @@
 #ifndef __VEC4I_H__
 #define __VEC4I_H__
 
-#include "genericVector.h"
+#include "PrimayVectorBase.h"
 
 #include "vec2i.h"
 #include "vec3i.h"
 
-class Vec4i : public GenericVector< S32, 4 >
+class Vec4i : public PrimayVectorBase< S32, 4 >
 {
 public:
 
@@ -68,9 +68,14 @@ public:
     }
     
     template< class TYPE2 >
-    Vec4i( const GenericVector< TYPE2, 4 > &v1 )
+    Vec4i( const TYPE2 &v1 )
     {
         SetValues( (S32) v1[0], (S32) v1[1], (S32) v1[2], (S32) v1[3] );
+    }
+
+    Vec4i(const PrimayVectorBase< S32, 4 > &v1)
+    {
+        SetValues(v1[0], v1[1], v1[2], v1[3]);
     }
         
 };

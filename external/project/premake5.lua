@@ -58,9 +58,25 @@ solution "zefirosMath"
 		optimize "Speed"
 				
 	configuration {}
-			
-	project "math-scalar-test"
-		location(  root .. "test/scalar/" )
+	
+	project "math"
+		
+		kind "StaticLib"
+		
+		location(  root .. "math/" )
+		
+		includedirs {
+			root .. "math"
+			}	
+		
+		files { 
+			root .. "math/**.h",
+			root .. "math/*.cpp"
+			}
+	
+	project "math-test"
+	
+		location(  root .. "test/" )
 		
 		kind "ConsoleApp"
 		flags "WinMain"
@@ -69,16 +85,14 @@ solution "zefirosMath"
 		includedirs {
 			root .. "external/gtest/include/",
 			root .. "external/gtest/",
-			
 			root .. "math/",
-            root .. "test/",
-			root .. "test/scalar"
+            root .. "test/"
 			}	
 		
 		files { 
 			root .. "external/gtest/src/gtest-all.cc",
-			root .. "test/scalar/**.h",
-			root .. "test/scalar/*.cpp"
+			root .. "test/**.h",
+			root .. "test/**.cpp"
 			}
 			
 		configuration { "Debug", "x32_f32" }

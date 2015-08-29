@@ -2,17 +2,30 @@
 #ifndef __FP_VECTOR_H__
 #define __FP_VECTOR_H__
 
-#include "genericVector.h"
+#include "primayVectorBase.h"
 
 template< class TYPE, U32 N >
-class FloatingPointVector : public GenericVector< TYPE, N >
+class FloatingPointVector : public PrimayVectorBase< TYPE, N >
 {
 public:
+
+    FloatingPointVector()
+    {}
+
+    FloatingPointVector(const PrimayVectorBase< TYPE, N > &lhs)
+    {
+        for (U32 i = 0; i < N; ++i)
+        {
+            mValues[i] = lhs[i];
+        }
+    }
 
     // Internal intrinsics
     inline TYPE Distance( const FloatingPointVector< TYPE, N > &v ) const
     {
-        return ( *this - v ).Length();
+        FloatingPointVector< TYPE, N > intermediate = (*this - v);
+
+        return intermediate.Length();
     }
     
     inline TYPE Length() const
@@ -20,9 +33,9 @@ public:
         return Mathf::Sqrt( this->Length2() );
     }
     
-    inline GenericVector< TYPE, N > SafeNormalise()
+    inline FloatingPointVector< TYPE, N > SafeNormalise()
     {
-        const GenericVector< TYPE, N > absv = this->Absolute();
+        const FloatingPointVector< TYPE, N > absv = this->Absolute();
         U8 max = absv.MaxAxis();
     
         if ( absv.mValues[max] > 0 )
@@ -30,27 +43,27 @@ public:
             assert( absv[max] != 0.0f );
             assert( Length() != 0.0f );
     
-            *this /= absv.mValues[max];
-            return *this /= Length();
+            FloatingPointVector< TYPE, N >(*this) /= absv.mValues[max];
+            return FloatingPointVector< TYPE, N >(*this) /= Length();
         }
     
         this->SetValue( 0, 1.0f );
         this->SetValue( 1, 0.0f );
         this->SetValue( 2, 0.0f );
         
-        return *this;
+        return FloatingPointVector< TYPE, N >(*this);
     }
     
-    inline GenericVector< TYPE, N > Normalise()
+    inline FloatingPointVector< TYPE, N > Normalise()
     {
         assert( Length() != 0.0f );
     
-        return *this /= Length();
+        return FloatingPointVector< TYPE, N >(*this) /= Length();
     }
     
-    inline GenericVector< TYPE, N > Lerp( const GenericVector< TYPE, N > &v, const TYPE t ) const
+    inline FloatingPointVector< TYPE, N > Lerp( const FloatingPointVector< TYPE, N > &v, const TYPE t ) const
     {
-        GenericVector< TYPE, N > newVec;
+        FloatingPointVector< TYPE, N > newVec;
         
         for ( U32 i=0; i < N; ++i )
         {
@@ -60,7 +73,7 @@ public:
         return newVec;
     }
     
-    inline GenericVector< TYPE, N > Slerp( const GenericVector< TYPE, N > &v, const TYPE t ) const
+    inline FloatingPointVector< TYPE, N > Slerp( const FloatingPointVector< TYPE, N > &v, const TYPE t ) const
     {
         TYPE dotp = Dot( v );
     
@@ -69,18 +82,18 @@ public:
         Mathf::Clamp( dotp , -1.0f, 1.0f );
     
         TYPE theta = Mathf::Acos( dotp ) * t;
-        GenericVector< TYPE, N > relative = v - *this * dotp;
+        FloatingPointVector< TYPE, N > relative = v - FloatingPointVector< TYPE, N >(*this) * dotp;
         relative.Normalise();
     
-        return *this * Mathf::Cos( theta ) + relative * Mathf::Sin( theta );
+        return FloatingPointVector< TYPE, N >(*this) * Mathf::Cos( theta ) + relative * Mathf::Sin( theta );
     }
     
-    inline GenericVector< TYPE, N > Nlerp( const GenericVector< TYPE, N > &v, const TYPE t ) const
+    inline FloatingPointVector< TYPE, N > Nlerp( const FloatingPointVector< TYPE, N > &v, const TYPE t ) const
     {
         return Lerp( v, t ).Normalise();
     }
     
-    inline TYPE Angle( const GenericVector< TYPE, N > &v ) const
+    inline TYPE Angle( const FloatingPointVector< TYPE, N > &v ) const
     {
         TYPE s = Mathf::Sqrt( this->Length2() * v.Length2() );
     
@@ -88,7 +101,6 @@ public:
     
         return Mathf::Acos( Mathf::Clamp( Dot( v ) / s, -1.0f, 1.0f ) );
     }
-    
 };
 
 #endif
