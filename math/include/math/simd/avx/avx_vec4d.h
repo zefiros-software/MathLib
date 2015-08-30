@@ -2,7 +2,7 @@
 #ifndef __AVXVEC4D_H__
 #define __AVXVEC4D_H__
 
-#include "common/types.h"
+#include "math/types.h"
 
 #include "math/simd/vectorize.h"
 #include "math/simd/simdVectorBase.h"

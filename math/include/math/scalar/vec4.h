@@ -28,10 +28,10 @@
 #ifndef __VEC4_H__
 #define __VEC4_H__
 
-#include "floatingPointVector.h"
+#include "math/scalar/floatingPointVector.h"
 
-#include "vec2.h"
-#include "vec3.h"
+#include "math/scalar/vec2.h"
+#include "math/scalar/vec3.h"
 
 class Vec4 : public FloatingPointVector< Real, 4 >
 {

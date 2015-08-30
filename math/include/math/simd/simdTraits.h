@@ -2,7 +2,7 @@
 #ifndef __SIMD_TRAITS_H__
 #define __SIMD_TRAITS_H__
 
-#include "vectorize.h"
+#include "math/simd/vectorize.h"
 
 class ScalarVec4f;
 

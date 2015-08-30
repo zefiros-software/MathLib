@@ -2,7 +2,7 @@
 #ifndef __SSE41_VEC4B_H__
 #define __SSE41_VEC4B_H__
 
-#include "common/types.h"
+#include "math/types.h"
 
 #include "math/simd/vectorize.h"
 #include "math/simd/simdVectorBoolBase.h"

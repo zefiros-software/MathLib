@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 
-#include "common/types.h"
+#include "math/types.h"
 
 #include "memory/alignedAllocator.h"
 

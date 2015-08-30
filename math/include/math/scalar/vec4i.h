@@ -30,8 +30,8 @@
 
 #include "PrimayVectorBase.h"
 
-#include "vec2i.h"
-#include "vec3i.h"
+#include "math/scalar/vec2i.h"
+#include "math/scalar/vec3i.h"
 
 class Vec4i : public PrimayVectorBase< S32, 4 >
 {
