@@ -56,23 +56,7 @@ solution "math"
 				
 	configuration {}
 	
-	project "math"
-		
-		kind "StaticLib"
-		
-		location(  root .. "math/" )
-		
-		includedirs {
-			root .. "math"
-			}	
-		
-		files { 
-			root .. "math/**.h",
-			root .. "math/*.cpp"
-			}
-	
 	project "math-test"
-	
 		location(  root .. "test/" )
 		
 		kind "ConsoleApp"
@@ -83,13 +67,14 @@ solution "math"
 			root .. "extern/gtest/include/",
 			root .. "extern/gtest/",
 			root .. "math/include/",
-            root .. "test/"
+            root .. "test/",
 			root .. "test/scalar/"
 			}	
 		
 		files { 
 			root .. "extern/gtest/src/gtest-all.cc",
-			root .. "test/**.cpp"
+			root .. "test/**.cpp",
+			root .. "test/**.h"
 			}
 			
 		configuration "gmake"

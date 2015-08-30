@@ -28,6 +28,7 @@
 #define __MATHF_H__
 
 #include "math/types.h"
+#include "math/config.h"
 
 #include <assert.h>
 #include <cfloat>
@@ -36,6 +37,8 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+
+BEGIN_MATH_NAMESPACE
 
 namespace Mathf
 {

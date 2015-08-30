@@ -1,3 +1,5 @@
 @echo off
 cd extern\project
-premake5 vs2013
+premake5 vs2015
+
+pause

@@ -2,13 +2,14 @@
 #ifndef __GENERIC_VECTOR_H__
 #define __GENERIC_VECTOR_H__
 
-#include "types.h"
-#include "config.h"
-
-#include "scalar/mathf.h"
+#include "math/types.h"
+#include "math/config.h"
+#include "math/scalar/mathf.h"
 
 #include <assert.h>
 
+
+#pragma warning( disable : 4201 )
 
 BEGIN_MATH_NAMESPACE
 

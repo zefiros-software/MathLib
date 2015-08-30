@@ -28,9 +28,11 @@
 #ifndef __VEC3I_H__
 #define __VEC3I_H__
 
-#include "PrimayVectorBase.h"
-
+#include "math/config.h"
 #include "math/scalar/vec2i.h"
+#include "math/scalar/primayVectorBase.h"
+
+BEGIN_MATH_NAMESPACE
 
 class Vec3i : public PrimayVectorBase< S32, 3 >
 {

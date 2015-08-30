@@ -28,7 +28,10 @@
 #ifndef __VEC2I_H__
 #define __VEC2I_H__
 
-#include "PrimayVectorBase.h"
+#include "math/config.h"
+#include "math/scalar/PrimayVectorBase.h"
+
+BEGIN_MATH_NAMESPACE
 
 class Vec2i : public PrimayVectorBase< S32, 2 >
 {

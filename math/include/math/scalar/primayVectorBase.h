@@ -2,7 +2,8 @@
 #ifndef __INTEGER_VECTOR_H__
 #define __INTEGER_VECTOR_H__
 
-#include "genericVectorData.h"
+#include "math/config.h"
+#include "math/scalar/genericVectorData.h"
 
 template< class TYPE, U32 N >
 class PrimayVectorBase : public GenericVectorData< TYPE, N >

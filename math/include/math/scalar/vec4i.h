@@ -28,10 +28,12 @@
 #ifndef __VEC4I_H__
 #define __VEC4I_H__
 
-#include "PrimayVectorBase.h"
-
+#include "math/config.h"
 #include "math/scalar/vec2i.h"
 #include "math/scalar/vec3i.h"
+#include "math/scalar/primayVectorBase.h"
+
+BEGIN_MATH_NAMESPACE
 
 class Vec4i : public PrimayVectorBase< S32, 4 >
 {

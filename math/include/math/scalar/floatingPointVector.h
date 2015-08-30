@@ -2,7 +2,10 @@
 #ifndef __FP_VECTOR_H__
 #define __FP_VECTOR_H__
 
-#include "primayVectorBase.h"
+#include "math/config.h"
+#include "math/scalar/primayVectorBase.h"
+
+BEGIN_MATH_NAMESPACE
 
 template< class TYPE, U32 N >
 class FloatingPointVector : public PrimayVectorBase< TYPE, N >

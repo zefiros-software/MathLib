@@ -29,9 +29,12 @@
 #define __MATRIX3_H__
 
 #include "math/types.h"
+#include "math/config.h"
 #include "math/scalar/vec3.h"
 
 #include <assert.h>
+
+BEGIN_MATH_NAMESPACE
 
 class Quaternion;
 

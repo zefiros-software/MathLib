@@ -28,9 +28,11 @@
 #ifndef __VEC3_H__
 #define __VEC3_H__
 
+#include "math/config.h"
+#include "math/scalar/vec2.h"
 #include "math/scalar/floatingPointVector.h"
 
-#include "math/scalar/vec2.h"
+BEGIN_MATH_NAMESPACE
 
 class Vec3 : public FloatingPointVector< Real, 3 >
 {
