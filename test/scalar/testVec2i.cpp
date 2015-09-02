@@ -13,18 +13,18 @@
 
 TEST(P(Vec2iTest), ConstructAndAccess)
 {
-    Vec2 testConst;
-    Vec2 testConst1(20);
-    Vec2 testConst2(10, 50);
+    Vec2i testConst;
+    Vec2i testConst1(20);
+    Vec2i testConst2(10, 50);
 
-    ASSERT_REAL_EQ(testConst1[0], 20);
-    ASSERT_REAL_EQ(testConst1[1], 20);
+    ASSERT_EQ(testConst1[0], 20);
+    ASSERT_EQ(testConst1[1], 20);
 
     ASSERT_REAL_EQ(testConst2[0], 10);
     ASSERT_REAL_EQ(testConst2[1], 50);
 }
 
-TEST(P(Vec2Test), RealCast)
+TEST(P(Vec2iTest), RealCast)
 {
     Vec2i testConst(10, 50);
     Vec2  testCast(testConst);

@@ -31,11 +31,11 @@
 #include "math/config.h"
 #include "math/scalar/vec2i.h"
 #include "math/scalar/vec3i.h"
-#include "math/scalar/primayVectorBase.h"
+#include "math/scalar/primaryVectorBase.h"
 
 BEGIN_MATH_NAMESPACE
 
-class Vec4i : public PrimayVectorBase< S32, 4 >
+class Vec4i : public PrimaryVectorBase< S32, 4 >
 {
 public:
 
@@ -70,12 +70,12 @@ public:
     }
     
     template< class TYPE2 >
-    Vec4i( const TYPE2 &v1 )
+    inline Vec4i( const PrimaryVectorBase< TYPE2, 4 > &v1 )
     {
         SetValues( (S32) v1[0], (S32) v1[1], (S32) v1[2], (S32) v1[3] );
     }
 
-    Vec4i(const PrimayVectorBase< S32, 4 > &v1)
+    Vec4i(const PrimaryVectorBase< S32, 4 > &v1)
     {
         SetValues(v1[0], v1[1], v1[2], v1[3]);
     }

@@ -1,13 +1,12 @@
 #pragma once
-#ifndef __GENERIC_VECTOR_H__
-#define __GENERIC_VECTOR_H__
+#ifndef __GENERIC_VECTOR_DATA_H__
+#define __GENERIC_VECTOR_DATA_H__
 
 #include "math/types.h"
 #include "math/config.h"
 #include "math/scalar/mathf.h"
 
 #include <assert.h>
-
 
 #pragma warning( disable : 4201 )
 
@@ -179,8 +178,6 @@ public:
         GenericVectorData< TYPE,3 > rgb;
     };
 };
-
-
 
 
 END_MATH_NAMESPACE

@@ -38,38 +38,38 @@ class Vec3 : public FloatingPointVector< Real, 3 >
 {
 public:
 
-    Vec3()
+    inline Vec3()
     {
         
     }
     
-    Vec3( Real p1 )
+    inline Vec3( Real p1 )
     {
         SetValues( p1, p1, p1 );
     }
     
-    Vec3( Real p1, Real p2, Real p3 )
+    inline Vec3( Real p1, Real p2, Real p3 )
     {
         SetValues( p1, p2, p3 );
     }
     
-    Vec3( const Vec2 &v1, Real p3 )
+    inline Vec3( const Vec2 &v1, Real p3 )
     {
         SetValues( v1[0], v1[1], p3 );
     }
     
-    Vec3( Real p1, const Vec2 &v1 )
+    inline Vec3( Real p1, const Vec2 &v1 )
     {
         SetValues( p1, v1[0], v1[1] );
     }
     
     template< class TYPE2 >
-    Vec3( const TYPE2 &v1 )
+    inline Vec3( const PrimaryVectorBase< TYPE2, 3 > &v1 )
     {
         SetValues( (Real) v1[0], (Real) v1[1], (Real) v1[2] );
     }
 
-    Vec3(const FloatingPointVector< Real, 3 > &v1)
+    inline Vec3(const FloatingPointVector< Real, 3 > &v1)
     {
         SetValues(v1[0], v1[1], v1[2]);
     }
@@ -87,7 +87,46 @@ public:
                      mValues[2] * v.mValues[0] - mValues[0] * v.mValues[2],
                      mValues[0] * v.mValues[1] - mValues[1] * v.mValues[0]);
     }
-        
+    
+    static inline Vec3 GetZero()
+    {
+        return Vec3( 0.0f, 0.0f, 0.0f );
+    }
+    
+    static inline Vec3 GetOne()
+    {
+        return Vec3( 0.0f, 0.0f, 0.0f );
+    }
+    
+    static inline Vec3 GetBack()
+    {
+        return Vec3( 0.0f, -1.0f, 0.0f );
+    }
+    
+    static inline Vec3 GetForward()
+    {
+        return Vec3( 0.0f, 1.0f, 0.0f );
+    }
+    
+    static inline Vec3 GetDown()
+    {
+        return Vec3( 0.0f, 0.0f, -1.0f );
+    }
+    
+    static inline Vec3 GetUp()
+    {
+        return Vec3( 0.0f, 0.0f, 1.0f );
+    }
+    
+    static inline Vec3 GetLeft()
+    {
+        return Vec3( -1.0f, 0.0f, 0.0f );
+    }
+    
+    static inline Vec3 GetRight()
+    {
+        return Vec3( 1.0f, 0.0f, 0.0f );
+    }
 };
 
 /*

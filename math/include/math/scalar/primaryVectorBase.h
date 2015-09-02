@@ -6,12 +6,12 @@
 #include "math/scalar/genericVectorData.h"
 
 template< class TYPE, U32 N >
-class PrimayVectorBase : public GenericVectorData< TYPE, N >
+class PrimaryVectorBase : public GenericVectorData< TYPE, N >
 {
 public:
 
     // STATICS
-    static U32 GetLength()
+    static U32 Width()
     {
         return N;
     }
@@ -32,17 +32,27 @@ public:
     }
 
     // Self operators
-    inline PrimayVectorBase< TYPE, N > &operator+=(const PrimayVectorBase< TYPE, N > &v)
+    inline PrimaryVectorBase< TYPE, N > &operator+=(const PrimaryVectorBase< TYPE, N > &v)
     {
         for (U32 i = 0; i < N; ++i)
         {
             this->mValues[i] += v[i];
         }
 
-        return *(PrimayVectorBase< TYPE, N >*)this;
+        return *(PrimaryVectorBase< TYPE, N >*)this;
+    }
+    
+    inline PrimaryVectorBase< TYPE, N > &operator-=(const PrimaryVectorBase< TYPE, N > &v)
+    {
+        for (U32 i = 0; i < N; ++i)
+        {
+            this->mValues[i] -= v[i];
+        }
+
+        return *(PrimaryVectorBase< TYPE, N >*)this;
     }
 
-    inline PrimayVectorBase< TYPE, N > &operator /= (const TYPE s)
+    inline PrimaryVectorBase< TYPE, N > &operator /= (const TYPE s)
     {
         assert(s != 0.0f);
 
@@ -51,21 +61,21 @@ public:
             this->mValues[i] /= s;
         }
 
-        return *(PrimayVectorBase< TYPE, N >*)this;
+        return *(PrimaryVectorBase< TYPE, N >*)this;
     }
 
-    inline PrimayVectorBase< TYPE, N > &operator *= (const TYPE s)
+    inline PrimaryVectorBase< TYPE, N > &operator *= (const TYPE s)
     {
         for (U32 i = 0; i < N; ++i)
         {
             this->mValues[i] *= s;
         }
 
-        return *(PrimayVectorBase< TYPE, N >*)this;
+        return *(PrimaryVectorBase< TYPE, N >*)this;
     }
 
     // Equality
-    inline bool operator==(const PrimayVectorBase< TYPE, N > &other) const
+    inline bool operator==(const PrimaryVectorBase< TYPE, N > &other) const
     {
         bool result = true;
 
@@ -77,13 +87,13 @@ public:
         return result;
     }
 
-    inline bool operator!=(const PrimayVectorBase< TYPE, N > &other) const
+    inline bool operator!=(const PrimaryVectorBase< TYPE, N > &other) const
     {
-        return !(PrimayVectorBase< TYPE, N >(*this) == other);
+        return !(PrimaryVectorBase< TYPE, N >(*this) == other);
     }
 
     // Internal intrinsics
-    inline TYPE Dot(const PrimayVectorBase< TYPE, N > &v) const
+    inline TYPE Dot(const PrimaryVectorBase< TYPE, N > &v) const
     {
         TYPE result = this->mValues[0] * v.mValues[0];
 
@@ -97,12 +107,12 @@ public:
 
     inline TYPE Length2() const
     {
-        return Dot(PrimayVectorBase< TYPE, N >(*this));
+        return Dot(PrimaryVectorBase< TYPE, N >(*this));
     }
 
-    inline TYPE Distance2(const PrimayVectorBase< TYPE, N > &v) const
+    inline TYPE Distance2(const PrimaryVectorBase< TYPE, N > &v) const
     {
-        return (PrimayVectorBase< TYPE, N >(*this) - v).Length2();
+        return (PrimaryVectorBase< TYPE, N >(*this) - v).Length2();
     }
 
     inline void SetValue(U32 axis, TYPE val)
@@ -110,9 +120,9 @@ public:
         this->mValues[axis] = val;
     }
 
-    inline PrimayVectorBase< TYPE, N > Absolute() const
+    inline PrimaryVectorBase< TYPE, N > Absolute() const
     {
-        PrimayVectorBase< TYPE, N > newVec;
+        PrimaryVectorBase< TYPE, N > newVec;
 
         for (U32 i = 0; i < N; ++i)
         {
@@ -192,11 +202,11 @@ public:
 };
 
 template< class TYPE, U32 N >
-inline PrimayVectorBase< TYPE, N > operator+(const PrimayVectorBase< TYPE, N > &v1, const PrimayVectorBase< TYPE, N > &v2)
+inline PrimaryVectorBase< TYPE, N > operator+(const PrimaryVectorBase< TYPE, N > &v1, const PrimaryVectorBase< TYPE, N > &v2)
 {
-    PrimayVectorBase< TYPE, N > newVec;
+    PrimaryVectorBase< TYPE, N > newVec;
 
-    for (U32 i = 0; i < PrimayVectorBase< TYPE, N >::GetLength(); ++i)
+    for (U32 i = 0; i < PrimaryVectorBase< TYPE, N >::Width(); ++i)
     {
         newVec[i] = v1[i] + v2[i];
     }
@@ -205,11 +215,11 @@ inline PrimayVectorBase< TYPE, N > operator+(const PrimayVectorBase< TYPE, N > &
 }
 
 template< class TYPE, U32 N >
-inline PrimayVectorBase< TYPE, N > operator*(const PrimayVectorBase< TYPE, N > &v1, const PrimayVectorBase< TYPE, N > &v2)
+inline PrimaryVectorBase< TYPE, N > operator*(const PrimaryVectorBase< TYPE, N > &v1, const PrimaryVectorBase< TYPE, N > &v2)
 {
-    PrimayVectorBase< TYPE, N > newVec;
+    PrimaryVectorBase< TYPE, N > newVec;
 
-    for (U32 i = 0; i < PrimayVectorBase< TYPE, N >::GetLength(); ++i)
+    for (U32 i = 0; i < PrimaryVectorBase< TYPE, N >::Width(); ++i)
     {
         newVec[i] = v1[i] * v2[i];
     }
@@ -218,11 +228,11 @@ inline PrimayVectorBase< TYPE, N > operator*(const PrimayVectorBase< TYPE, N > &
 }
 
 template< class TYPE, U32 N >
-inline PrimayVectorBase< TYPE, N > operator-(const PrimayVectorBase< TYPE, N > &v1, const PrimayVectorBase< TYPE, N > &v2)
+inline PrimaryVectorBase< TYPE, N > operator-(const PrimaryVectorBase< TYPE, N > &v1, const PrimaryVectorBase< TYPE, N > &v2)
 {
-    PrimayVectorBase< TYPE, N > newVec;
+    PrimaryVectorBase< TYPE, N > newVec;
 
-    for (U32 i = 0; i < PrimayVectorBase< TYPE, N >::GetLength(); ++i)
+    for (U32 i = 0; i < PrimaryVectorBase< TYPE, N >::Width(); ++i)
     {
         newVec[i] = v1[i] - v2[i];
     }
@@ -231,11 +241,11 @@ inline PrimayVectorBase< TYPE, N > operator-(const PrimayVectorBase< TYPE, N > &
 }
 
 template< class TYPE, U32 N >
-inline PrimayVectorBase< TYPE, N > operator-(const PrimayVectorBase< TYPE, N > &v)
+inline PrimaryVectorBase< TYPE, N > operator-(const PrimaryVectorBase< TYPE, N > &v)
 {
-    PrimayVectorBase< TYPE, N > newVec;
+    PrimaryVectorBase< TYPE, N > newVec;
 
-    for (U32 i = 0; i < PrimayVectorBase< TYPE, N >::GetLength(); ++i)
+    for (U32 i = 0; i < PrimaryVectorBase< TYPE, N >::Width(); ++i)
     {
         newVec[i] = -v[i];
     }
@@ -244,11 +254,11 @@ inline PrimayVectorBase< TYPE, N > operator-(const PrimayVectorBase< TYPE, N > &
 }
 
 template< class TYPE, U32 N >
-inline PrimayVectorBase< TYPE, N > operator*(const PrimayVectorBase< TYPE, N > &v, const TYPE s)
+inline PrimaryVectorBase< TYPE, N > operator*(const PrimaryVectorBase< TYPE, N > &v, const TYPE s)
 {
-    PrimayVectorBase< TYPE, N > newVec;
+    PrimaryVectorBase< TYPE, N > newVec;
 
-    for (U32 i = 0; i < PrimayVectorBase< TYPE, N >::GetLength(); ++i)
+    for (U32 i = 0; i < PrimaryVectorBase< TYPE, N >::Width(); ++i)
     {
         newVec[i] = v[i] * s;
     }
@@ -257,24 +267,32 @@ inline PrimayVectorBase< TYPE, N > operator*(const PrimayVectorBase< TYPE, N > &
 }
 
 template< class TYPE, U32 N >
-inline PrimayVectorBase< TYPE, N > operator*(TYPE s, const PrimayVectorBase< TYPE, N > &v)
+inline PrimaryVectorBase< TYPE, N > operator*(TYPE s, const PrimaryVectorBase< TYPE, N > &v)
 {
     return v * s;
 }
 
 template< class TYPE, U32 N >
-inline PrimayVectorBase< TYPE, N > operator/(const PrimayVectorBase< TYPE, N > &v, TYPE s)
+inline PrimaryVectorBase< TYPE, N > operator/(const PrimaryVectorBase< TYPE, N > &v, TYPE s)
 {
-    assert(s != 0.0f);
-    return v * (Real(1.0) / s);
+    assert(s != TYPE(0));
+    
+    PrimaryVectorBase< TYPE, N > newVec;
+
+    for (U32 i = 0; i < PrimaryVectorBase< TYPE, N >::Width(); ++i)
+    {
+        newVec[i] = v[i] / s;
+    }
+
+    return newVec;
 }
 
 template< class TYPE, U32 N >
-inline PrimayVectorBase< TYPE, N > operator/(const PrimayVectorBase< TYPE, N > &v1, const PrimayVectorBase< TYPE, N > &v2)
+inline PrimaryVectorBase< TYPE, N > operator/(const PrimaryVectorBase< TYPE, N > &v1, const PrimaryVectorBase< TYPE, N > &v2)
 {
-    PrimayVectorBase< TYPE, N > newVec;
+    PrimaryVectorBase< TYPE, N > newVec;
 
-    for (U32 i = 0; i < PrimayVectorBase< TYPE, N >::GetLength(); ++i)
+    for (U32 i = 0; i < PrimaryVectorBase< TYPE, N >::Width(); ++i)
     {
         newVec[i] = v1[i] / v2[i];
     }

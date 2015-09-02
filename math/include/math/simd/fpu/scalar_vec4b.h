@@ -21,6 +21,7 @@ public:
         }
     }
     
+    /*
     inline ScalarVec4b( bool x, bool y, bool z, bool w ) 
     {
         mValue[0] = x;
@@ -28,6 +29,7 @@ public:
         mValue[2] = z;
         mValue[3] = w;
     }
+    */
     
     inline ScalarVec4b( const bool *rhs ) 
     {
@@ -51,29 +53,41 @@ public:
         return mValue;
     }
     
-    void StoreAligned( F32 *dest ) const
+    void StoreAligned( Real *dest ) const
     {
         for ( U32 i=0; i < 4; ++i ) 
         {
-            dest[i] = (F32) mvalue[i];
+            dest[i] = (Real) mValue[i];
         }
     }
 
-    void LoadAligned( const F32 *src ) 
+    void LoadAligned( const Real *src ) 
     {
         for ( U32 i=0; i < 4; ++i ) 
         {
-            mvalue[i] = (bool) src[i];
+            mValue[i] = (bool) src[i];
         }
     }
     
-    template< U32 rotate >
-    inline void LoadMask( U64 mask ) 
+
+    inline void LoadMask( U32 rotate, U64 mask ) 
     {
         mValue[0] = ( mask >> ( 0  + ( 0 + rotate ) % 4 ) ) & 0x1;
         mValue[1] = ( mask >> ( 4  + ( 1 + rotate ) % 4 ) ) & 0x1;
         mValue[2] = ( mask >> ( 8  + ( 2 + rotate ) % 4 ) ) & 0x1;
         mValue[3] = ( mask >> ( 12 + ( 3 + rotate ) % 4 ) ) & 0x1;                    
+    }
+    
+    inline U64 StoreMask() const
+    {   
+        U64 mask = 0;    
+        
+        mask |= ( (U64)mValue[0] & 0x1 ) << 0;
+        mask |= ( (U64)mValue[1] & 0x1 ) << 1;
+        mask |= ( (U64)mValue[2] & 0x1 ) << 2;
+        mask |= ( (U64)mValue[3] & 0x1 ) << 3;
+        
+        return mask;
     }
     
 private:
@@ -141,7 +155,7 @@ inline ScalarVec4b operator!=( const ScalarVec4b &lhs, const ScalarVec4b &rhs )
     return newVec;
 }
 
-inline bool SIMD_Hadd( const SSE41Vec4b &lhs )
+inline bool SIMD_Hadd( const ScalarVec4b &lhs )
 {
     int val = 0;
     

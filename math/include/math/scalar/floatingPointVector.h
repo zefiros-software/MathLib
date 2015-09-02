@@ -3,23 +3,23 @@
 #define __FP_VECTOR_H__
 
 #include "math/config.h"
-#include "math/scalar/primayVectorBase.h"
+#include "math/scalar/primaryVectorBase.h"
 
 BEGIN_MATH_NAMESPACE
 
 template< class TYPE, U32 N >
-class FloatingPointVector : public PrimayVectorBase< TYPE, N >
+class FloatingPointVector : public PrimaryVectorBase< TYPE, N >
 {
 public:
 
     FloatingPointVector()
     {}
 
-    FloatingPointVector(const PrimayVectorBase< TYPE, N > &lhs)
+    FloatingPointVector(const PrimaryVectorBase< TYPE, N > &lhs)
     {
         for (U32 i = 0; i < N; ++i)
         {
-            mValues[i] = lhs[i];
+            this->mValues[i] = lhs[i];
         }
     }
 
@@ -51,8 +51,11 @@ public:
         }
     
         this->SetValue( 0, 1.0f );
-        this->SetValue( 1, 0.0f );
-        this->SetValue( 2, 0.0f );
+        
+        for ( U32 i=1; i < N; ++i )
+        {
+            this->SetValue( i, 0.0f );
+        }
         
         return FloatingPointVector< TYPE, N >(*this);
     }
@@ -105,5 +108,7 @@ public:
         return Mathf::Acos( Mathf::Clamp( Dot( v ) / s, -1.0f, 1.0f ) );
     }
 };
+
+END_MATH_NAMESPACE
 
 #endif

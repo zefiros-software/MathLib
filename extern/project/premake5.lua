@@ -79,6 +79,11 @@ solution "math"
 			
 		configuration "gmake"
 			links "pthread"
+            buildoptions( "-mfma" )
+            buildoptions( "-mavx2" )
+            buildoptions( "-mavx" )
+            buildoptions( "-msse" )
+            buildoptions( "-march=native" )
 			
 		configuration { "Debug", "x32_f32" }
             defines "PREFIX=x32_f32_"

@@ -2,6 +2,10 @@
 #ifndef __VECTORIZE_H__
 #define __VECTORIZE_H__
 
+
+
+
+/*
 //
 //define simd widths and support
 //
@@ -85,6 +89,6 @@
 #elif SIMD_INSTRUCTION_SET == 1
 #include <xmmintrin.h>
 #endif // SIMD_INSTRUCTION_SET
-
+*/
 
 #endif // __VECTORIZE_H__

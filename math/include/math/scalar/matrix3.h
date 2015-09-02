@@ -231,9 +231,9 @@ public:
                             const Real a21, const Real a22, const Real a23,
                             const Real a31, const Real a32, const Real a33 )
     {
-        mValues[0].SetValue( a11, a12, a13 );
-        mValues[1].SetValue( a21, a22, a23 );
-        mValues[2].SetValue( a31, a32, a33 );
+        mValues[0].SetValues( a11, a12, a13 );
+        mValues[1].SetValues( a21, a22, a23 );
+        mValues[2].SetValues( a31, a32, a33 );
     }
     
     

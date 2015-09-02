@@ -30,46 +30,46 @@
 
 #include "math/config.h"
 #include "math/scalar/vec2i.h"
-#include "math/scalar/primayVectorBase.h"
+#include "math/scalar/primaryVectorBase.h"
 
 BEGIN_MATH_NAMESPACE
 
-class Vec3i : public PrimayVectorBase< S32, 3 >
+class Vec3i : public PrimaryVectorBase< S32, 3 >
 {
 public:
 
-    Vec3i()
+    inline Vec3i()
     {
         
     }
     
-    Vec3i( S32 p1 )
+    inline Vec3i( S32 p1 )
     {
         SetValues( p1, p1, p1 );
     }
     
-    Vec3i( S32 p1, S32 p2, S32 p3 )
+    inline Vec3i( S32 p1, S32 p2, S32 p3 )
     {
         SetValues( p1, p2, p3 );
     }
     
-    Vec3i( const Vec2i &v1, S32 p3 )
+    inline Vec3i( const Vec2i &v1, S32 p3 )
     {
         SetValues( v1[0], v1[1], p3 );
     }
     
-    Vec3i( S32 p1, const Vec2i &v1 )
+    inline Vec3i( S32 p1, const Vec2i &v1 )
     {
         SetValues( p1, v1[0], v1[1] );
     }
-    
+     
     template< class TYPE2 >
-    Vec3i( const TYPE2 &v1 )
+    inline Vec3i( const PrimaryVectorBase< TYPE2, 3 > &v1 )
     {
         SetValues( (S32) v1[0], (S32) v1[1], (S32) v1[2] );
     }
 
-    Vec3i(const PrimayVectorBase< S32, 3 > &v1)
+    inline Vec3i(const PrimaryVectorBase< S32, 3 > &v1)
     {
         SetValues(v1[0], v1[1], v1[2]);
     }

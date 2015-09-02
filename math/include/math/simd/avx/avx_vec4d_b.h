@@ -8,8 +8,7 @@
 #include "math/simd/vectorize.h"
 #include "math/simd/simdVectorBoolBase.h"
 
-#include "memory/stackAlign.h"
-
+#include <immintrin.h>
 #include <iostream>
 #include <limits>
 
@@ -25,10 +24,12 @@ public:
     {
     }
     
+    /*
     inline AvxVec4d_b( bool b0, bool b1, bool b2, bool b3) :
     mValue( _mm256_castsi256_pd( _mm256_setr_epi64x( -(S64)b0, -(S64)b1, -(S64)b2, -(S64)b3 ) ) )
     {
     }
+    */
     
     inline AvxVec4d_b( const __m256d &rhs ) :
     mValue( rhs )
@@ -47,8 +48,8 @@ public:
         return mValue;
     }
     
-    template< U32 rotate >
-    inline void LoadMask( U64 mask  ) 
+    //template< U32 rotate >
+    inline void LoadMask( U32 rotate, U64 mask  ) 
     {
         U32 shift = rotate >> 1;
            
@@ -67,7 +68,7 @@ public:
     }
     
     // TODO: MIGHT CAUSE PROBLEMS WITH MANUAL LOADED VALS
-    inline U64 StoreMask( U32 rotate ) const
+    inline U64 StoreMask() const
     {       
         return (U64)_mm256_movemask_pd( mValue );
     }

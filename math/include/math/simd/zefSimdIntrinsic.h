@@ -6,6 +6,7 @@
 
 #include <assert.h>
 
+
 template< class SIMD_TYPE, class INIT_TYPE, U8 N, U8 M >
 class SimdMatNM
 {

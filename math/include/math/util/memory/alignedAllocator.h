@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include <memory>
 
-#include "common/types.h"
+#include "math/types.h"
 
-#include "memory/malloc.h"
+#include "math/util/memory/malloc.h"
 
 namespace LibStruct
 {

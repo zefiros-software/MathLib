@@ -4,25 +4,25 @@
 
 #include "math/types.h"
 
-#include "math/simd/vectorize.h"
+#include "math/simd/simdBaseTraits.h"
 #include "math/simd/simdVectorBase.h"
 #include "math/simd/avx/avx_vec4d_b.h"
 
-#include "memory/stackAlign.h"
-
+#include <immintrin.h>
 #include <iostream>
 #include <limits>
 
 class AvxVec4d;
 
 template <>
-struct SimdTraits<F64>
-{
-    typedef F64 value_type;
+struct AvxSimdTraits<F64> : public BaseSimdTraits<F64>
+{  
     typedef AvxVec4d vec_type;
     typedef AvxVec4d_b bool_type;
     static const size_t width = 4;
     static const size_t bytesPerValue = 8;
+    static const size_t registers = 2;
+    static const size_t alignment = 32;
 };
 
 class AvxVec4d : public SimdVectorBase< AvxVec4d, F64>
@@ -36,10 +36,12 @@ public:
     {
     }
 
+    /*
     inline AvxVec4d( F64 v0, F64 v1, F64 v2, F64 v3 ) :
         mValue( _mm256_setr_pd( v0, v1, v2, v3 ) )
     {
     }
+    */
 
     inline AvxVec4d( const __m256d &rhs ) : mValue( rhs )
     {
@@ -174,15 +176,6 @@ inline AvxVec4d SIMD_Sqrt( const AvxVec4d &lhs )
 inline AvxVec4d SIMD_Rcp( const AvxVec4d &lhs )
 {
     return ( 1.0 / lhs ); 
-}
-
-inline AvxVec4d SIMD_RcpSqrt( const AvxVec4d &lhs )
-{
-#ifdef __APROX_RCP_SQRT
-    return _mm256_rsqrt_pd( lhs );
-#else
-    return _mm256_sqrt_pd( SIMD_Rcp( lhs ) );
-#endif
 }
 
 inline AvxVec4d SIMD_Select( const AvxVec4d_b &sel, const AvxVec4d &lhs, const AvxVec4d &rhs )

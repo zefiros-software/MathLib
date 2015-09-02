@@ -29,41 +29,40 @@
 #define __VEC2I_H__
 
 #include "math/config.h"
-#include "math/scalar/PrimayVectorBase.h"
+#include "math/scalar/PrimaryVectorBase.h"
 
 BEGIN_MATH_NAMESPACE
 
-class Vec2i : public PrimayVectorBase< S32, 2 >
+class Vec2i : public PrimaryVectorBase< S32, 2 >
 {
 public:
 
-    Vec2i()
+    inline Vec2i()
     {
         
     }
     
-    Vec2i( S32 p1 )
+    inline Vec2i( S32 p1 )
     {
         SetValues( p1, p1 );
     }
     
-    Vec2i( S32 p1, S32 p2 )
+    inline Vec2i( S32 p1, S32 p2 )
     {
         SetValues( p1, p2 );
     }
     
     template< class TYPE2 >
-    Vec2i( const TYPE2 &v1 )
+    inline Vec2i( const PrimaryVectorBase< TYPE2, 2 > &v1 )
     {
         SetValues( (S32) v1[0], (S32) v1[1] );
     }
 
-    Vec2i(const PrimayVectorBase< S32, 2 > &v1)
+    inline Vec2i(const PrimaryVectorBase< S32, 2 > &v1)
     {
         SetValues(v1[0], v1[1]);
     }
-
-        
+  
 };
 
 /*

@@ -1,10 +1,10 @@
 #pragma once
 
-#if _PLATFORM_WIN 
+#if _WIN32 
 
 #define StackAlign( x ) __declspec(align( x ))
 
-#elif _PLATFORM_UNIX
+#else 
 
 #define StackAlign( x ) __attribute__ ((aligned ( x )))
 

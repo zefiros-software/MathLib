@@ -4,27 +4,28 @@
 
 #include "math/types.h"
 
-#include "math/simd/vectorize.h"
-
+#include "math/simd/simdBaseTraits.h"
 #include "math/simd/simdVectorBase.h"
 
 #include "math/simd/avx/avx_vec8f_b.h"
 
-#include "memory/stackAlign.h"
-
+#include <immintrin.h>
 #include <iostream>
 #include <limits>
+
 
 class AvxVec8f;
 
 template <>
-struct SimdTraits<F32>
+struct AvxSimdTraits<F32> : public BaseSimdTraits<F32>
 {
-    typedef F32 value_type;
+    
     typedef AvxVec8f vec_type;
     typedef AvxVec8f_b bool_type;
     static const size_t width = 8;
     static const size_t bytesPerValue = 4;
+    static const size_t registers = 2;
+    static const size_t alignment = 32;
 };
 
 class AvxVec8f : public SimdVectorBase< AvxVec8f, F32>
@@ -38,11 +39,13 @@ public:
     {
     }
 
+    /*
     inline AvxVec8f( F32 v0, F32 v1, F32 v2, F32 v3,
                      F32 v4, F32 v5, F32 v6, F32 v7 ) :
         mValue( _mm256_setr_ps( v0, v1, v2, v3, v4, v5, v6, v7 ) )
     {
     }
+    */
 
     inline AvxVec8f( const __m256 &rhs ) : mValue( rhs )
     {
@@ -182,16 +185,8 @@ inline AvxVec8f SIMD_Sqrt( const AvxVec8f &lhs )
 
 inline AvxVec8f SIMD_Rcp( const AvxVec8f &lhs )
 {
-    return _mm256_rcp_ps( lhs );
-}
-
-inline AvxVec8f SIMD_RcpSqrt( const AvxVec8f &lhs )
-{
-#ifdef __APROX_RCP_SQRT
-    return _mm256_rsqrt_ps( lhs );
-#else
-    return _mm256_sqrt_ps( _mm256_rcp_ps( lhs ) );
-#endif
+    return 1.0 / lhs;
+    //return _mm256_rcp_ps( lhs );
 }
 
 inline AvxVec8f SIMD_Select( const AvxVec8f_b &sel, const AvxVec8f &lhs, const AvxVec8f &rhs )
@@ -199,7 +194,6 @@ inline AvxVec8f SIMD_Select( const AvxVec8f_b &sel, const AvxVec8f &lhs, const A
     return _mm256_blendv_ps( rhs, lhs, sel );
 }
 
-//http://stackoverflow.com/questions/23189488/horizontal-sum-of-32-bit-floats-in-256-bit-avx-vector
 inline F32 SIMD_Hadd( const AvxVec8f &lhs )
 {
     const __m128 x128 = _mm_add_ps(_mm256_extractf128_ps(lhs, 1), _mm256_castps256_ps128(lhs));

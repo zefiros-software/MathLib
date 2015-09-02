@@ -265,10 +265,10 @@ public:
                             const Real a42,
                             const Real a43, const Real a44 )
     {
-        mValues[0].SetValue( a11, a12, a13, a14 );
-        mValues[1].SetValue( a21, a22, a23, a24 );
-        mValues[2].SetValue( a31, a32, a33, a34 );
-        mValues[3].SetValue( a41, a42, a43, a44 );
+        mValues[0].SetValues( a11, a12, a13, a14 );
+        mValues[1].SetValues( a21, a22, a23, a24 );
+        mValues[2].SetValues( a31, a32, a33, a34 );
+        mValues[3].SetValues( a41, a42, a43, a44 );
     }
     
     static inline Matrix4 GetZero()

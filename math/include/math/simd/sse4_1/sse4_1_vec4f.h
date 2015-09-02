@@ -4,24 +4,27 @@
 
 #include "math/types.h"
 
-#include "math/simd/vectorize.h"
+#include "math/simd/simdBaseTraits.h"
 #include "math/simd/simdVectorBase.h"
-#include "math/simd/sse4_1/sse4_1_vec4b.h"
-#include "math/memory/stackAlign.h"
 
+#include "math/simd/sse4_1/sse4_1_vec4f_b.h"
+
+#include <smmintrin.h>
 #include <iostream>
 #include <limits>
 
 class SSE41Vec4f;
 
 template <>
-struct SimdTraits<F32>
+struct SSE4_1SimdTraits<F32> : public BaseSimdTraits<F32>
 {
     typedef F32 value_type;
     typedef SSE41Vec4f vec_type;
-    typedef SSE41Vec4b bool_type;
+    typedef SSE41Vec4f_b bool_type;
     static const size_t width = 4;
     static const size_t bytesPerValue = 4;
+    static const size_t registers = 1;
+    static const size_t alignment = 16;
 };
 
 class SSE41Vec4f : public SimdVectorBase< SSE41Vec4f, F32>
@@ -35,11 +38,13 @@ public:
     {
     }
 
+    /*
     inline SSE41Vec4f( F32 v0, F32 v1, F32 v2, F32 v3 ) :
         mValue( _mm_setr_ps( v0, v1, v2, v3 ) )
     {
     }
-
+    */
+    
     inline SSE41Vec4f( const __m128 &rhs ) : mValue( rhs )
     {
 
@@ -121,32 +126,32 @@ inline SSE41Vec4f operator/( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
 // Comparison
 //
 
-inline SSE41Vec4b operator== ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
+inline SSE41Vec4f_b operator== ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
 {
     return _mm_cmpeq_ps( lhs, rhs );
 }
 
-inline SSE41Vec4b operator!= ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
+inline SSE41Vec4f_b operator!= ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
 {
     return _mm_cmpneq_ps( lhs, rhs );
 }
 
-inline SSE41Vec4b operator< ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
+inline SSE41Vec4f_b operator< ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
 {
     return _mm_cmplt_ps( lhs, rhs );
 }
 
-inline SSE41Vec4b operator<= ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
+inline SSE41Vec4f_b operator<= ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
 {
     return _mm_cmple_ps( lhs, rhs );
 }
 
-inline SSE41Vec4b operator> ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
+inline SSE41Vec4f_b operator> ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
 {
     return _mm_cmpgt_ps( lhs, rhs );
 }
 
-inline SSE41Vec4b operator>= ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
+inline SSE41Vec4f_b operator>= ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
 {
     return _mm_cmpge_ps( lhs, rhs );
 }
@@ -162,19 +167,11 @@ inline SSE41Vec4f SIMD_Sqrt( const SSE41Vec4f &lhs )
 
 inline SSE41Vec4f SIMD_Rcp( const SSE41Vec4f &lhs )
 {
-    return _mm_rcp_ps( lhs );
+    return 1.0 / lhs;
+    //return _mm_rcp_ps( lhs );
 }
 
-inline SSE41Vec4f SIMD_RcpSqrt( const SSE41Vec4f &lhs )
-{
-#ifdef __APROX_RCP_SQRT
-    return _mm_rsqrt_ps( lhs );
-#else
-    return _mm_sqrt_ps( _mm_rcp_ps( lhs ) );
-#endif
-}
-
-inline SSE41Vec4f SIMD_Select( const SSE41Vec4b &sel, const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
+inline SSE41Vec4f SIMD_Select( const SSE41Vec4f_b &sel, const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
 {
     return _mm_blendv_ps( rhs, lhs, sel );
 }

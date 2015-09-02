@@ -6,20 +6,22 @@
 
 #include "math/scalar/mathf.h"
 
+#include "math/simd/simdBaseTraits.h"
 #include "math/simd/simdVectorBase.h"
 
-#include "math/simd/scalarFallback/scalar_vec4b.h"
+#include "math/simd/fpu/scalar_vec4b.h"
 
 class ScalarVec4f;
 
 template <>
-struct SimdTraits<F32>
+struct FpuSimdTraits<F32> : public BaseSimdTraits<F32>
 {
-    typedef F32 value_type;
     typedef ScalarVec4f vec_type;
     typedef ScalarVec4b bool_type;
     static const size_t width = 4;
     static const size_t bytesPerValue = 4;
+    static const size_t registers = 1;
+    static const size_t alignment = 16;
 };
 
 class ScalarVec4f : public SimdVectorBase< ScalarVec4f, F32>
@@ -37,6 +39,7 @@ public:
         }
     }
 
+    /*
     inline ScalarVec4f( F32 x, F32 y, F32 z, F32 w )
     {
         mValue[0] = x;
@@ -44,15 +47,16 @@ public:
         mValue[2] = z;
         mValue[3] = w;
     }
+    */
 
     inline ScalarVec4f( const F32 *rhs )
     {
-        std::copy( rhs, rhs + SimdTraits<F32>::width, mValue );
+        std::copy( rhs, rhs + FpuSimdTraits<F32>::width, mValue );
     }
 
     inline ScalarVec4f &operator=( const F32 *rhs )
     {
-        std::copy( rhs, rhs + SimdTraits<F32>::width, mValue );
+        std::copy( rhs, rhs + FpuSimdTraits<F32>::width, mValue );
 
         return *this;
     }
@@ -69,7 +73,7 @@ public:
 
     void LoadUnaligned( const F32 *src )
     {
-        std::copy( src, src + SimdTraits<F32>::width, mValue );
+        std::copy( src, src + FpuSimdTraits<F32>::width, mValue );
     }
 
     void LoadAligned( const F32 *src )
@@ -79,7 +83,7 @@ public:
 
     void StoreUnaligned( F32 *dest ) const
     {
-        std::copy( mValue, mValue + SimdTraits<F32>::width, dest );
+        std::copy( mValue, mValue + FpuSimdTraits<F32>::width, dest );
     }
 
     void StoreAligned( F32 *dest ) const

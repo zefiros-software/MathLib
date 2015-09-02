@@ -4,20 +4,23 @@
 
 #include "math/types.h"
 
+#include "math/simd/simdBaseTraits.h"
 #include "math/simd/simdVectorBase.h"
 
-#include "math/simd/scalarFallback/scalar_vec4b.h"
+#include "math/simd/fpu/scalar_vec4b.h"
 
 class ScalarVec4d;
 
 template <>
-struct SimdTraits<F64>
+struct FpuSimdTraits<F64> : public BaseSimdTraits<F64>
 {
-    typedef F64 value_type;
+    
     typedef ScalarVec4d vec_type;
     typedef ScalarVec4b bool_type;
     static const size_t width = 4;
     static const size_t bytesPerValue = 8;
+    static const size_t registers = 1;
+    static const size_t alignment = 16;
 };
 
 class ScalarVec4d : public SimdVectorBase< ScalarVec4d, F64> 
@@ -35,6 +38,7 @@ public:
         }
     }
     
+    /*
     inline ScalarVec4d( F64 x, F64 y, F64 z, F64 w ) 
     {
         mValue[0] = x;
@@ -42,6 +46,7 @@ public:
         mValue[2] = z;
         mValue[3] = w;
     }
+    */
     
     inline ScalarVec4d( const F64 *rhs ) 
     {
@@ -67,7 +72,7 @@ public:
     
     void LoadUnaligned( const F64 *src )
     {
-        std::copy( src,src+SimdTraits<F64>::width, mValue );
+        std::copy( src,src+FpuSimdTraits<F64>::width, mValue );
     }
     
     void LoadAligned( const F64 *src )
@@ -77,7 +82,7 @@ public:
     
     void StoreUnaligned( F64 *dest ) const
     {
-        std::copy( mValue,mValue+SimdTraits<F64>::width, dest );
+        std::copy( mValue,mValue+FpuSimdTraits<F64>::width, dest );
     }
     
     void StoreAligned( F64 *dest ) const
