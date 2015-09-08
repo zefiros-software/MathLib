@@ -52,36 +52,35 @@ public:
 
     inline Matrix3(const Matrix3 &other)
     {
-        mRows[0] = other.mRows[0];
-        mRows[1] = other.mRows[1];
-        mRows[2] = other.mRows[2];
+        this->mRows[0] = other.mRows[0];
+        this->mRows[1] = other.mRows[1];
+        this->mRows[2] = other.mRows[2];
     }
 
     inline Matrix3(const Vec3 &v1, const Vec3 &v2, const Vec3 &v3)
     {
-        mRows[0] = v1;
-        mRows[1] = v2;
-        mRows[2] = v3;
+        this->mRows[0] = v1;
+        this->mRows[1] = v2;
+        this->mRows[2] = v3;
     }
 
     inline Matrix3(const PrimaryMatrixBase< Real, 3, 3 > &other)
     {
-        mRows[0] = other.mRows[0];
-        mRows[1] = other.mRows[1];
-        mRows[2] = other.mRows[2];
+        this->mRows[0] = other.mRows[0];
+        this->mRows[1] = other.mRows[1];
+        this->mRows[2] = other.mRows[2];
     }
 
     inline void SetValues( const Real a11, const Real a12, const Real a13,
                            const Real a21, const Real a22, const Real a23,
                            const Real a31, const Real a32, const Real a33 )
     {
-        mRows[0].SetValues(a11, a12, a13);
-        mRows[1].SetValues(a21, a22, a23);
-        mRows[2].SetValues(a31, a32, a33);
+        this->mRows[0].SetValues(a11, a12, a13);
+        this->mRows[1].SetValues(a21, a22, a23);
+        this->mRows[2].SetValues(a31, a32, a33);
     }
 
-    
-
+   
     /*
     inline void SetEuler(const Real yaw, const Real pitch, const Real roll)
     {

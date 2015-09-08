@@ -33,9 +33,9 @@ public:
         {
             for (U32 j = 0; j < COLS; ++j)
             {
-                mRows[i][j] = m.mRows[i][j];
+                this->mRows[i][j] = m.mRows[i][j];
             }
-        }
+        };
 
         return *this;
     }
@@ -46,7 +46,7 @@ public:
         {
             for (U32 j = 0; j < COLS; ++j)
             {
-                m.DotColumn(j, mRows[i]);
+                m.DotColumn(j, this->mRows[i]);
             }
         }
 
@@ -59,7 +59,7 @@ public:
         {
             for (U32 j = 0; j < COLS; ++j)
             {
-                mRows[i][j] += m.mRows[i][j];
+                this->mRows[i][j] += m.mRows[i][j];
             }
         }
 
@@ -72,7 +72,7 @@ public:
         {
             for (U32 j = 0; j < COLS; ++j)
             {
-                mRows[i][j] -= m.mRows[i][j];
+                this->mRows[i][j] -= m.mRows[i][j];
             }
         }
 
@@ -87,7 +87,7 @@ public:
         {
             for (U32 j = 0; j < COLS; ++j)
             {
-                result &= mRows == m.mRows;
+                result &= this->mRows == m.mRows;
             }
         }
 
@@ -103,7 +103,7 @@ public:
     {
         for (U32 j = 0; j < COLS; ++j)
         {
-            mRows[j][column] = v[j];
+            this->mRows[j][column] = v[j];
         }
     }
 
@@ -113,7 +113,7 @@ public:
 
         for (U32 j = 0; j < COLS; ++j)
         {
-            newVec[j] = mRows[j][column];
+            newVec[j] = this->mRows[j][column];
         }
 
         return newVec;
@@ -121,12 +121,12 @@ public:
 
     inline void SetRow(const U8 row, const PrimaryVectorBase< TYPE, COLS > &v)
     {
-        mValues[row] = v;
+        this->mRows[row] = v;
     }
 
     inline PrimaryVectorBase< TYPE, COLS > GetRow(const U8 row) const
     {
-        return mValues[row];
+        return this->mRows[row];
     }
 
     inline PrimaryMatrixBase< TYPE, ROWS, COLS > Scale(const PrimaryVectorBase< TYPE, COLS > &v) const
@@ -135,7 +135,7 @@ public:
 
         for (U32 i = 0; i < ROWS; ++i)
         {
-            newMat.SetRow( mRows[i] * v );
+            newMat.SetRow( this->mRows[i] * v );
         }
 
         return newMat;
@@ -147,7 +147,7 @@ public:
 
         for (U32 i = 0; i < ROWS; ++i)
         {
-            transpMat.SetColumn(i, mRows[i]);
+            transpMat.SetColumn(i, this->mRows[i]);
         }
 
         return transpMat;
@@ -159,7 +159,7 @@ public:
 
         for (U32 i = 0; i < ROWS; ++i)
         {
-            transpMat.SetRow(i, mRows[i].Absolute() );
+            transpMat.SetRow(i, this->mRows[i].Absolute() );
         }
         
         return newMat;
@@ -188,7 +188,7 @@ public:
                     continue;
                 }
 
-                localMat[irow][jcol] = mValues[i][j];
+                localMat[irow][jcol] = this->mRows[i][j];
 
                 jcol++;
             }
@@ -240,11 +240,11 @@ public:
             {
                 if (i == j)
                 {
-                    mValues[i][j] = 1.0;
+                    this->mRows[i][j] = 1.0;
                 }
                 else
                 {
-                    mValues[i][j] = 0.0;
+                    this->mRows[i][j] = 0.0;
                 }    
             }
         }
@@ -258,7 +258,7 @@ public:
 
         for (U32 i = 0; i < ROWS; ++i)
         {
-            result += mValues[i][0] * GetCofactor(i, 0);
+            result += this->mRows[i][0] * GetCofactor(i, 0);
         }
 
         return result;
@@ -294,7 +294,7 @@ private:
 
         for (U32 i = 0; i < ROWS; ++i)
         {
-            mValues[i][tcol] * v[tcol];
+            this->mRows[i][tcol] * v[tcol];
         }
 
         return result;
