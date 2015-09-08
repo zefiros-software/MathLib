@@ -29,7 +29,7 @@
 #define __VEC2I_H__
 
 #include "math/config.h"
-#include "math/generic/PrimaryVectorBase.h"
+#include "math/generic/primaryVectorBase.h"
 
 BEGIN_MATH_NAMESPACE
 
