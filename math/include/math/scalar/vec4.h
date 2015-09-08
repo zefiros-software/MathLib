@@ -31,7 +31,7 @@
 #include "math/config.h"
 #include "math/scalar/vec2.h"
 #include "math/scalar/vec3.h"
-#include "math/scalar/floatingPointVector.h"
+#include "math/generic/floatingPointVector.h"
 
 BEGIN_MATH_NAMESPACE
 

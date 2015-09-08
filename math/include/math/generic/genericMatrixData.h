@@ -6,7 +6,7 @@
 #include "math/config.h"
 #include "math/scalar/mathf.h"
 
-#include "math/scalar/primaryVectorBase.h"
+#include "math/generic/primaryVectorBase.h"
 
 #include <assert.h>
 
@@ -29,7 +29,7 @@ public:
 
     union 
     {
-        PrimaryVectorBase< 2, 2 > mRows[ROWS];
+        PrimaryVectorBase< TYPE, 2 > mRows[2];
         struct { TYPE _11, _12, 
                       _21, _22; };
     };
@@ -42,7 +42,7 @@ public:
 
     union 
     {
-        PrimaryVectorBase< 3, 3 > mRows[ROWS];
+        PrimaryVectorBase< TYPE, 3 > mRows[3];
         struct { TYPE _11, _12, _13,
                       _21, _22, _23,
                       _31, _32, _33; };
@@ -56,7 +56,7 @@ public:
 
     union 
     {
-        PrimaryVectorBase< 3, 3 > mRows[ROWS];
+        PrimaryVectorBase< TYPE, 4 > mRows[3];
         struct { TYPE _11, _12, _13, _14,
                       _21, _22, _23, _24,
                       _31, _32, _33, _34,

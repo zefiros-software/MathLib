@@ -185,8 +185,8 @@ inline AvxVec4d SIMD_Select( const AvxVec4d_b &sel, const AvxVec4d &lhs, const A
 
 inline F64 SIMD_Hadd( const AvxVec4d &lhs )
 {
-    const __m128 x128 = _mm_add_pd(_mm256_extractf128_pd(lhs, 1), _mm256_castpd256_pd128(lhs));
-    const __m128 x64 = _mm_add_sd( x128, _mm_shuffle_pd(x128, x128, 0x3 ) );
+    const __m128d x128 = _mm_add_pd(_mm256_extractf128_pd(lhs, 1), _mm256_castpd256_pd128(lhs));
+    const __m128d x64 = _mm_add_sd( x128, _mm_shuffle_pd(x128, x128, 0x3 ) );
     return _mm_cvtsd_f64(x64);
 }
 

@@ -11,9 +11,10 @@
 #include <vector>
 #include <array>
 #include <string>
+#include <bitset>
 
 #ifdef _WIN32
-#define GetCpuID _cpuid
+#define GetCpuID __cpuid
 #else
 #ifndef __LP64__
 #error currently cpuid is only supported for x86_64 platforms!
@@ -65,42 +66,42 @@ public:
         DefineVendor();
     }
 
-    bool SupportsSSE() const
+    inline bool SupportsSSE() const
     {
         return mFunctionLevel1_DINT[25]; 
     }	
     
-    bool SupportsSSE2() const
+    inline bool SupportsSSE2() const
     {
         return mFunctionLevel1_DINT[26]; 
     }	
     
-    bool SupportsSSE3() const
+    inline bool SupportsSSE3() const
     {
         return mFunctionLevel1_CINT[9]; 
     }	
 
-    bool SupportsSSE4_1() const
+    inline bool SupportsSSE4_1() const
     {
         return mFunctionLevel1_CINT[19]; 
     }	
     
-    bool SupportsSSE4_2() const
+    inline bool SupportsSSE4_2() const
     {
         return mFunctionLevel1_CINT[20]; 
     }
     
-    bool SupportsAVX() const
+    inline bool SupportsAVX() const
     {
         return mFunctionLevel1_CINT[28]; 
     }
 
-    bool SupportsFMA() const
+    inline bool SupportsFMA() const
     {
         return mFunctionLevel1_CINT[12]; 
     }
     
-    U32 SIMDLevel() const
+    inline U32 SIMDLevel() const
     {
         U32 level = 0;
         
@@ -115,7 +116,7 @@ public:
         return level;
     }
     
-    const std::string &Vendor() const
+    inline const std::string &Vendor() const
     {
         return mVendor;
     }

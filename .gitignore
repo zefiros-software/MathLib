@@ -12,3 +12,4 @@ build/
 test/lib/
 *.orig
 documentation/out/
+math/.vs/*

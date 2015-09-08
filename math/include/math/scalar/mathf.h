@@ -318,7 +318,7 @@ namespace Mathf
     template< typename tT >
     inline tT Rcp( const tT &_a )
     {
-        return 1.0 / _a;
+        return (tT)1.0 / _a;
     }
 }
 
