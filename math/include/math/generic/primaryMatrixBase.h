@@ -159,7 +159,7 @@ public:
 
         for (U32 i = 0; i < ROWS; ++i)
         {
-            transpMat.SetRow(i, this->mRows[i].Absolute() );
+            newMat.SetRow(i, this->mRows[i].Absolute() );
         }
         
         return newMat;
