@@ -13,3 +13,4 @@ test/lib/
 *.orig
 documentation/out/
 math/.vs/*
+math/.vs/*
