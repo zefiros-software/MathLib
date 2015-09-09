@@ -2,23 +2,21 @@
 #ifndef __VECTORIZE_H__
 #define __VECTORIZE_H__
 
+//align to cache line
+#define SIMD_ALIGNMENT 64
 
-
-
-/*
 //
 //define simd widths and support
 //
-
-//align to cache line
-#define SIMD_ALIGNMENT 64
 
 //based on the really nice article: http://jmabille.github.io/blog/2014/10/25/writing-c-plus-plus-wrappers-for-simd-intrinsics-5/
 #ifdef _VECTORIZE
 
 //
-// Read what instruction set we have available
+// Read what static instruction set we have available
 //
+
+#ifdef _PREBAKE_SIMD_INSTRUCTION_SET
 
 #ifndef SIMD_INSTRUCTION_SET
 
@@ -89,6 +87,7 @@
 #elif SIMD_INSTRUCTION_SET == 1
 #include <xmmintrin.h>
 #endif // SIMD_INSTRUCTION_SET
-*/
+
+#endif //_PREBAKE_SIMD_INSTRUCTION_SET
 
 #endif // __VECTORIZE_H__
