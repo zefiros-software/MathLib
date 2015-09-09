@@ -3,7 +3,7 @@
 #define __FP_VECTOR_H__
 
 #include "math/config.h"
-#include "math/scalar/primaryVectorBase.h"
+#include "math/generic/primaryVectorBase.h"
 
 BEGIN_MATH_NAMESPACE
 

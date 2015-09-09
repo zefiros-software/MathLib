@@ -37,7 +37,15 @@
 
 #include <assert.h>
 
-BEGIN_MATH_NAMESPACE
+
+class Matrix4 : public PrimaryMatrixBase< Real, 4, 4 >
+{
+
+
+
+};
+
+/*
 
 class Vec3;
 class Quaternion;
@@ -369,5 +377,7 @@ inline Vec4 operator*( const Matrix4 &m, const Vec4 &v )
 {
     return Vec4( m.mValues[0].Dot( v ), m.mValues[1].Dot( v ), m.mValues[2].Dot( v ), m.mValues[3].Dot( v ) );
 }
+
+*/
 
 #endif

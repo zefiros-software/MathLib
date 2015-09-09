@@ -12,3 +12,9 @@ build/
 test/lib/
 *.orig
 documentation/out/
+math/.vs/*
+math/.vs/*
+math/include/math/simd/vectorize_BACKUP_22292.h
+math/include/math/simd/vectorize_BASE_22292.h
+math/include/math/simd/vectorize_LOCAL_22292.h
+math/include/math/simd/vectorize_REMOTE_22292.h

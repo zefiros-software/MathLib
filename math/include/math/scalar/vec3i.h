@@ -30,7 +30,7 @@
 
 #include "math/config.h"
 #include "math/scalar/vec2i.h"
-#include "math/scalar/primaryVectorBase.h"
+#include "math/generic/primaryVectorBase.h"
 
 BEGIN_MATH_NAMESPACE
 

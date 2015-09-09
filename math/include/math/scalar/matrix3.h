@@ -31,11 +31,89 @@
 #include "math/types.h"
 #include "math/config.h"
 #include "math/scalar/vec3.h"
+#include "math/generic/primaryMatrixBase.h"
 
 #include <assert.h>
 
-BEGIN_MATH_NAMESPACE
+class Matrix3 : public PrimaryMatrixBase< Real, 3, 3 >
+{
+public:
 
+    inline Matrix3()
+    {
+    }
+
+    inline Matrix3( const Real a11, const Real a12, const Real a13,
+                    const Real a21, const Real a22, const Real a23,
+                    const Real a31, const Real a32, const Real a33 )
+    {
+        SetValues(a11, a12, a13, a21, a22, a23, a31, a32, a33);
+    }
+
+    inline Matrix3(const Matrix3 &other)
+    {
+        this->mRows[0] = other.mRows[0];
+        this->mRows[1] = other.mRows[1];
+        this->mRows[2] = other.mRows[2];
+    }
+
+    inline Matrix3(const Vec3 &v1, const Vec3 &v2, const Vec3 &v3)
+    {
+        this->mRows[0] = v1;
+        this->mRows[1] = v2;
+        this->mRows[2] = v3;
+    }
+
+    inline Matrix3(const PrimaryMatrixBase< Real, 3, 3 > &other)
+    {
+        this->mRows[0] = other.mRows[0];
+        this->mRows[1] = other.mRows[1];
+        this->mRows[2] = other.mRows[2];
+    }
+
+    inline void SetValues( const Real a11, const Real a12, const Real a13,
+                           const Real a21, const Real a22, const Real a23,
+                           const Real a31, const Real a32, const Real a33 )
+    {
+        this->mRows[0].SetValues(a11, a12, a13);
+        this->mRows[1].SetValues(a21, a22, a23);
+        this->mRows[2].SetValues(a31, a32, a33);
+    }
+
+   
+    /*
+    inline void SetEuler(const Real yaw, const Real pitch, const Real roll)
+    {
+        Real cy(Mathf::Cos(yaw));
+        Real cp(Mathf::Cos(pitch));
+        Real cr(Mathf::Cos(roll));
+
+        Real sy(Mathf::Sin(yaw));
+        Real sp(Mathf::Sin(pitch));
+        Real sr(Mathf::Sin(roll));
+
+
+        Real cc = cr * cy;
+        Real cs = cr * sy;
+        Real sc = sr * cy;
+        Real ss = sr * sy;
+
+        SetValue( cp * cy,
+                  sp * sc - cs, 
+                  sp * cc + ss, 
+                  cp * sy, 
+                  sp * ss + cc, 
+                  sp * cs - sc, 
+                 -sp, 
+                  cp * sr, 
+                  cp * cr );
+    }
+    */
+
+};
+
+
+/*
 class Quaternion;
 
 class Matrix3
@@ -309,5 +387,7 @@ inline Vec3 operator*( const Matrix3 &m, const Vec3 &v )
 {
     return Vec3( m.mValues[0].Dot( v ), m.mValues[1].Dot( v ), m.mValues[2].Dot( v ) );
 }
+
+*/
 
 #endif

@@ -3,7 +3,7 @@
 #define __INTEGER_VECTOR_H__
 
 #include "math/config.h"
-#include "math/scalar/genericVectorData.h"
+#include "math/generic/genericVectorData.h"
 
 template< class TYPE, U32 N >
 class PrimaryVectorBase : public GenericVectorData< TYPE, N >

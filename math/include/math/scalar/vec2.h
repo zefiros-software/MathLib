@@ -29,7 +29,7 @@
 #define __VEC2_H__
 
 #include "math/config.h"
-#include "math/scalar/floatingPointVector.h"
+#include "math/generic/floatingPointVector.h"
 
 BEGIN_MATH_NAMESPACE
 
