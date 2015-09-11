@@ -5,7 +5,6 @@
 //align to cache line
 #define SIMD_ALIGNMENT 64
 
-<<<<<<< HEAD
 //
 //define simd widths and support
 //
@@ -90,9 +89,5 @@
 #endif // SIMD_INSTRUCTION_SET
 
 #endif //_PREBAKE_SIMD_INSTRUCTION_SET
-=======
-
-
->>>>>>> d6b8e4a21458d02783270e340ec128ed89123115
 
 #endif // __VECTORIZE_H__
