@@ -286,20 +286,87 @@ public:
         return mat;
     }
 
-private:
-
     inline TYPE DotColumn( U32 tcol, const PrimaryVectorBase< TYPE, ROWS > &v) const
     {
         TYPE result = 0;
 
         for (U32 i = 0; i < ROWS; ++i)
         {
-            this->mRows[i][tcol] * v[tcol];
+            result += this->mRows[i][tcol] * v[tcol];
         }
 
         return result;
     }
 };
+
+template< class TYPE, U32 ROWS, U32 COLS >
+inline PrimaryMatrixBase< TYPE, ROWS, COLS > operator+( 
+       const PrimaryMatrixBase< TYPE, ROWS, COLS > &m1, 
+       const PrimaryMatrixBase< TYPE, ROWS, COLS > &m2 )
+{
+    PrimaryMatrixBase< TYPE, ROWS, COLS > newMat;
+    
+    for (U32 i = 0; i < ROWS; ++i)
+    {
+        for (U32 j = 0; j < COLS; ++j)
+        {
+            newMat[i][j] = m1.mRows[i][j] += m2.mRows[i][j];
+        }
+    }
+    
+    return newMat;
+}
+
+template< class TYPE, U32 ROWS, U32 COLS >
+inline PrimaryMatrixBase< TYPE, ROWS, COLS > operator-( 
+        const PrimaryMatrixBase< TYPE, ROWS, COLS > &m1, 
+        const PrimaryMatrixBase< TYPE, ROWS, COLS > &m2 )
+{
+    PrimaryMatrixBase< TYPE, ROWS, COLS > newMat;
+    
+    for (U32 i = 0; i < ROWS; ++i)
+    {
+        for (U32 j = 0; j < COLS; ++j)
+        {
+           newMat[i][j] = m1.mRows[i][j] -= m2.mRows[i][j];
+        }
+    }
+    
+    return newMat;
+}
+
+template< class TYPE, U32 ROWS, U32 COLS >
+inline PrimaryMatrixBase< TYPE, ROWS, COLS > operator*( 
+        const PrimaryMatrixBase< TYPE, ROWS, COLS > &m1, 
+        const PrimaryMatrixBase< TYPE, ROWS, COLS > &m2 )
+{
+    PrimaryMatrixBase< TYPE, ROWS, COLS > newMat;
+    
+    for (U32 i = 0; i < ROWS; ++i)
+    {
+        for (U32 j = 0; j < COLS; ++j)
+        {
+            newMat[i][j] = m2.DotColumn(j, m1.mRows[i]);
+        }
+    }
+    
+    return newMat;
+}
+
+template< class TYPE, U32 ROWS, U32 COLS >
+inline PrimaryVectorBase< TYPE, ROWS > operator*( 
+        const PrimaryMatrixBase< TYPE, ROWS, COLS > &m, 
+        const PrimaryVectorBase< TYPE, COLS > &v )
+{
+    PrimaryVectorBase< TYPE, ROWS > newVec;
+    
+    for (U32 i = 0; i < ROWS; ++i)
+    {
+        newVec[i] = m.mRows[i].Dot( v );   
+    }
+    
+    return newVec;
+}
 
 END_MATH_NAMESPACE
 

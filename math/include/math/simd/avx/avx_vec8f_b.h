@@ -75,8 +75,7 @@ public:
                 ) );  
         
     }
-    
-    /*
+   
     template< U32 rotate >
     inline void LoadMask( U64 mask ) 
     {
@@ -101,7 +100,6 @@ public:
                 -(S32)( ( mask >> ( 56 + rot3 + offset2 ) ) & 0x1 ) 
                 ) );      
     }
-    */
     
     // TODO: MIGHT CAUSE PROBLEMS WITH MANUAL LOADED VALS
     inline U64 StoreMask() const
