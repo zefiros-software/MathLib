@@ -84,10 +84,12 @@ public:
         _mm256_store_ps( dest, mValue );
     }
 
-    inline void RotateOne( bool permute128 )
+    inline void RotateOne( U32 rotation )
     {
         const S32 select = ( 1 ) | ( 2 << 2 ) | ( 3 << 4 ) | ( 0 << 6 );
         AvxVec8f permute = _mm256_permute_ps( mValue, select );
+
+        bool permute128 = ( rotation == 3 || rotation == 7 );
 
         if ( permute128 )
         {
@@ -97,6 +99,17 @@ public:
         {
             mValue = permute;
         }
+    }
+    
+    static inline U32 RotateIndex( U32 rotation, U32 index )
+    {
+        const U32 registerOffset = 4;
+        const U32 shift = rotation / registerOffset;
+        const U32 offset = index / registerOffset;
+        
+        const U32 rotatedIndex = ( ( index + rotation ) & ( registerOffset - 1 ) ) + ( ( shift ^ offset ) * registerOffset );
+    
+        return rotatedIndex;
     }
     
     inline AvxVec8f RoundToNearest() const

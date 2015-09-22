@@ -90,7 +90,7 @@ public:
         StoreUnaligned( dest );
     }
     
-    void RotateOne( bool permute128  )
+    void RotateOne( U32 rotation  )
     {
         F64 temp = mValue[0];
         
@@ -98,6 +98,15 @@ public:
         mValue[1] = mValue[2];
         mValue[2] = mValue[3];
         mValue[3] = temp;
+    }
+    
+    static inline U32 RotateIndex( U32 rotation, U32 index )
+    {
+        const U32 registerOffset = 4;
+        
+        const U32 rotatedIndex = ( ( index + rotation ) & ( registerOffset - 1 ) );
+    
+        return rotatedIndex;
     }
     
     inline ScalarVec4d RoundToNearest() const

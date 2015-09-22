@@ -53,6 +53,18 @@
 #endif // _VECTORIZE
 
 //
+// MAX INSTRUCTION LEVEL
+//
+#ifdef _SIMD_MAX_INSTRUCTION_LEVEL
+#if SIMD_INSTRUCTION_SET > _SIMD_MAX_INSTRUCTION_LEVEL
+
+#define SIMD_INSTRUCTION_SET _SIMD_MAX_INSTRUCTION_LEVEL
+
+#endif //
+#endif // SIMD_MAX_INSTRUCTION_LEVEL
+
+
+//
 // Based on the set make defines and include
 //
 

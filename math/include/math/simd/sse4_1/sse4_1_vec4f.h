@@ -82,10 +82,19 @@ public:
         _mm_store_ps( dest, mValue );
     }
 
-    void RotateOne( bool permute128 )
+    void RotateOne( U32 rotation )
     {
         const S32 select = ( 1 ) | ( 2 << 2 ) | ( 3 << 4 ) | ( 0 << 6 );
         mValue = _mm_shuffle_ps( mValue, mValue, select );
+    }
+    
+    static inline U32 RotateIndex( U32 rotation, U32 index )
+    {
+        const U32 registerOffset = 4;
+        
+        const U32 rotatedIndex = ( ( index + rotation ) & ( registerOffset - 1 ) );
+    
+        return rotatedIndex;
     }
 
     inline SSE41Vec4f RoundToNearest() const
