@@ -116,6 +116,11 @@ public:
     {
         mValue = _mm256_load_ps( src );
     }
+    
+    bool IsEmpty() const
+    {
+        return _mm256_testz_ps( mValue, mValue) == 1;
+    }
 
 private:
 

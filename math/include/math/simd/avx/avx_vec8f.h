@@ -31,6 +31,13 @@ struct AvxSimdTraits<F32> : public BaseSimdTraits<F32>
 class AvxVec8f : public SimdVectorBase< AvxVec8f, F32>
 {
 public:
+    
+    union EasyConvert
+    {
+        F32 f;
+        S32 i;
+        U32 u;
+    };
 
     AvxVec8f()
     {}
@@ -63,7 +70,7 @@ public:
     {
         return mValue;
     }
-
+    
     inline void LoadUnaligned( const F32 *src )
     {
         mValue =  _mm256_loadu_ps( src );
@@ -117,6 +124,18 @@ public:
         return _mm256_round_ps( mValue, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC );
         
         //return _mm256_round_ps( mValue + AvxVec8f( 0.5 ), _MM_FROUND_TO_ZERO  );
+    }
+    
+    inline static AvxVec8f GetZero()
+    {
+        return _mm256_setzero_ps();
+    }
+    
+    inline static AvxVec8f GetFullMask()
+    {
+        EasyConvert easyc;
+        easyc.u = 0xFFFFFFFF;
+        return _mm256_set1_ps( easyc.f );
     }
 
 private:
@@ -186,6 +205,22 @@ inline AvxVec8f_b operator>= ( const AvxVec8f &lhs, const AvxVec8f &rhs )
 {
     return _mm256_cmp_ps( lhs, rhs, 29 );
 }
+
+inline AvxVec8f operator&( const AvxVec8f &lhs, const AvxVec8f &rhs ) 
+{
+    return _mm256_and_ps( lhs, rhs );
+}
+
+inline AvxVec8f operator&( const AvxVec8f &lhs, const AvxVec8f_b &rhs ) 
+{
+    return _mm256_and_ps( lhs, rhs );
+}
+
+inline AvxVec8f operator&( const AvxVec8f_b &lhs, const AvxVec8f &rhs ) 
+{
+    return _mm256_and_ps( lhs, rhs );
+}
+
 
 //
 // Special
