@@ -52,8 +52,8 @@ struct SimdTraits< F64 > : public SSE4_1SimdTraits< F64 >
 
 #else
 
-#include "math/simd/scalarFallback/scalar_vec4f.h"
-#include "math/simd/scalarFallback/scalar_vec4d.h"
+#include "math/simd/fpu/scalar_vec4f.h"
+#include "math/simd/fpu/scalar_vec4d.h"
 
 template<>
 struct SimdTraits< F32 > : public FpuSimdTraits< F32 >

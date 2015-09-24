@@ -231,6 +231,11 @@ inline AvxVec8f SIMD_Sqrt( const AvxVec8f &lhs )
     return _mm256_sqrt_ps( lhs );
 }
 
+inline AvxVec8f SIMD_RcpSqrt( const AvxVec8f &lhs )
+{
+    return _mm256_rsqrt_ps( lhs );
+}
+
 inline AvxVec8f SIMD_Rcp( const AvxVec8f &lhs )
 {
     return 1.0 / lhs;
