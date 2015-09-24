@@ -294,9 +294,15 @@ inline ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 {
     ScalarVec4f newVec;
 
+    EasyConvert conv1, conv2, conv3;
+    
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] & rhs()[i];
+        conv1.f = lhs()[i];
+        conv2.f = rhs()[i];
+        conv3.u = conv1.u & conv2.u;
+        
+        newVec()[i] = conv3.f;
     }
 
     return newVec;
@@ -306,9 +312,15 @@ inline ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4b &rhs )
 {
     ScalarVec4f newVec;
 
+    EasyConvert conv1, conv2, conv3;
+
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] & rhs()[i];
+        conv1.f = lhs()[i];
+        conv2.f = rhs()[i];
+        conv3.u = conv1.u & conv2.u;
+        
+        newVec()[i] = conv3.f;
     }
 
     return newVec;
@@ -318,9 +330,15 @@ inline ScalarVec4f operator&( const ScalarVec4b &lhs, const ScalarVec4f &rhs )
 {
     ScalarVec4f newVec;
 
+    EasyConvert conv1, conv2, conv3;
+
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] & rhs()[i];
+        conv1.f = lhs()[i];
+        conv2.f = rhs()[i];
+        conv3.u = conv1.u & conv2.u;
+        
+        newVec()[i] = conv3.f;
     }
 
     return newVec;
