@@ -90,6 +90,11 @@ public:
         return mask;
     }
     
+    bool IsEmpty() const
+    {
+        return ( ( ( mValue[0] == mValue[1] ) == mValue[2] ) == mValue[3] ) == false;
+    }
+    
 private:
 
     bool mValue[4];

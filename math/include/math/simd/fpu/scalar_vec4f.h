@@ -28,6 +28,13 @@ class ScalarVec4f : public SimdVectorBase< ScalarVec4f, F32>
 {
 public:
 
+    union EasyConvert
+    {
+        F32 f;
+        S32 i;
+        U32 u;
+    };
+
     ScalarVec4f()
     {}
 
@@ -118,6 +125,33 @@ public:
         for ( U32 i = 0; i < 4; ++i )
         {
             newVec()[i] = (F32) Mathf::Rint( mValue[i] );
+        }
+    
+        return newVec;
+    }
+    
+    inline static AvxVec8f GetZero()
+    {
+        ScalarVec4f newVec;
+
+        for ( U32 i = 0; i < 4; ++i )
+        {
+            newVec()[i] = 0.0;
+        }
+    
+        return newVec;
+    }
+    
+    inline static AvxVec8f GetFullMask()
+    {
+        EasyConvert easyc;
+        easyc.u = 0xFFFFFFFF;
+        
+        ScalarVec4f newVec;
+
+        for ( U32 i = 0; i < 4; ++i )
+        {
+            newVec()[i] = easyc.f;
         }
     
         return newVec;
@@ -251,6 +285,42 @@ inline ScalarVec4b operator>= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
     for ( U32 i = 0; i < 4; ++i )
     {
         newVec()[i] = lhs()[i] >= rhs()[i];
+    }
+
+    return newVec;
+}
+
+inline ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4f &rhs ) 
+{
+    ScalarVec4f newVec;
+
+    for ( U32 i = 0; i < 4; ++i )
+    {
+        newVec()[i] = lhs()[i] & rhs()[i];
+    }
+
+    return newVec;
+}
+
+inline ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4b &rhs ) 
+{
+    ScalarVec4f newVec;
+
+    for ( U32 i = 0; i < 4; ++i )
+    {
+        newVec()[i] = lhs()[i] & rhs()[i];
+    }
+
+    return newVec;
+}
+
+inline AvxVec8f operator&( const ScalarVec4b &lhs, const ScalarVec4f &rhs ) 
+{
+    ScalarVec4f newVec;
+
+    for ( U32 i = 0; i < 4; ++i )
+    {
+        newVec()[i] = lhs()[i] & rhs()[i];
     }
 
     return newVec;

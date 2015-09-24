@@ -31,6 +31,13 @@ class SSE41Vec4f : public SimdVectorBase< SSE41Vec4f, F32>
 {
 public:
 
+    union EasyConvert
+    {
+        F32 f;
+        S32 i;
+        U32 u;
+    };
+
     SSE41Vec4f()
     {}
 
