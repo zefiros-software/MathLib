@@ -130,7 +130,7 @@ public:
         return newVec;
     }
     
-    inline static AvxVec8f GetZero()
+    inline static ScalarVec4f GetZero()
     {
         ScalarVec4f newVec;
 
@@ -142,7 +142,7 @@ public:
         return newVec;
     }
     
-    inline static AvxVec8f GetFullMask()
+    inline static ScalarVec4f GetFullMask()
     {
         EasyConvert easyc;
         easyc.u = 0xFFFFFFFF;
@@ -314,7 +314,7 @@ inline ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4b &rhs )
     return newVec;
 }
 
-inline AvxVec8f operator&( const ScalarVec4b &lhs, const ScalarVec4f &rhs ) 
+inline ScalarVec4f operator&( const ScalarVec4b &lhs, const ScalarVec4f &rhs ) 
 {
     ScalarVec4f newVec;
 
