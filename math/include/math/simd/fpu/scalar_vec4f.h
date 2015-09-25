@@ -294,7 +294,12 @@ inline ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 {
     ScalarVec4f newVec;
 
-    EasyConvert conv1, conv2, conv3;
+    union EasyConvert
+    {
+        F32 f;
+        S32 i;
+        U32 u;
+    } conv1, conv2, conv3;
     
     for ( U32 i = 0; i < 4; ++i )
     {
@@ -312,7 +317,12 @@ inline ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4b &rhs )
 {
     ScalarVec4f newVec;
 
-    EasyConvert conv1, conv2, conv3;
+    union EasyConvert
+    {
+        F32 f;
+        S32 i;
+        U32 u;
+    } conv1, conv2, conv3;
 
     for ( U32 i = 0; i < 4; ++i )
     {
@@ -330,7 +340,12 @@ inline ScalarVec4f operator&( const ScalarVec4b &lhs, const ScalarVec4f &rhs )
 {
     ScalarVec4f newVec;
 
-    EasyConvert conv1, conv2, conv3;
+    union EasyConvert
+    {
+        F32 f;
+        S32 i;
+        U32 u;
+    } conv1, conv2, conv3;
 
     for ( U32 i = 0; i < 4; ++i )
     {

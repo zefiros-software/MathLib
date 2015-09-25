@@ -126,6 +126,25 @@ public:
         //return _mm256_round_ps( mValue + AvxVec8f( 0.5 ), _MM_FROUND_TO_ZERO  );
     }
     
+    template< U32 index >
+    inline AvxVec8f BroadCastIndex() const
+    {
+        __m256 temp;
+        
+        if ( index >= 4 )
+        {
+            temp = _mm256_permute2f128_ps( mValue, mValue, 1 );
+        }
+        else
+        {
+            temp = mValue;
+        }
+        const S32 selector = index % 4;
+        const S32 select = ( selector ) | ( selector << 2 ) | ( selector << 4 ) | ( selector << 6 );
+        
+        return _mm256_shuffle_ps( temp, temp, select );
+    }
+    
     inline static AvxVec8f GetZero()
     {
         return _mm256_setzero_ps();

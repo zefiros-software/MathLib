@@ -2,8 +2,8 @@
 #ifndef __VECTORIZE_H__
 #define __VECTORIZE_H__
 
-//align to cache line
-#define SIMD_ALIGNMENT 64
+//align to half cache line
+#define SIMD_ALIGNMENT 32
 
 //
 //define simd widths and support
