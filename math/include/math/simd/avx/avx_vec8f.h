@@ -242,6 +242,29 @@ inline AvxVec8f operator&( const AvxVec8f_b &lhs, const AvxVec8f &rhs )
 
 
 //
+// FMA
+//
+
+inline AvxVec8f FMA_ADD( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &add )
+{
+#if SIMD_INSTRUCTION_SET >= 7
+    return _mm256_fmadd_ps( mul1, mul2, add );
+#else
+    return ( mul1 * mul2 ) + add;
+#endif
+}
+
+inline AvxVec8f FMA_SUB( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &sub )
+{
+#if SIMD_INSTRUCTION_SET >= 7
+    return _mm256_fmsub_ps( mul1, mul2, sub );
+#else
+    return ( mul1 * mul2 ) - sub;
+#endif
+}
+
+
+//
 // Special
 //
 
@@ -252,7 +275,12 @@ inline AvxVec8f SIMD_Sqrt( const AvxVec8f &lhs )
 
 inline AvxVec8f SIMD_RcpSqrt( const AvxVec8f &lhs )
 {
-    return _mm256_rsqrt_ps( lhs );
+    __m256 temp = _mm256_rsqrt_ps( lhs );
+    
+    // newton rhapson cycle
+    __m256 temp2 = _mm256_mul_ps( _mm256_sub_ps( _mm256_set1_ps(3.0f), _mm256_mul_ps(_mm256_mul_ps(temp, temp), lhs) ), temp );
+    
+    return _mm256_mul_ps( _mm256_set1_ps(0.5f), temp2 );
 }
 
 inline AvxVec8f SIMD_Rcp( const AvxVec8f &lhs )
@@ -274,22 +302,5 @@ inline F32 SIMD_Hadd( const AvxVec8f &lhs )
     return _mm_cvtss_f32(x32);
 }
 
-inline AvxVec8f FMA_ADD( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &add )
-{
-#if SIMD_INSTRUCTION_SET >= 7
-    return _mm256_fmadd_ps( mul1, mul2, add );
-#else
-    return ( mul1 * mul2 ) + add;
-#endif
-}
-
-inline AvxVec8f FMA_SUB( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &sub )
-{
-#if SIMD_INSTRUCTION_SET >= 7
-    return _mm256_fmsub_ps( mul1, mul2, sub );
-#else
-    return ( mul1 * mul2 ) - sub;
-#endif
-}
 
 #endif
