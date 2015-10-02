@@ -91,6 +91,7 @@ public:
         _mm256_store_ps( dest, mValue );
     }
 
+    /*
     inline void RotateOne( U32 rotation )
     {
         const S32 select = ( 1 ) | ( 2 << 2 ) | ( 3 << 4 ) | ( 0 << 6 );
@@ -118,6 +119,7 @@ public:
     
         return rotatedIndex;
     }
+    */
     
     inline AvxVec8f RoundToNearest() const
     {
@@ -133,12 +135,14 @@ public:
         
         if ( index >= 4 )
         {
-            temp = _mm256_permute2f128_ps( mValue, mValue, 1 );
+            
+            temp = _mm256_permute2f128_ps( mValue, mValue, 1 | ( 1 << 4 ) );
         }
         else
         {
-            temp = mValue;
+            temp = _mm256_permute2f128_ps( mValue, mValue, 0 );
         }
+        
         const S32 selector = index % 4;
         const S32 select = ( selector ) | ( selector << 2 ) | ( selector << 4 ) | ( selector << 6 );
         

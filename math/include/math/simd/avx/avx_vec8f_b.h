@@ -17,6 +17,13 @@ class AvxVec8f_b : public SimdVectorBoolBase< AvxVec8f_b >
 {
 public:
 
+    union EasyConv
+    {
+        U32 u;
+        S32 i;
+        F32 f;
+    };
+
     AvxVec8f_b()
     {}
 
@@ -51,6 +58,37 @@ public:
         return mValue;
     }
     
+    inline void LoadBinaryMask( U8 mask )
+    {
+        EasyConv conv1;
+        conv1.u = 0xFFFFFFFF;
+        
+        /*
+        mValue = _mm256_castsi256_ps( _mm256_setr_epi32(  
+                                      conv1.i * ( ( mask >> 0 ) & 0x1 ),
+                                      conv1.i * ( ( mask >> 1 ) & 0x1 ),
+                                      conv1.i * ( ( mask >> 2 ) & 0x1 ),
+                                      conv1.i * ( ( mask >> 3 ) & 0x1 ),
+                                      conv1.i * ( ( mask >> 4 ) & 0x1 ),
+                                      conv1.i * ( ( mask >> 5 ) & 0x1 ),
+                                      conv1.i * ( ( mask >> 6 ) & 0x1 ),
+                                      conv1.i * ( ( mask >> 7 ) & 0x1 )  
+                                    ) );
+        */
+        
+        mValue = _mm256_castsi256_ps( _mm256_setr_epi32(  
+                                      -(S32)( ( mask >> 0 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 1 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 2 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 3 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 4 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 5 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 6 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 7 ) & 0x1 )  
+                                    ) );
+    } 
+    
+    /*
     inline void LoadMask( U32 rotate, U64 mask ) 
     {
         U32 shift = rotate >> 2;
@@ -100,6 +138,7 @@ public:
                 -(S32)( ( mask >> ( 56 + rot3 + offset2 ) ) & 0x1 ) 
                 ) );      
     }
+    */
     
     // TODO: MIGHT CAUSE PROBLEMS WITH MANUAL LOADED VALS
     inline U64 StoreMask() const
