@@ -306,5 +306,27 @@ inline F32 SIMD_Hadd( const AvxVec8f &lhs )
     return _mm_cvtss_f32(x32);
 }
 
+template< U32 index >
+inline AvxVec8f SIMD_HaddToIndex( const AvxVec8f &lhs )
+{
+    const __m128 x128 = _mm_add_ps(_mm256_extractf128_ps(lhs, 1), _mm256_castps256_ps128(lhs));
+    const __m128 x64 = _mm_add_ps(x128, _mm_movehl_ps(x128, x128));
+    const __m128 x32 = _mm_add_ps(_mm_shuffle_ps(x64,x64,0), _mm_shuffle_ps(x64, x64, 0x55));
+ 
+    // Two cases, either target is hi register or target is low register
+    __m256 zero = _mm256_setzero_ps();
+        
+    const U32 controll = 1 << ( index % 4 );
+    __m256 result = _mm256_blend_ps( zero, _mm256_castps128_ps256(x32), controll );
+    
+    if ( index >= 4 )
+    {
+        //switch halves
+        result = _mm256_permute2f128_ps( result, result, 1 );
+    }
+    
+    return result;
+}
+
 
 #endif
