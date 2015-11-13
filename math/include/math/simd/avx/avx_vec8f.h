@@ -45,14 +45,13 @@ public:
     inline AvxVec8f( F32 val ) : mValue( _mm256_set1_ps( val ) )
     {
     }
-
-    /*
-    inline AvxVec8f( F32 v0, F32 v1, F32 v2, F32 v3,
-                     F32 v4, F32 v5, F32 v6, F32 v7 ) :
-        mValue( _mm256_setr_ps( v0, v1, v2, v3, v4, v5, v6, v7 ) )
+    
+    inline AvxVec8f( F32 v1, F32 v2, F32 v3, F32 v4,
+                     F32 v5, F32 v6, F32 v7, F32 v8 ) : 
+                     mValue( _mm256_set_ps( v8, v7, v6, v5,
+                                            v4, v3, v2, v1 ) )
     {
     }
-    */
 
     inline AvxVec8f( const __m256 &rhs ) : mValue( rhs )
     {
@@ -90,42 +89,10 @@ public:
     {
         _mm256_store_ps( dest, mValue );
     }
-
-    /*
-    inline void RotateOne( U32 rotation )
-    {
-        const S32 select = ( 1 ) | ( 2 << 2 ) | ( 3 << 4 ) | ( 0 << 6 );
-        AvxVec8f permute = _mm256_permute_ps( mValue, select );
-
-        bool permute128 = ( rotation == 3 || rotation == 7 );
-
-        if ( permute128 )
-        {
-            mValue = _mm256_permute2f128_ps( permute, permute, 1 );
-        }
-        else
-        {
-            mValue = permute;
-        }
-    }
-    
-    static inline U32 RotateIndex( U32 rotation, U32 index )
-    {
-        const U32 registerOffset = 4;
-        const U32 shift = rotation / registerOffset;
-        const U32 offset = index / registerOffset;
-        
-        const U32 rotatedIndex = ( ( index + rotation ) & ( registerOffset - 1 ) ) + ( ( shift ^ offset ) * registerOffset );
-    
-        return rotatedIndex;
-    }
-    */
     
     inline AvxVec8f RoundToNearest() const
     {
         return _mm256_round_ps( mValue, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC );
-        
-        //return _mm256_round_ps( mValue + AvxVec8f( 0.5 ), _MM_FROUND_TO_ZERO  );
     }
     
     template< U32 index >
