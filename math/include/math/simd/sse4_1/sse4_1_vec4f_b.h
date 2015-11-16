@@ -86,7 +86,7 @@ public:
     
     bool IsEmpty() const
     {
-        return _mm_test_all_zeros( mValue, mValue) == 1;
+        return _mm_test_all_zeros( _mm_castps_si128(mValue), _mm_castps_si128(mValue) ) == 1;
     }
     
     inline U64 StoreMask() const
