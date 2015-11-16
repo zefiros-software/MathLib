@@ -14,6 +14,13 @@ class SSE41Vec4f_b : public SimdVectorBoolBase< SSE41Vec4f_b >
 {
 public:
 
+    union EasyConv
+    {
+        U32 u;
+        S32 i;
+        F32 f;
+    };
+
     SSE41Vec4f_b()
     {}
 
@@ -47,6 +54,7 @@ public:
     }
 
     //template< U32 rotate >
+    /*
     inline void LoadMask( U32 rotate, U64 mask )
     {
         const U32 rot0 = ( ( 0 + rotate ) & 0x03 );
@@ -60,6 +68,25 @@ public:
                                        -( S32 )( ( mask >> ( 8  + rot2 ) )  & 0x1 ),
                                        -( S32 )( ( mask >> ( 12 + rot3 ) ) & 0x1 )
                                    ) );
+    }
+    */
+    
+    inline void LoadBinaryMask( U8 mask )
+    {
+        //EasyConv conv1;
+        //conv1.u = 0xFFFFFFFF;
+        
+        mValue = _mm_castsi128_ps( _mm_setr_epi32(  
+                                      -(S32)( ( mask >> 0 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 1 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 2 ) & 0x1 ),
+                                      -(S32) ( ( mask >> 3 ) & 0x1 )
+                                    ) );
+    } 
+    
+    bool IsEmpty() const
+    {
+        return _mm_test_all_zeros( mValue, mValue) == 1;
     }
     
     inline U64 StoreMask() const

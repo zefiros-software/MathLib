@@ -177,6 +177,8 @@ inline AvxVec4d_b operator>= ( const AvxVec4d &lhs, const AvxVec4d &rhs )
     return _mm256_cmp_pd( lhs, rhs, 29 );
 }
 
+
+
 //
 // Special
 //

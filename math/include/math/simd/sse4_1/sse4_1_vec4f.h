@@ -45,12 +45,10 @@ public:
     {
     }
 
-    /*
     inline SSE41Vec4f( F32 v0, F32 v1, F32 v2, F32 v3 ) :
-        mValue( _mm_setr_ps( v0, v1, v2, v3 ) )
+        mValue( _mm_set_ps( v3, v2, v1, v0 ) )
     {
     }
-    */
     
     inline SSE41Vec4f( const __m128 &rhs ) : mValue( rhs )
     {
@@ -107,6 +105,27 @@ public:
     inline SSE41Vec4f RoundToNearest() const
     {
         return _mm_round_ps( mValue, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC );
+    }
+    
+    template< U32 index >
+    inline SSE41Vec4f BroadCastIndex() const
+    {     
+        const S32 selector = index % 4;
+        const S32 select = ( selector ) | ( selector << 2 ) | ( selector << 4 ) | ( selector << 6 );
+        
+        return _mm_shuffle_ps( mValue, mValue, select );
+    }
+    
+    inline static SSE41Vec4f GetZero()
+    {
+        return _mm_setzero_ps();
+    }
+    
+    inline static SSE41Vec4f GetFullMask()
+    {
+        EasyConvert easyc;
+        easyc.u = 0xFFFFFFFF;
+        return _mm_set1_ps( easyc.f );
     }
 
 private:
@@ -172,6 +191,16 @@ inline SSE41Vec4f_b operator>= ( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
     return _mm_cmpge_ps( lhs, rhs );
 }
 
+inline SSE41Vec4f operator&( const SSE41Vec4f &lhs, const SSE41Vec4f_b &rhs ) 
+{
+    return _mm_and_ps( lhs, rhs );
+}
+
+inline SSE41Vec4f operator&( const SSE41Vec4f_b &lhs, const SSE41Vec4f &rhs ) 
+{
+    return _mm_and_ps( lhs, rhs );
+}
+
 //
 // Special
 //
@@ -187,6 +216,16 @@ inline SSE41Vec4f SIMD_Rcp( const SSE41Vec4f &lhs )
     //return _mm_rcp_ps( lhs );
 }
 
+inline SSE41Vec4f SIMD_RcpSqrt( const SSE41Vec4f &lhs )
+{
+    __m128 temp = _mm_rsqrt_ps( lhs );
+    
+    // newton rhapson cycle
+    __m128 temp2 = _mm_mul_ps( _mm_sub_ps( _mm_set1_ps(3.0f), _mm_mul_ps(_mm_mul_ps(temp, temp), lhs) ), temp );
+    
+    return _mm_mul_ps( _mm_set1_ps(0.5f), temp2 );
+}
+
 inline SSE41Vec4f SIMD_Select( const SSE41Vec4f_b &sel, const SSE41Vec4f &lhs, const SSE41Vec4f &rhs )
 {
     return _mm_blendv_ps( rhs, lhs, sel );
@@ -199,6 +238,21 @@ inline F32 SIMD_Hadd( const SSE41Vec4f &lhs )
     __m128 tmp1 = _mm_hadd_ps( tmp0, tmp0 );
 
     return _mm_cvtss_f32( tmp1 );
+}
+
+template< U32 index >
+inline SSE41Vec4f SIMD_HaddToIndex( const SSE41Vec4f &lhs )
+{
+    __m128 tmp0 = _mm_hadd_ps( lhs, lhs );
+    __m128 tmp1 = _mm_hadd_ps( tmp0, tmp0 );;
+ 
+    // Two cases, either target is hi register or target is low register
+    __m128 zero = _mm_setzero_ps();
+        
+    const U32 controll = 1 << ( index % 4 );
+    __m128 result = _mm_blend_ps( zero, tmp1, controll );
+    
+    return result;
 }
 
 inline SSE41Vec4f FMA_ADD( const SSE41Vec4f &mul1, const SSE41Vec4f &mul2, const SSE41Vec4f &add )
