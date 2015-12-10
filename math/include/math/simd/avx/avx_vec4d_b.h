@@ -16,6 +16,13 @@ class AvxVec4d_b : public SimdVectorBoolBase< AvxVec4d_b >
 {
 public:
 
+    union EasyConvert
+    {
+        F64 d;
+        S64 il;
+        U64 ul;
+    };
+
     AvxVec4d_b()
     {}
 
@@ -48,25 +55,6 @@ public:
         return mValue;
     }
     
-    //template< U32 rotate >
-    inline void LoadMask( U32 rotate, U64 mask  ) 
-    {
-        U32 shift = rotate >> 1;
-           
-        const U32 offset1 = ( shift << 1 );
-        const U32 offset2 = ( ( shift ^ 1 ) << 1 );
-            
-        const U32 rot0 = ( ( 0 + rotate ) & 0x01 );
-        const U32 rot1 = ( ( 1 + rotate ) & 0x01 );
-
-        mValue = _mm256_castsi256_pd( _mm256_setr_epi64x( 
-                -(S64)( ( mask >> ( 0 +  rot0 + offset1 ) ) & 0x1 ),  
-                -(S64)( ( mask >> ( 4 +  rot1 + offset1 ) ) & 0x1 ),   
-                -(S64)( ( mask >> ( 8 +  rot0 + offset2 ) ) & 0x1 ), 
-                -(S64)( ( mask >> ( 12 + rot1 + offset2 ) ) & 0x1 )
-                ) );      
-    }
-    
     // TODO: MIGHT CAUSE PROBLEMS WITH MANUAL LOADED VALS
     inline U64 StoreMask() const
     {       
@@ -81,6 +69,22 @@ public:
     void LoadAligned( const F64 *src ) 
     {
         mValue = _mm256_load_pd( src );
+    }
+    
+    
+    inline void LoadBinaryMask( U8 mask )
+    {
+        mValue = _mm256_castsi256_pd( _mm256_setr_epi64x(  
+                                      -(S64) ( ( mask >> 0 ) & 0x1 ),
+                                      -(S64) ( ( mask >> 1 ) & 0x1 ),
+                                      -(S64) ( ( mask >> 2 ) & 0x1 ),
+                                      -(S64) ( ( mask >> 3 ) & 0x1 ) 
+                                    ) );
+    } 
+    
+    bool IsEmpty() const
+    {
+        return _mm256_testz_si256( mValue, mValue) == 1;
     }
 
 private:
