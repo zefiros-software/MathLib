@@ -8,6 +8,8 @@
 #include "math/simd/simdVectorBase.h"
 #include "math/simd/avx/avx_vec4d_b.h"
 
+#include "math/util/memory/stackAlign.h"
+
 #include <immintrin.h>
 #include <iostream>
 #include <limits>
@@ -39,6 +41,10 @@ public:
 
     AvxVec4d()
     {}
+    
+    inline AvxVec4d( const F64 *src ) : mValue( _mm256_load_pd( src ) )
+    {
+    }
 
     inline AvxVec4d( F64 val ) : mValue( _mm256_set1_pd( val ) )
     {
@@ -219,6 +225,78 @@ inline AvxVec4d SIMD_Rcp( const AvxVec4d &lhs )
 inline AvxVec4d SIMD_RcpSqrt( const AvxVec4d &lhs )
 {
     return SIMD_Rcp( SIMD_Sqrt( lhs ) );
+}
+
+inline AvxVec4d SIMD_Acos( const AvxVec4d &lhs )
+{
+    //
+    // For now use this hack ...
+    //
+    
+    Real StackAlign( SIMD_ALIGNMENT ) store[ 4 ];
+    lhs.StoreAligned( store );
+    
+    for ( U32 i=0; i < 4; ++i )
+    {
+        store[i] = Mathf::Acos( store[i] );
+    }
+    
+    
+    return AvxVec4d( store );
+}
+
+inline AvxVec4d SIMD_Cos( const AvxVec4d &lhs )
+{
+    //
+    // For now use this hack ...
+    //
+    
+    Real StackAlign( SIMD_ALIGNMENT ) store[ 4 ];
+    lhs.StoreAligned( store );
+    
+    for ( U32 i=0; i < 4; ++i )
+    {
+        store[i] = Mathf::Cos( store[i] );
+    }
+    
+    
+    return AvxVec4d( store );
+}
+
+inline AvxVec4d SIMD_Asin( const AvxVec4d &lhs )
+{
+    //
+    // For now use this hack ...
+    //
+    
+    Real StackAlign( SIMD_ALIGNMENT ) store[ 4 ];
+    lhs.StoreAligned( store );
+    
+    for ( U32 i=0; i < 4; ++i )
+    {
+        store[i] = Mathf::Asin( store[i] );
+    }
+    
+    
+    return AvxVec4d( store );
+}
+
+inline AvxVec4d SIMD_Sin( const AvxVec4d &lhs )
+{
+    //
+    // For now use this hack ...
+    //
+    
+    Real StackAlign( SIMD_ALIGNMENT ) store[ 4 ];
+    lhs.StoreAligned( store );
+    
+    for ( U32 i=0; i < 4; ++i )
+    {
+        store[i] = Mathf::Sin( store[i] );
+    }
+    
+    
+    return AvxVec4d( store );
 }
 
 inline AvxVec4d SIMD_Select( const AvxVec4d_b &sel, const AvxVec4d &lhs, const AvxVec4d &rhs )
