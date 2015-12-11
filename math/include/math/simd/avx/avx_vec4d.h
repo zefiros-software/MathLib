@@ -95,7 +95,7 @@ public:
     template< U32 index >
     inline AvxVec4d BroadCastIndex() const
     {
-        __m256 temp;
+        __m256d temp;
         
         if ( index >= 2 )
         {

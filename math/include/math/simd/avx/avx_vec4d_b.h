@@ -84,7 +84,7 @@ public:
     
     bool IsEmpty() const
     {
-        return _mm256_testz_si256( mValue, mValue) == 1;
+        return _mm256_testz_si256( _mm256_castpd_si256(mValue), _mm256_castpd_si256(mValue) ) == 1;
     }
 
 private:

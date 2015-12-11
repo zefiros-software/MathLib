@@ -41,6 +41,10 @@ public:
 
     AvxVec8f()
     {}
+    
+    inline AvxVec8f( const F32 *src ) : mValue( _mm256_load_ps( src ) )
+    {
+    }
 
     inline AvxVec8f( F32 val ) : mValue( _mm256_set1_ps( val ) )
     {
@@ -69,7 +73,7 @@ public:
     {
         return mValue;
     }
-    
+
     inline void LoadUnaligned( const F32 *src )
     {
         mValue =  _mm256_loadu_ps( src );
@@ -126,6 +130,26 @@ public:
         EasyConvert easyc;
         easyc.u = 0xFFFFFFFF;
         return _mm256_set1_ps( easyc.f );
+    }
+
+    //
+    // Non-generic
+    //
+    
+    inline __m256d CastDoubleLower() const
+    {
+        //extract lower half
+        __m128 temp = _mm256_extractf128_ps( mValue, 0 );
+        
+        return _mm256_cvtps_pd( temp );
+    }
+    
+    inline __m256d CastDoubleUpper() const
+    {
+        //extract upper half
+        __m128 temp = _mm256_extractf128_ps( mValue, 1 );
+        
+        return _mm256_cvtps_pd( temp );      
     }
 
 private:
