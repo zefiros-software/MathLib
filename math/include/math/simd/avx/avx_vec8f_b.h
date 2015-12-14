@@ -32,6 +32,7 @@ public:
     {
     }
     
+    
     /*
     inline AvxVec8f_b( bool b0, bool b1, bool b2, bool b3,
                         bool b4, bool b5, bool b6, bool b7 ) :
@@ -63,16 +64,12 @@ public:
         //EasyConv conv1;
         //conv1.u = 0xFFFFFFFF;
         
-        mValue = _mm256_castsi256_ps( _mm256_setr_epi32(  
-                                      -(S32)( ( mask >> 0 ) & 0x1 ),
-                                      -(S32) ( ( mask >> 1 ) & 0x1 ),
-                                      -(S32) ( ( mask >> 2 ) & 0x1 ),
-                                      -(S32) ( ( mask >> 3 ) & 0x1 ),
-                                      -(S32) ( ( mask >> 4 ) & 0x1 ),
-                                      -(S32) ( ( mask >> 5 ) & 0x1 ),
-                                      -(S32) ( ( mask >> 6 ) & 0x1 ),
-                                      -(S32) ( ( mask >> 7 ) & 0x1 )  
-                                    ) );
+        // compare flags containing incrementing bitflags
+        static const __m256 compare = _mm256_castsi256_ps( _mm256_set_epi32( 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01  ) );
+        
+        __m256 temp = _mm256_castsi256_ps( _mm256_set1_epi32( (S32) mask ) );    	
+        
+        mValue = _mm256_cmp_ps( _mm256_and_ps( temp, compare ), compare, 16 );
     } 
     
     // TODO: MIGHT CAUSE PROBLEMS WITH MANUAL LOADED VALS
