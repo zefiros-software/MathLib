@@ -68,7 +68,8 @@ solution "math"
 			root .. "extern/gtest/",
 			root .. "math/include/",
             root .. "test/",
-			root .. "test/scalar/"
+			root .. "test/scalar/",
+            root .. "test/simd/"
 			}	
 		
 		files { 

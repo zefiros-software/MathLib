@@ -281,7 +281,6 @@ inline AvxVec8f SIMD_RcpSqrt( const AvxVec8f &lhs )
 inline AvxVec8f SIMD_Rcp( const AvxVec8f &lhs )
 {
     return 1.0 / lhs;
-    //return _mm256_rcp_ps( lhs );
 }
 
 inline AvxVec8f SIMD_Select( const AvxVec8f_b &sel, const AvxVec8f &lhs, const AvxVec8f &rhs )
