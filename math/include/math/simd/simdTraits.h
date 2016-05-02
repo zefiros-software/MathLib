@@ -1,8 +1,8 @@
 #pragma once 
+
 #ifndef __SIMD_TRAITS_H__
 #define __SIMD_TRAITS_H__
 
-#include "math/simd/simdBaseTraits.h"
 #include "math/simd/vectorize.h"
 
 //

@@ -95,7 +95,8 @@ public:
     
     inline AvxVec4d RoundToNearest() const
     {
-        return _mm256_round_pd( mValue, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC );
+        //return _mm256_round_pd( mValue, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC );
+        return _mm256_round_pd( mValue, 0x00 | 0x08 );
     }
     
     template< U32 index >

@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <immintrin.h>
 
-#include "common/util.h"
-
 void *LibStruct::_InternalAlignedMalloc( size_t bytes, size_t alignment )
 {
     size_t offset = alignment; //+ sizeof( size_t );

@@ -280,7 +280,7 @@ namespace Mathf
 #endif
     }
     
-    inline S32 Abs( const S32 f )
+    inline U32 Abs( const S32 f )
     {
         return abs( ( int )f );
     }

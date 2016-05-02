@@ -1,7 +1,7 @@
 /**
  * @cond ___LICENSE___
  *
- * Copyright (c) 2014 Koen Visscher, Paul Visscher and individual contributors.
+ * Copyright (c) 2016 Koen Visscher, Paul Visscher and individual contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,45 +25,105 @@
  */
 
 #pragma once
-#ifndef __VEC2_H__
-#define __VEC2_H__
+#ifndef __ENGINE_VEC2_H__
+#define __ENGINE_VEC2_H__
 
-#include "math/config.h"
-#include "math/generic/floatingPointVector.h"
+#include "math/types.h"
 
-BEGIN_MATH_NAMESPACE
+class Vec2I;
 
-class Vec2 : public FloatingPointVector< Real, 2 >
+class Vec2
 {
+    friend Vec2 operator+( const Vec2 &, const Vec2 & );
+    friend Vec2 operator*( const Vec2 &, const Vec2 & );
+    friend Vec2 operator-( const Vec2 &, const Vec2 & );
+    friend Vec2 operator-( const Vec2 & );
+    friend Vec2 operator*( const Vec2 &, const Real );
+    friend Vec2 operator*( const Real , const Vec2 & );
+    friend Vec2 operator/( const Vec2 &, const Real );
+    friend Vec2 operator/( const Vec2 &, const Vec2 & );
 public:
 
-    inline Vec2()
-    {
-        
-    }
-    
-    inline Vec2( Real p1 )
-    {
-        SetValues( p1, p1 );
-    }
-    
-    inline Vec2( Real p1, Real p2 )
-    {
-        SetValues( p1, p2 );
-    }
-    
-    template< class TYPE2 >
-    inline Vec2( const PrimaryVectorBase< TYPE2, 2 > &v1 )
-    {
-        SetValues( (Real) v1[0], (Real) v1[1] );
-    }
+    Vec2();
+    Vec2( const Real x, const Real y );
+    Vec2( const Vec2 &v );
+    Vec2( const Vec2I &v );
 
-    inline Vec2(const FloatingPointVector< Real, 2 > &v1)
-    {
-        SetValues( v1[0], v1[1] );
-    }
+    Vec2 &operator=( const Vec2 &other );
+    Vec2 &operator-=( const Vec2 &v );
+    Vec2 &operator+=( const Vec2 &v );
+    Vec2 &operator/=( const Real s );
+    Vec2 &operator*=( const Real s );
+
+    bool operator==( const Vec2 &other ) const;
+    bool operator!=( const Vec2 &other ) const;
+
+    Real &operator[]( const U8 axis );
+    const Real &operator[]( const U8 axis ) const;
+
+    Real Dot( const Vec2 &v ) const;
+
+    Real Length2() const;
+    Real Length() const;
+
+    Real Distance2( const Vec2 &v ) const;
+    Real Distance( const Vec2 &v ) const;
+
+    void SetValue( Real x, Real y );
+    void Clear();
+
+    Vec2 SafeNormalise();
+    Vec2 Normalise();
+
+    Vec2 Lerp( const Vec2 &v, const Real t ) const;
+    Vec2 Nlerp( const Vec2 &v, const Real t ) const;
+
+    Vec2 Rotate( const Real angle ) const;
+    Vec2 Absolute() const;
+
+    U8 MinAxis() const;
+    U8 MaxAxis() const;
+
+    Real Angle( const Vec2 &v ) const;
+
+    void SetX( const Real x );
+    Real GetX() const;
+
+    void SetY( const Real y );
+    Real GetY() const;
+
+    void SetZero();
+    bool IsZero() const;
+
+    bool IsFuzzyZero() const;
+
+    static Vec2 GetZero();
+
+    static Vec2 GetOne();
+
+    static Vec2 GetDown();
+
+    static Vec2 GetUp();
+
+    static Vec2 GetLeft();
+
+    static Vec2 GetRight();
+    
+private:
+
+    Real mValues[2];
 };
 
+Vec2 operator+( const Vec2 &v1, const Vec2 &v2 );
 
+Vec2 operator-( const Vec2 &v1, const Vec2 &v2 );
+Vec2 operator-( const Vec2 &v );
+
+Vec2 operator*( const Vec2 &v1, const Vec2 &v2 );
+Vec2 operator*( const Vec2 &v, const Real s );
+Vec2 operator*( const Real s, const Vec2 &v );
+
+Vec2 operator/( const Vec2 &v, const Real s );
+Vec2 operator/( const Vec2 &v1, const Vec2 &v2 );
 
 #endif
