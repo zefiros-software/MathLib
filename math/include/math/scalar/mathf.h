@@ -42,200 +42,181 @@ BEGIN_MATH_NAMESPACE
 
 namespace Mathf
 {
-    inline Real GetEpsilon()
+    template< class Number >
+    inline Number GetEpsilon();
+    
+    template<>
+    inline F64 GetEpsilon()
     {
-#ifdef  REAL_PRECISION_DOUBLE
         return DBL_EPSILON;
-#else
+    }
+    
+    template<>
+    inline F32 GetEpsilon()
+    {
         return FLT_EPSILON;
-#endif
     }
     
-    inline Real GetPi()
+    template< class Number >
+    inline Number GetPi()
     {
-        return ( Real )M_PI;
+        return ( Number )M_PI;
     }
     
-    inline Real Get2Pi()
+    template< class Number >
+    inline Number Get2Pi()
     {
-        return ( Real )M_PI_2;
+        return ( Number )M_PI_2;
     }
     
-    inline Real GetSqrt2()
+    template< class Number >
+    inline Number GetSqrt2()
     {
-        return ( Real )M_SQRT2;
+        return ( Number )M_SQRT2;
     }
     
-    inline Real GetE()
+    template< class Number >
+    inline Number GetE()
     {
-        return ( Real )M_E;
+        return ( Number )M_E;
     }
     
-    inline Real GetLog2E()
+    template< class Number >
+    inline Number GetLog2E()
     {
-        return ( Real )M_LOG2E;
+        return ( Number )M_LOG2E;
     }
     
-    inline Real GetLog10E()
+    template< class Number >
+    inline Number GetLog10E()
     {
-        return ( Real )M_LOG10E;
+        return ( Number )M_LOG10E;
     }
     
-    inline Real GetLn2()
+    template< class Number >
+    inline Number GetLn2()
     {
-        return ( Real )M_LN2;
+        return ( Number )M_LN2;
     }
     
-    inline Real GetLn10()
+    template< class Number >
+    inline Number GetLn10()
     {
-        return ( Real )M_LN10;
+        return ( Number )M_LN10;
     }
     
-    inline Real Acos( const Real f )
+    template< class Number >
+    inline Number Acos( const Number f )
     {
         assert( f >= -1.0f && f <= 1.0f );
         
-#ifdef REAL_PRECISION_DOUBLE
-        return acos( f );
-#else
-        return acosf( f );
-#endif
+        return std::acos( f );
     }
     
-    inline Real Asin( const Real f )
+    template< class Number >
+    inline Number Asin( const Number f )
     {
         assert( f >= -1.0f && f <= 1.0f );
-    
-#ifdef REAL_PRECISION_DOUBLE
+
         return asin( f );
-#else
-        return asinf( f );
-#endif
     }
     
+    template< class Number >
     inline Real Atan( const Real f )
     {
-#ifdef REAL_PRECISION_DOUBLE
-        return atan( f );
-#else
-        return atanf( f );
-#endif
+        return std::atan( f );
     }
     
-    inline Real Atan2( const Real x, const Real y )
+    template< class Number >
+    inline Number Atan2( const Number x, const Number y )
     {
-#ifdef REAL_PRECISION_DOUBLE
-        return atan2( x, y );
-#else
-        return atan2f( x, y );
-#endif
+        return std::atan2( x, y );
     }
     
-    inline Real Cos( const Real f )
+    template< class Number >
+    inline Number Cos( const Number f )
     {
-#ifdef REAL_PRECISION_DOUBLE
-        return cos( f );
-#else
-        return cosf( f );
-#endif
+        return std::cos( f );
     }
     
-    inline Real Sin( const Real f )
+    template< class Number >
+    inline Number Sin( const Number f )
     {
-#ifdef REAL_PRECISION_DOUBLE
-        return sin( f );
-#else
-        return sinf( f );
-#endif
+        return std::sin( f );
     }
     
-    inline Real Tan( const Real f )
+    template< class Number >
+    inline Number Tan( const Number f )
     {
-#ifdef REAL_PRECISION_DOUBLE
-        return tan( f );
-#else
-        return tanf( f );
-#endif
+        return std::tan( f );
     }
     
-    inline Real Exp( const Real f )
+    template< class Number >
+    inline Number Exp( const Number f )
     {
-#ifdef REAL_PRECISION_DOUBLE
-        return exp( f );
-#else
-        return expf( f );
-#endif
+        return std::exp( f );
     }
     
-    inline Real Ceil( const Real f )
+    template< class Number >
+    inline Number Ceil( const Number f )
     {
-#ifdef REAL_PRECISION_DOUBLE
-        return ceil( f );
-#else
-        return ceilf( f );
-#endif
+        return std::ceil( f );
     }
     
-    inline Real Floor( const Real f )
+    template< class Number >
+    inline Number Floor( const Number f )
     {
-#ifdef REAL_PRECISION_DOUBLE
-        return floor( f );
-#else
-        return floorf( f );
-#endif
+        return std::floor( f );
     }
     
-    inline Real Round( const Real f )
+    template< class Number >
+    inline Number Round( const Number f )
     {
-        return f >= 0.0 ? f + 0.5f : ( ( f - ( Real )( S32 )f ) <= -0.5 ? f : f - 0.5f );
+        return f >= 0.0 ? f + 0.5f : ( ( f - ( Number )( S32 )f ) <= -0.5 ? f : f - 0.5f );
     }
     
-    inline Real Log( const Real f )
+    template< class Number >
+    inline Number Log( const Number f )
     {
         assert( f > 0.0f );
     
-#ifdef REAL_PRECISION_DOUBLE
-        return log( f );
-#else
-        return logf( f );
-#endif
+        return std::log( f );
     }
     
-    inline Real Log10( const Real f )
+    template< class Number >
+    inline Number Log10( const Number f )
     {
         assert( f > 0.0f );   
-#ifdef REAL_PRECISION_DOUBLE
-        return log10( f );
-#else
-        return log10f( f );
-#endif
+
+        return std::log10( f );
     }
     
-    inline Real Pow( const Real base, const Real exp )
+    template< class Number >
+    inline Number Pow( const Number base, const Number exp )
     {
-#ifdef REAL_PRECISION_DOUBLE
-        return pow( base, exp );
-#else
-        return powf( base, exp );
-#endif
+        return std::pow( base, exp );
     }
     
-    inline Real Clamp( const Real f, const Real min, const Real max )
+    template< class Number >
+    inline Number Clamp( const Number f, const Number min, const Number max )
     {
         return f < min ? min : ( f > max ? max : f );
     }
     
-    inline Real RadToDeg( const Real f )
+    template< class Number >
+    inline Number RadToDeg( const Number f )
     {
-        return f * 180.0f / GetPi();
+        return f * 180.0f / GetPi< Number >();
     }
     
-    inline Real DegToRad( const Real f )
+    template< class Number >
+    inline Number DegToRad( const Number f )
     {
-        return f * GetPi() / 180.0f;
+        return f * GetPi< Number >() / 180.0f;
     }
     
-    inline Real Lerp( const Real a, const Real b, const Real t )
+    template< class Number >
+    inline Number Lerp( const Number a, const Number b, const Number t )
     {
         return a + ( b - a ) * t;
     }
@@ -261,64 +242,48 @@ namespace Mathf
         return a * a;
     }
 
-    inline Real Sqrt( const Real f )
+    template< class Number >
+    inline Number Sqrt( const Number f )
     {
         assert( f >= 0.0f );
-#ifdef REAL_PRECISION_DOUBLE
-        return sqrt( f );
-#else
-        return sqrtf( f );
-#endif
+
+        return std::sqrt( f );
     }
     
-    inline Real Abs( const Real f )
+    template< class Number >
+    inline Number Abs( const Number f )
     {
-#ifdef REAL_PRECISION_DOUBLE
         return std::abs( f );
-#else
-        return fabsf( f );
-#endif
     }
     
-    inline S32 Abs( const S32 f )
+    template< class Number >
+    inline Number Rint( Number x )
     {
-        return abs( ( int )f );
+        return std::rint( x );
     }
     
-    inline S32 Rint( Real x )
+    template< class Number >
+    inline bool Equal( const Number a, const Number b )
     {
-#ifdef _WIN32
-        return ( S32 )( x + 0.5 );
-#else
-        return ( S32 )rint( x );
-#endif
-    }
-  
-    inline bool Equal( const Real a, const Real b )
-    {
-#ifdef REAL_PRECISION_DOUBLE
-        return std::abs( a - b ) < GetEpsilon();
-#else
-        return fabs( a - b ) < GetEpsilon();
-#endif
+        return std::abs( a - b ) <= GetEpsilon< Number >();
     }
 
-    template< typename tT >
-    inline tT GetMin( const tT &a, const tT &b )
+    template< typename Number >
+    inline Number GetMin( const Number &a, const Number &b )
     {
         return a < b ? a : b;
     }
 
-    template< typename tT >
-    inline tT GetMax( const tT &a, const tT &b )
+    template< typename Number >
+    inline Number GetMax( const Number &a, const Number &b )
     {
         return a > b ? a : b;
     }
 
-    template< typename tT >
-    inline tT Rcp( const tT &_a )
+    template< typename Number >
+    inline Number Rcp( const Number &_a )
     {
-        return (tT)1.0 / _a;
+        return (Number)1.0 / _a;
     }
 }
 

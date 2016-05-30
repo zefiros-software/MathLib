@@ -11,6 +11,7 @@
 #include <vector>
 #include <string>
 
+/*
 TEST( P( Vec2Test ), ConstructAndAccess )
 {
     Vec2 testConst;
@@ -32,6 +33,7 @@ TEST(P(Vec2Test), IntegerCast)
     ASSERT_EQ(testCast[0], 10);
     ASSERT_EQ(testCast[1], 50);
 }
+*/
 
 /*
 TEST( P(Vec2Test), FP_Distance )

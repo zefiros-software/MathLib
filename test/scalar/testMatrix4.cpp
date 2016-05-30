@@ -11,11 +11,12 @@
 #include <vector>
 #include <string>
 
+/*
 TEST(P(Mat4Test), ConstructAndAccess)
 {
     Matrix3 testMat(0.1, 0.2, 0.3,
-        0.4, 0.5, 0.6,
-        0.7, 0.8, 0.9);
+                    0.4, 0.5, 0.6,
+                    0.7, 0.8, 0.9);
 
     ASSERT_REAL_EQ(testMat[0][0], 0.1);
     ASSERT_REAL_EQ(testMat[0][1], 0.2);
@@ -43,3 +44,4 @@ TEST(P(Mat4Test), ConstructAndAccess)
     ASSERT_REAL_EQ(testMat2[2][1], 0.5);
     ASSERT_REAL_EQ(testMat2[2][2], 0.6);
 }
+*/

@@ -11,6 +11,7 @@
 #include <vector>
 #include <string>
 
+/*
 TEST(P(Vec2iTest), ConstructAndAccess)
 {
     Vec2i testConst;
@@ -32,3 +33,4 @@ TEST(P(Vec2iTest), RealCast)
     ASSERT_REAL_EQ(testCast[0], 10.0);
     ASSERT_REAL_EQ(testCast[1], 50.0);
 }
+*/

@@ -120,5 +120,6 @@ solution "math"
             
         files { 
             root .. "math/include/math/**.h",
+            root .. "math/include/math/**.cpp",
             }
             
