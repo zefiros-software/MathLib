@@ -51,7 +51,7 @@ const Vec3 &BoundingBox::GetMaxAxis() const
 
 Vec3  BoundingBox::GetCentreOfMass() const
 {
-    return ( mMaxAxis + mMinAxis ) / 2.0f;
+    return ( mMaxAxis + mMinAxis ) / 2.0;
 }
 
 Real BoundingBox::GetBoundingSphereR2() const

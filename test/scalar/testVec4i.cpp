@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 
+/*
 TEST(P(Vec4iTest), ConstructAndAccess)
 {
     Vec4i testConst;
@@ -335,3 +336,4 @@ TEST(P(Vec4iTest), OperatorDivVec )
     ASSERT_EQ(testConst3[2], 5 );
     ASSERT_EQ(testConst3[3], 5 );
 }
+*/

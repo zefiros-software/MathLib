@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "16BCCEEF9075305085D8DAF9FEEA25E7C70EF8DB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "61DD4A97E641111BAF56F6D54DEBCFCBBEC4E2F5" : 0,
+    "16BCCEEF9075305085D8DAF9FEEA25E7C70EF8DB" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "22E185B2-B65B-4D34-8365-DE03D33F3EC3",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "61DD4A97E641111BAF56F6D54DEBCFCBBEC4E2F5" : "..",
+    "16BCCEEF9075305085D8DAF9FEEA25E7C70EF8DB" : "zefirosMath\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "math",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "math\/math.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "ssh:\/\/zefiros.eu:7999\/math\/math-library.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "16BCCEEF9075305085D8DAF9FEEA25E7C70EF8DB"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:kmvisscher\/LibStruct.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "61DD4A97E641111BAF56F6D54DEBCFCBBEC4E2F5"
+    }
+  ]
+}

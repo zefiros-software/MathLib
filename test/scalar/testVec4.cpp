@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 
+/*
 TEST(P(Vec4Test), ConstructAndAccess)
 {
     Vec4 testConst;
@@ -118,6 +119,7 @@ TEST(P(Vec4Test), Normalise)
     ASSERT_REAL_EQ(testConst6[2], 0.0);
     ASSERT_REAL_EQ(testConst6[3], 0.0);
 }
+*/
 
 // TODO
 // Interpolation & Angle

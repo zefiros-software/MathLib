@@ -5,19 +5,19 @@
 // big thanks to http://jmabille.github.io/blog/2014/10/10/writing-c-plus-plus-wrappers-for-simd-intrinsics-3/
 // for the idea's on how to nicely wrap
 
-template< class VALUE_TYPE >
+template< class valueType >
 struct BaseSimdTraits;
 
 template<>
 struct BaseSimdTraits<F64>
 {
-    typedef F64 value_type;
+    typedef F64 valueType;
 };
 
 template<>
 struct BaseSimdTraits<F32>
 {
-    typedef F32 value_type;
+    typedef F32 valueType;
 };
 
 
@@ -26,7 +26,7 @@ class SimdVectorBase
 {
 public:
     
-    typedef typename BaseSimdTraits<VALUE_TYPE>::value_type value_type;
+    typedef typename BaseSimdTraits<VALUE_TYPE>::valueType valueType;
     
     //downcast
     inline TYPE& operator()()
@@ -48,7 +48,7 @@ public:
         return (*this)();
     } 
     
-    inline TYPE& operator+= ( const value_type& rhs )
+    inline TYPE& operator+= ( const valueType& rhs )
     {
         (*this)() = (*this)() + TYPE( rhs );
         return (*this)();
@@ -60,7 +60,7 @@ public:
         return (*this)();
     } 
     
-    inline TYPE& operator-= ( const value_type& rhs )
+    inline TYPE& operator-= ( const valueType& rhs )
     {
         (*this)() = (*this)() - TYPE( rhs );
         return (*this)();
@@ -72,7 +72,7 @@ public:
         return (*this)();
     } 
     
-    inline TYPE& operator*= ( const value_type& rhs )
+    inline TYPE& operator*= ( const valueType& rhs )
     {
         (*this)() = (*this)() * TYPE( rhs );
         return (*this)();
@@ -84,7 +84,7 @@ public:
         return (*this)();
     } 
     
-    inline TYPE& operator/= ( const value_type& rhs )
+    inline TYPE& operator/= ( const valueType& rhs )
     {
         (*this)() = (*this)() / TYPE( rhs );
         return (*this)();
@@ -93,13 +93,13 @@ public:
     // Increment decrement
     inline TYPE& operator++()
     {
-        (*this)() += value_type( 1 );
+        (*this)() += valueType( 1 );
         return (*this)();
     }
     
     inline TYPE& operator--()
     {
-        (*this)() -= value_type( 1 );
+        (*this)() -= valueType( 1 );
         return (*this)();
     }
 
@@ -114,101 +114,51 @@ protected:
 };
 
 template< typename TYPE >
-inline TYPE operator+( const TYPE &lhs, const typename TYPE::value_type &rhs )
+inline TYPE operator+( const TYPE &lhs, const typename TYPE::valueType &rhs )
 {
     return lhs() + TYPE( rhs );
 }
 
 template< typename TYPE >
-inline TYPE operator+( const typename TYPE::value_type &lhs, const TYPE &rhs )
+inline TYPE operator+( const typename TYPE::valueType &lhs, const TYPE &rhs )
 {
     return TYPE(lhs) + rhs();
 }
 
 template< typename TYPE >
-inline TYPE operator-( const TYPE &lhs, const typename TYPE::value_type &rhs )
+inline TYPE operator-( const TYPE &lhs, const typename TYPE::valueType &rhs )
 {
     return lhs() - TYPE( rhs );
 }
 
 template< typename TYPE >
-inline TYPE operator-( const typename TYPE::value_type &lhs, const TYPE &rhs )
+inline TYPE operator-( const typename TYPE::valueType &lhs, const TYPE &rhs )
 {
     return TYPE(lhs) - rhs();
 }
 
 template< typename TYPE >
-inline TYPE operator*( const TYPE &lhs, const typename TYPE::value_type &rhs )
+inline TYPE operator*( const TYPE &lhs, const typename TYPE::valueType &rhs )
 {
     return lhs() * TYPE( rhs );
 }
 
 template< typename TYPE >
-inline TYPE operator*( const typename TYPE::value_type &lhs, const TYPE &rhs )
+inline TYPE operator*( const typename TYPE::valueType &lhs, const TYPE &rhs )
 {
     return TYPE(lhs) * rhs();
 }
 
 template< typename TYPE >
-inline TYPE operator/( const TYPE &lhs, const typename TYPE::value_type &rhs )
+inline TYPE operator/( const TYPE &lhs, const typename TYPE::valueType &rhs )
 {
     return lhs() / TYPE( rhs );
 }
 
 template< typename TYPE >
-inline TYPE operator/( const typename TYPE::value_type &lhs, const TYPE &rhs )
+inline TYPE operator/( const typename TYPE::valueType &lhs, const TYPE &rhs )
 {
     return TYPE(lhs) / rhs();
 }
-
-/*
-template< typename TYPE, typename VALUE_TYPE >
-inline SimdVectorBase<TYPE,VALUE_TYPE> operator+( const SimdVectorBase<TYPE,VALUE_TYPE> &lhs, const typename BaseSimdTraits<VALUE_TYPE>::value_type &rhs )
-{
-    return lhs() + TYPE( rhs );
-}
-
-template< typename TYPE, typename VALUE_TYPE >
-inline SimdVectorBase<TYPE,VALUE_TYPE> operator+( const typename BaseSimdTraits<VALUE_TYPE>::value_type &lhs, const SimdVectorBase<TYPE,VALUE_TYPE> &rhs )
-{
-    return TYPE(lhs) + rhs();
-}
-
-template< typename TYPE, typename VALUE_TYPE >
-inline SimdVectorBase<TYPE,VALUE_TYPE> operator-( const SimdVectorBase<TYPE,VALUE_TYPE> &lhs, const typename BaseSimdTraits<VALUE_TYPE>::value_type &rhs )
-{
-    return lhs() - TYPE( rhs );
-}
-
-template< typename TYPE, typename VALUE_TYPE >
-inline SimdVectorBase<TYPE,VALUE_TYPE> operator-( const typename BaseSimdTraits<VALUE_TYPE>::value_type &lhs, const SimdVectorBase<TYPE,VALUE_TYPE> &rhs )
-{
-    return TYPE(lhs) - rhs();
-}
-
-template< typename TYPE, typename VALUE_TYPE >
-inline SimdVectorBase<TYPE,VALUE_TYPE> operator*( const SimdVectorBase<TYPE,VALUE_TYPE> &lhs, const typename BaseSimdTraits<VALUE_TYPE>::value_type &rhs )
-{
-    return lhs() * TYPE( rhs );
-}
-
-template< typename TYPE, typename VALUE_TYPE >
-inline SimdVectorBase<TYPE,VALUE_TYPE> operator*( const typename BaseSimdTraits<VALUE_TYPE>::value_type &lhs, const SimdVectorBase<TYPE,VALUE_TYPE> &rhs )
-{
-    return TYPE(lhs) * rhs();
-}
-
-template< typename TYPE, typename VALUE_TYPE >
-inline SimdVectorBase<TYPE,VALUE_TYPE> operator/( const SimdVectorBase<TYPE,VALUE_TYPE> &lhs, const typename BaseSimdTraits<VALUE_TYPE>::value_type &rhs )
-{
-    return lhs() / TYPE( rhs );
-}
-
-template< typename TYPE, typename VALUE_TYPE >
-inline SimdVectorBase<TYPE,VALUE_TYPE> operator/( const typename BaseSimdTraits<VALUE_TYPE>::value_type &lhs, const SimdVectorBase<TYPE,VALUE_TYPE> &rhs )
-{
-    return TYPE(lhs) / rhs();
-}
-*/
 
 #endif

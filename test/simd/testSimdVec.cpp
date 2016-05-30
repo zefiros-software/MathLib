@@ -19,6 +19,7 @@
 #include <string>
 #include <cstdlib>
 
+/*
 static SimdStatus hardwareStatus;
 
 template< typename TYPE >
@@ -1083,3 +1084,4 @@ TestPlatforms( TestOperatorLtSelect, OperatorLtSelect );
 TestPlatforms( TestOperatorLeSelect, OperatorLeSelect );
 
 TestPlatforms( TestHadd, Hadd );
+*/

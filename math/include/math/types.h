@@ -136,7 +136,7 @@ typedef F32 Real;
 #elif REAL_PRECISION_DOUBLE
 typedef F64 Real;
 #else
-#error Precision of Real numbers is not defined!
+#define REAL_UNDEFINED
 #endif
 
 /// @}

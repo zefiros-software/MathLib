@@ -18,7 +18,6 @@ class SSE41Vec4f;
 template <>
 struct SSE4_1SimdTraits<F32> : public BaseSimdTraits<F32>
 {
-    typedef F32 value_type;
     typedef SSE41Vec4f vec_type;
     typedef SSE41Vec4f_b bool_type;
     static const size_t width = 4;

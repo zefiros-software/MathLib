@@ -30,74 +30,194 @@
 
 #include "math/types.h"
 
-class Vec3;
-
 class Vec3I
 {
     friend Vec3I operator+( const Vec3I &, const Vec3I & );
     friend Vec3I operator*( const Vec3I &, const Vec3I & );
     friend Vec3I operator-( const Vec3I &, const Vec3I & );
     friend Vec3I operator-( const Vec3I & );
-    friend Vec3I operator*( const Vec3I &, const F32 );
-    friend Vec3I operator*( const F32 , const Vec3I & );
-    friend Vec3I operator/( const Vec3I &, const F32 );
+    friend Vec3I operator*( const Vec3I &, const S32 );
+    friend Vec3I operator*( const S32 , const Vec3I & );
+    friend Vec3I operator/( const Vec3I &, const S32 );
     friend Vec3I operator/( const Vec3I &, const Vec3I & );
 
 public:
 
-    Vec3I();
-    Vec3I( const Vec3 &v );
-    Vec3I( const S32 x, const S32 y, const S32 z );
-    Vec3I( const F32 x, const F32 y, const F32 z );
+    inline Vec3I()
+    {
+        mValues[0] = 0;
+        mValues[1] = 0;
+        mValues[2] = 0;
+    }
+    
+    template < class Vector3D >
+    inline Vec3I( const Vector3D &v )
+    {
+        SetValue( ( S32 )v.GetX(), ( S32 )v.GetY(), ( S32 )v.GetZ() );
+    }
+    
+    template < class Vector2D >
+    inline Vec3I( const Vector2D &v, S32 z )
+    {
+        SetValue( ( S32 )v[0], ( S32 )v[1], z );
+    }
+    
+    template < class Vector2D >
+    inline Vec3I( S32 x, const Vector2D &v )
+    {
+        SetValue( x, ( S32 )v[0], ( S32 )v[1] );
+    }
+    
+    inline Vec3I( const S32 x, const S32 y, const S32 z )
+    {
+        SetValue( x, y, z );
+    }
 
-    S32 &operator[]( const U8 axis );
-    const S32 &operator[]( const U8 axis ) const;
+    inline S32 &operator[]( const U8 axis )
+    {
+        return mValues[ axis ];
+    }
+    
+    inline const S32 &operator[]( const U8 axis ) const
+    {
+        return mValues[ axis ];
+    }
+    
+    inline void SetX( const S32 val )
+    {
+        mValues[0] = val;
+    }
+    
+    inline S32 GetX() const
+    {
+        return mValues[0];
+    }
+    
+    inline void SetY( const S32 val )
+    {
+        mValues[1] = val;
+    }
+    
+    inline S32 GetY() const
+    {
+        return mValues[1];
+    }
+    
+    inline void SetZ( const S32 val )
+    {
+        mValues[2] = val;
+    }
+    
+    inline S32 GetZ() const
+    {
+        return mValues[2];
+    }
+    
+    inline void SetValue( S32 x, S32 y, S32 z )
+    {
+        mValues[0] = x;
+        mValues[1] = y;
+        mValues[2] = z;
+    }
 
-    void SetX( const S32 val );
-    S32 GetX() const;
-
-    void SetY( const S32 val );
-    S32 GetY() const;
-
-    void SetZ( const S32 val );
-    S32 GetZ() const;
-
-    void SetValue( const S32 x, const S32 y, const S32 z );
-    void Clear();
-
-    Vec3 ToVec() const;
-
-    static Vec3I GetZero();
-
-    static Vec3I GetOne();
-
-    static Vec3I GetBack();
-
-    static Vec3I GetForward();
-
-    static Vec3I GetDown();
-
-    static Vec3I GetUp();
-
-    static Vec3I GetLeft();
-
-    static Vec3I GetRight();
+    inline void Clear()
+    {
+        SetValue( 0, 0, 0 );
+    }
+    
+    static inline Vec3I GetZero()
+    {
+        return Vec3I( 0, 0, 0 );
+    }
+    
+    static inline Vec3I GetOne()
+    {
+        return Vec3I( 1, 1, 1 );
+    }
+    
+    static inline Vec3I GetBack()
+    {
+        return Vec3I( 0, -1, 0 );
+    }
+    
+    static inline Vec3I GetForward()
+    {
+        return Vec3I( 0, 1, 0 );
+    }
+    
+    static inline Vec3I GetDown()
+    {
+        return Vec3I( 0, 0, -1 );
+    }
+    
+    static inline Vec3I GetUp()
+    {
+        return Vec3I( 0, 0, 1 );
+    }
+    
+    static inline Vec3I GetLeft()
+    {
+        return Vec3I( -1, 0, 0 );
+    }
+    
+    static inline Vec3I GetRight()
+    {
+        return Vec3I( 1, 0, 0 );
+    }
 
 private:
 
     S32 mValues[3];
 };
 
-Vec3I operator+( const Vec3I &v1, const Vec3I &v2 );
-Vec3I operator*( const Vec3I &v1, const Vec3I &v2 );
+inline Vec3I operator+( const Vec3I &v1, const Vec3I &v2 )
+{
+    return Vec3I( v1.mValues[0] + v2.mValues[0],
+                  v1.mValues[1] + v2.mValues[1],
+                  v1.mValues[2] + v2.mValues[2] );
+}
 
-Vec3I operator-( const Vec3I &v1, const Vec3I &v2 );
-Vec3I operator-( const Vec3I &v );
+inline Vec3I operator*( const Vec3I &v1, const Vec3I &v2 )
+{
+    return Vec3I( v1.mValues[0] * v2.mValues[0],
+                  v1.mValues[1] * v2.mValues[1],
+                  v1.mValues[2] * v2.mValues[2] );
+}
 
-Vec3I operator*( const Vec3I &v, const F32 s );
-Vec3I operator*( F32 s, const Vec3I &v );
+inline Vec3I operator-( const Vec3I &v1, const Vec3I &v2 )
+{
+    return Vec3I( v1.mValues[0] - v2.mValues[0],
+                  v1.mValues[1] - v2.mValues[1],
+                  v1.mValues[2] - v2.mValues[2] );
+}
 
-Vec3I operator/( const Vec3I &v, F32 s );
-Vec3I operator/( const Vec3I &v1, const Vec3I &v2 );
+inline Vec3I operator-( const Vec3I &v )
+{
+    return Vec3I( -v.mValues[0], -v.mValues[1], -v.mValues[2] );
+}
+
+inline Vec3I operator*( const Vec3I &v, const S32 s )
+{
+    return Vec3I( v.mValues[0] * s, v.mValues[1] * s, v.mValues[2] * s );
+}
+
+inline Vec3I operator*( S32 s, const Vec3I &v )
+{
+    return v * s;
+}
+
+inline Vec3I operator/( const Vec3I &v, S32 s )
+{
+    assert( s != 0 );
+    
+    return v / s;
+}
+
+inline Vec3I operator/( const Vec3I &v1, const Vec3I &v2 )
+{
+    return Vec3I( v1.mValues[0] / v2.mValues[0],
+                  v1.mValues[1] / v2.mValues[1] ,
+                  v1.mValues[2] / v2.mValues[2] );
+}
 
 #endif
