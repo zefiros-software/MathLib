@@ -46,12 +46,6 @@ public:
     {
     }
     
-    template< class Vector2D >
-    inline Vec2I( const Vector2D &v )
-    {
-        SetValue( ( S32 )v.GetX(), ( S32 )v.GetY() );
-    }
-    
     inline Vec2I( const S32 x, const S32 y )
     {
         SetValue( x, y );

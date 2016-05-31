@@ -30,6 +30,7 @@
 
 #include "math/types.h"
 #include "math/scalar/mathf.h"
+#include "math/scalar/vec2i.h"
 
 template< class Number >
 class Vec2;
@@ -56,23 +57,40 @@ class Vec2
 
 public:
 
+    // Done
     inline Vec2()
     {
     }
     
+    // Done
+    inline Vec2( const Number num )
+    {
+        mValues[0] = num;
+        mValues[1] = num;
+    }
+    
+    // Done
     inline Vec2( const Number x, const Number y )
     {
         mValues[0] = x;
         mValues[1] = y;
     }
     
-    template< class Vector2D >
-    inline Vec2( const Vector2D &v )
+    // Done
+    inline Vec2( const Vec2I &v )
     {
         mValues[0] = ( Number )v.GetX();
         mValues[1] = ( Number )v.GetY();
     }
     
+    // Done
+    inline Vec2I ToVec2I() const
+    {
+        return Vec2I( (S32) mValues[0],
+                      (S32) mValues[1]);
+    }
+    
+    // Done
     inline Vec2 &operator=( const Vec2 &other )
     {
         mValues[0] = other.mValues[0];
@@ -81,6 +99,7 @@ public:
         return *this;
     }
     
+    // Done
     inline Vec2 &operator-=( const Vec2 &v )
     {
         mValues[0] -= v.mValues[0];
@@ -89,6 +108,7 @@ public:
         return *this;
     }
     
+    // Done
     inline Vec2 &operator+=( const Vec2 &v )
     {
         mValues[0] += v.mValues[0];
@@ -97,6 +117,7 @@ public:
         return *this;
     }
     
+    // Done
     inline Vec2 &operator/=( const Number s )
     {
         assert( s != 0.0f );
@@ -107,6 +128,7 @@ public:
         return *this;
     }
     
+    // Done
     inline Vec2 &operator*=( const Number s )
     {
         mValues[0] *= s;
@@ -115,24 +137,34 @@ public:
         return *this;
     }
     
+    // Done
     inline bool operator==( const Vec2 &other ) const
     {
         return Mathf::Equal< Number >( mValues[0], other.mValues[0] ) && Mathf::Equal< Number >( mValues[1], other.mValues[1] );
     }
     
+    // Done
     inline bool operator!=( const Vec2 &other ) const
     {
         return !( *this == other );
     }
     
+    // Done
     inline Number &operator[]( const U8 axis )
     {
         return mValues[ axis ];
     }
     
+    // Done
     inline const Number &operator[]( const U8 axis ) const
     {
         return mValues[ axis ];
+    }
+    
+    inline void SetValue( const Number x, const Number y )
+    {
+        mValues[0] = x;
+        mValues[1] = y;
     }
     
     inline Number Dot( const Vec2 &v ) const
@@ -158,12 +190,6 @@ public:
     inline Number Distance( const Vec2 &v ) const
     {
         return ( *this - v ).Length();
-    }
-    
-    inline void SetValue( const Number x, const Number y )
-    {
-        mValues[0] = x;
-        mValues[1] = y;
     }
     
     inline Vec2 SafeNormalise()
