@@ -26,8 +26,13 @@ struct SSE4_1SimdTraits<F64> : public BaseSimdTraits<F64>
     static const size_t alignment = 16;
 };
 
-class SSE41Vec2d : public SimdVectorBase< SSE41Vec2d, F64>
+class SSE41Vec2d
 {
+    friend SSE41Vec2d operator+( const SSE41Vec2d &lhs, const SSE41Vec2d &rhs );
+    friend SSE41Vec2d operator-( const SSE41Vec2d &lhs, const SSE41Vec2d &rhs );
+    friend SSE41Vec2d operator/( const SSE41Vec2d &lhs, const SSE41Vec2d &rhs );
+    friend SSE41Vec2d operator*( const SSE41Vec2d &lhs, const SSE41Vec2d &rhs );
+    
 public:
 
     SSE41Vec2d()
@@ -79,21 +84,6 @@ public:
     void StoreAligned( F64 *dest ) const
     {
         _mm_store_pd( dest, mValue );
-    }
-
-    void RotateOne( U32 rotation )
-    {
-        const S32 select = ( 1 ) | ( 2 << 2 ) | ( 3 << 4 ) | ( 0 << 6 );
-        mValue = _mm_shuffle_pd( mValue, mValue, select );
-    }
-    
-    static inline U32 RotateIndex( U32 rotation, U32 index )
-    {
-        const U32 registerOffset = 2;
-        
-        const U32 rotatedIndex = ( ( index + rotation ) & ( registerOffset - 1 ) );
-    
-        return rotatedIndex;
     }
 
     inline SSE41Vec2d RoundToNearest() const
@@ -163,6 +153,8 @@ inline SSE41Vec2d_b operator>= ( const SSE41Vec2d &lhs, const SSE41Vec2d &rhs )
 {
     return _mm_cmpge_pd( lhs, rhs );
 }
+
+DEFINE_COMMON_OPERATORS( SSE41Vec2d_b, F64 );
 
 //
 // Special

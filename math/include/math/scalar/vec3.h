@@ -31,6 +31,7 @@
 #include "math/types.h"
 #include "math/scalar/mathf.h"
 #include "math/scalar/vec2.h"
+#include "math/scalar/vec3i.h"
 
 template< class Number >
 class Vec3;
@@ -45,14 +46,29 @@ typedef Vec3< Real > Vec3r;
 template< class Number >
 class Vec3
 {
-    friend Vec3 operator+( const Vec3 &, const Vec3 & );
-    friend Vec3 operator*( const Vec3 &, const Vec3 & );
-    friend Vec3 operator-( const Vec3 &, const Vec3 & );
-    friend Vec3 operator-( const Vec3 & );
-    friend Vec3 operator*( const Vec3 &, const Number );
-    friend Vec3 operator*( const Number , const Vec3 & );
-    friend Vec3 operator/( const Vec3 &, const Number );
-    friend Vec3 operator/( const Vec3 &, const Vec3 & );
+    template< class T >
+    friend Vec3< T > operator+( const Vec3< T > &, const Vec3< T > & );
+    
+    template< class T >
+    friend Vec3< T > operator*( const Vec3< T > &, const Vec3< T > & );
+    
+    template< class T >
+    friend Vec3< T > operator-( const Vec3< T > &, const Vec3< T > & );
+    
+    template< class T >
+    friend Vec3< T > operator-( const Vec3< T > & );
+    
+    template< class T >
+    friend Vec3< T > operator*( const Vec3< T > &, const T );
+    
+    template< class T >
+    friend Vec3< T > operator*( const T , const Vec3< T > & );
+    
+    template< class T >
+    friend Vec3< T > operator/( const Vec3< T > &, const T );
+    
+    template< class T >
+    friend Vec3< T > operator/( const Vec3< T > &, const Vec3< T > & );
 
 public:
     
@@ -67,8 +83,7 @@ public:
         mValues[2] = z;
     }
 
-    template < class Vector3D >
-    inline Vec3( const Vector3D &v )
+    inline Vec3( const Vec3I &v )
     {
         mValues[0] = ( Number )v.GetX();
         mValues[1] = ( Number )v.GetY();
@@ -153,7 +168,7 @@ public:
         return mValues[ axis ];
     }
 
-    inline const Number &operator[]( const size_t axis ) const
+    inline const Number operator[]( const size_t axis ) const
     {
         return mValues[ axis ];
     }
@@ -430,6 +445,13 @@ Vec3< Number > operator/( const Vec3< Number > &v1, const Vec3< Number > &v2 )
     return Vec3< Number >( v1.mValues[0] / v2.mValues[0],
                            v1.mValues[1] / v2.mValues[1] ,
                            v1.mValues[2] / v2.mValues[2] );
+}
+
+// Vec3I conversion:
+template < class T >
+inline Vec3I::Vec3I( const Vec3< T > &v )
+{
+    SetValue( ( S32 )v.GetX(), ( S32 )v.GetY(), ( S32 )v.GetZ() );
 }
 
 #endif

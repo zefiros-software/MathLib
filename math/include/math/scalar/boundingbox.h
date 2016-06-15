@@ -28,6 +28,7 @@
 #ifndef __ENGINE_BOUNDINGBOX_H__
 #define __ENGINE_BOUNDINGBOX_H__
 
+/*
 #include "math/scalar/vec3.h"
 
 class BoundingBox
@@ -50,6 +51,6 @@ private:
     Vec3 mMaxAxis;
     Vec3 mOffset;
 };
-
+*/
 
 #endif

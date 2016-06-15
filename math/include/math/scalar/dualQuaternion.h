@@ -28,6 +28,7 @@
 #ifndef __ENGINE_DUALQUATERNION_H__
 #define __ENGINE_DUALQUATERNION_H__
 
+/*
 #include "math/scalar/quaternion.h"
 
 class Vec3;
@@ -60,6 +61,6 @@ private:
     Quaternion mReal;
     Quaternion mDual;
 };
-
+*/
 
 #endif

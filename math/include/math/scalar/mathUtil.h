@@ -28,6 +28,8 @@
 #ifndef __ENGINE_MATHUTIL_H__
 #define __ENGINE_MATHUTIL_H__
 
+/*
+
 #include "math/scalar/dualQuaternion.h"
 #include "math/scalar/matrix4.h"
 
@@ -40,5 +42,7 @@ namespace MathUtil
 
     Vec3 DualQuaternionTransform( const Vec3 &pt, const DualQuaternion &DQ );
 }
+
+*/ 
 
 #endif

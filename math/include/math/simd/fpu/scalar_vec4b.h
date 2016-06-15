@@ -6,8 +6,30 @@
 
 #include "math/simd/simdVectorBoolBase.h"
 
+class ScalarVec4f;
+class ScalarVec4d;
+
 class ScalarVec4b : public SimdVectorBoolBase< ScalarVec4b > 
 {
+    friend ScalarVec4b operator== ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator!= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator< ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator> ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator<= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator>= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4b &rhs );
+    friend ScalarVec4f operator&( const ScalarVec4b &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4f SIMD_Select( const ScalarVec4b &sel, const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    
+    friend ScalarVec4b operator== ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator!= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator< ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator<= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator> ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator>= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4d SIMD_Select( const ScalarVec4b &sel, const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    
 public:
 
     ScalarVec4b()

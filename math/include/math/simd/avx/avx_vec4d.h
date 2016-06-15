@@ -27,8 +27,13 @@ struct AvxSimdTraits<F64> : public BaseSimdTraits<F64>
     static const size_t alignment = 32;
 };
 
-class AvxVec4d : public SimdVectorBase< AvxVec4d, F64>
+class AvxVec4d
 {
+    friend AvxVec4d operator+( const AvxVec4d &lhs, const AvxVec4d &rhs );
+    friend AvxVec4d operator-( const AvxVec4d &lhs, const AvxVec4d &rhs );
+    friend AvxVec4d operator*( const AvxVec4d &lhs, const AvxVec4d &rhs );
+    friend AvxVec4d operator/( const AvxVec4d &lhs, const AvxVec4d &rhs );
+    
 public:
 
     union EasyConvert
@@ -131,6 +136,9 @@ public:
         easyc.ul = 0xFFFFFFFFFFFFFFFF;
         return _mm256_set1_pd( easyc.d );
     }
+    
+    DEFINE_ASSIGNMENT_OPERATORS( AvxVec4d, F64 );
+    DEFINE_INC_OPERATORS( AvxVec4d, F64 )
 
 private:
 
@@ -209,6 +217,9 @@ inline AvxVec4d operator&( const AvxVec4d_b &lhs, const AvxVec4d &rhs )
 {
     return _mm256_and_pd( lhs, rhs );
 }
+
+DEFINE_COMMON_OPERATORS( AvxVec4d, F64 );
+
 //
 // Special
 //

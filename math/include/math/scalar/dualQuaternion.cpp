@@ -24,6 +24,8 @@
  * @endcond
  */
 
+/*
+
 #include "math/scalar/dualQuaternion.h"
 
 DualQuaternion::DualQuaternion()
@@ -104,3 +106,5 @@ void DualQuaternion::Normalize()
         mDual = dualN - ( realN * realN.Dot( dualN ) );
     }
 }
+
+ */

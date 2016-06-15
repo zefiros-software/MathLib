@@ -24,8 +24,28 @@ struct FpuSimdTraits<F32> : public BaseSimdTraits<F32>
     static const size_t alignment = 16;
 };
 
-class ScalarVec4f : public SimdVectorBase< ScalarVec4f, F32>
+class ScalarVec4f
 {
+    friend ScalarVec4f operator+( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4f operator-( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4f operator*( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4f operator/( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator== ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator!= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator< ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator> ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator<= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4b operator>= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4b &rhs );
+    friend ScalarVec4f operator&( const ScalarVec4b &lhs, const ScalarVec4f &rhs );
+    
+    friend ScalarVec4f SIMD_Sqrt( const ScalarVec4f &lhs );
+    friend ScalarVec4f SIMD_Rcp( const ScalarVec4f &lhs );
+    friend ScalarVec4f SIMD_RcpSqrt( const ScalarVec4f &lhs );
+    friend ScalarVec4f SIMD_Select( const ScalarVec4b &sel, const ScalarVec4f &lhs, const ScalarVec4f &rhs );
+    friend F32 SIMD_Hadd( const ScalarVec4f &lhs );
+    
 public:
 
     union EasyConvert
@@ -97,25 +117,6 @@ public:
     {
         StoreUnaligned( dest );
     }
-
-    void RotateOne( U32 rotation )
-    {
-        F32 temp = mValue[0];
-
-        mValue[0] = mValue[1];
-        mValue[1] = mValue[2];
-        mValue[2] = mValue[3];
-        mValue[3] = temp;
-    }
-    
-    static inline U32 RotateIndex( U32 rotation, U32 index )
-    {
-        const U32 registerOffset = 4;
-        
-        const U32 rotatedIndex = ( ( index + rotation ) & ( registerOffset - 1 ) );
-    
-        return rotatedIndex;
-    }
     
     inline ScalarVec4f RoundToNearest() const
     {
@@ -124,7 +125,7 @@ public:
 
         for ( U32 i = 0; i < 4; ++i )
         {
-            newVec()[i] = (F32) Mathf::Rint( mValue[i] );
+            newVec.mValue[i] = (F32) Mathf::Rint( mValue[i] );
         }
     
         return newVec;
@@ -136,7 +137,7 @@ public:
 
         for ( U32 i = 0; i < 4; ++i )
         {
-            newVec()[i] = 0.0;
+            newVec.mValue[i] = 0.0;
         }
     
         return newVec;
@@ -151,11 +152,14 @@ public:
 
         for ( U32 i = 0; i < 4; ++i )
         {
-            newVec()[i] = easyc.f;
+            newVec.mValue[i] = easyc.f;
         }
     
         return newVec;
     }
+    
+    DEFINE_ASSIGNMENT_OPERATORS( ScalarVec4f, F32 );
+    DEFINE_INC_OPERATORS( ScalarVec4f, F32 )
 
 private:
 
@@ -165,14 +169,15 @@ private:
 //
 // Math
 //
-
+                               
+                               
 inline ScalarVec4f operator+( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 {
     ScalarVec4f newVec;
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] + rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] + rhs.mValue[i];
     }
 
     return newVec;
@@ -184,7 +189,7 @@ inline ScalarVec4f operator-( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] - rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] - rhs.mValue[i];
     }
 
     return newVec;
@@ -196,7 +201,7 @@ inline ScalarVec4f operator*( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] * rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] * rhs.mValue[i];
     }
 
     return newVec;
@@ -208,7 +213,7 @@ inline ScalarVec4f operator/( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] / rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] / rhs.mValue[i];
     }
 
     return newVec;
@@ -224,7 +229,7 @@ inline ScalarVec4b operator== ( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] == rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] == rhs.mValue[i];
     }
 
     return newVec;
@@ -236,7 +241,7 @@ inline ScalarVec4b operator!= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] != rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] != rhs.mValue[i];
     }
 
     return newVec;
@@ -248,7 +253,7 @@ inline ScalarVec4b operator< ( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] < rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] < rhs.mValue[i];
     }
 
     return newVec;
@@ -260,7 +265,7 @@ inline ScalarVec4b operator<= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] <= rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] <= rhs.mValue[i];
     }
 
     return newVec;
@@ -272,7 +277,7 @@ inline ScalarVec4b operator> ( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] > rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] > rhs.mValue[i];
     }
 
     return newVec;
@@ -284,7 +289,7 @@ inline ScalarVec4b operator>= ( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = lhs()[i] >= rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] >= rhs.mValue[i];
     }
 
     return newVec;
@@ -303,11 +308,11 @@ inline ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4f &rhs )
     
     for ( U32 i = 0; i < 4; ++i )
     {
-        conv1.f = lhs()[i];
-        conv2.f = rhs()[i];
+        conv1.f = lhs.mValue[i];
+        conv2.f = rhs.mValue[i];
         conv3.u = conv1.u & conv2.u;
         
-        newVec()[i] = conv3.f;
+        newVec.mValue[i] = conv3.f;
     }
 
     return newVec;
@@ -326,11 +331,11 @@ inline ScalarVec4f operator&( const ScalarVec4f &lhs, const ScalarVec4b &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        conv1.f = lhs()[i];
-        conv2.f = rhs()[i];
+        conv1.f = lhs.mValue[i];
+        conv2.f = rhs.mValue[i];
         conv3.u = conv1.u & conv2.u;
         
-        newVec()[i] = conv3.f;
+        newVec.mValue[i] = conv3.f;
     }
 
     return newVec;
@@ -349,15 +354,17 @@ inline ScalarVec4f operator&( const ScalarVec4b &lhs, const ScalarVec4f &rhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        conv1.f = lhs()[i];
-        conv2.f = rhs()[i];
+        conv1.f = lhs.mValue[i];
+        conv2.f = rhs.mValue[i];
         conv3.u = conv1.u & conv2.u;
         
-        newVec()[i] = conv3.f;
+        newVec.mValue[i] = conv3.f;
     }
 
     return newVec;
 }
+
+DEFINE_COMMON_OPERATORS( ScalarVec4f, F32 );
 
 //
 // Special
@@ -369,7 +376,7 @@ inline ScalarVec4f SIMD_Sqrt( const ScalarVec4f &lhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = Mathf::Sqrt( lhs()[i] );
+        newVec.mValue[i] = Mathf::Sqrt( lhs.mValue[i] );
     }
 
     return newVec;
@@ -381,7 +388,7 @@ inline ScalarVec4f SIMD_Rcp( const ScalarVec4f &lhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = Mathf::Rcp( lhs()[i] );
+        newVec.mValue[i] = Mathf::Rcp( lhs.mValue[i] );
     }
 
     return newVec;
@@ -398,7 +405,7 @@ inline ScalarVec4f SIMD_Select( const ScalarVec4b &sel, const ScalarVec4f &lhs, 
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        newVec()[i] = sel()[i] ? lhs()[i] : rhs()[i];
+        newVec.mValue[i] = sel.mValue[i] ? lhs.mValue[i] : rhs.mValue[i];
     }
 
     return newVec;
@@ -410,7 +417,7 @@ inline F32 SIMD_Hadd( const ScalarVec4f &lhs )
 
     for ( U32 i = 0; i < 4; ++i )
     {
-        val += lhs()[i];
+        val += lhs.mValue[i];
     }
 
     return val;

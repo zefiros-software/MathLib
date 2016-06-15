@@ -14,7 +14,6 @@ class ScalarVec4d;
 template <>
 struct FpuSimdTraits<F64> : public BaseSimdTraits<F64>
 {
-    
     typedef ScalarVec4d vec_type;
     typedef ScalarVec4b bool_type;
     static const size_t width = 4;
@@ -23,8 +22,26 @@ struct FpuSimdTraits<F64> : public BaseSimdTraits<F64>
     static const size_t alignment = 16;
 };
 
-class ScalarVec4d : public SimdVectorBase< ScalarVec4d, F64> 
+class ScalarVec4d
 {
+    friend ScalarVec4d operator+( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4d operator-( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4d operator*( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4d operator/( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    
+    friend ScalarVec4b operator== ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator!= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator< ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator<= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator> ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend ScalarVec4b operator>= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    
+    friend ScalarVec4d SIMD_Sqrt( const ScalarVec4d &lhs );
+    friend ScalarVec4d SIMD_Rcp( const ScalarVec4d &lhs );
+    friend ScalarVec4d SIMD_RcpSqrt( const ScalarVec4d &lhs );
+    friend ScalarVec4d SIMD_Select( const ScalarVec4b &sel, const ScalarVec4d &lhs, const ScalarVec4d &rhs );
+    friend F64 SIMD_Hadd( const ScalarVec4d &lhs );
+    
 public:
 
     ScalarVec4d()
@@ -52,7 +69,7 @@ public:
     {
     	std::copy( rhs,rhs+4, mValue );
     }
-
+    
     inline ScalarVec4d &operator=( const F64 *rhs )
     {
         std::copy( rhs,rhs+4, mValue );
@@ -90,32 +107,13 @@ public:
         StoreUnaligned( dest );
     }
     
-    void RotateOne( U32 rotation  )
-    {
-        F64 temp = mValue[0];
-        
-        mValue[0] = mValue[1];
-        mValue[1] = mValue[2];
-        mValue[2] = mValue[3];
-        mValue[3] = temp;
-    }
-    
-    static inline U32 RotateIndex( U32 rotation, U32 index )
-    {
-        const U32 registerOffset = 4;
-        
-        const U32 rotatedIndex = ( ( index + rotation ) & ( registerOffset - 1 ) );
-    
-        return rotatedIndex;
-    }
-    
     inline ScalarVec4d RoundToNearest() const
     {   
         ScalarVec4d newVec;
 
         for ( U32 i = 0; i < 4; ++i )
         {
-            newVec()[i] = (F64) Mathf::Rint( mValue[i] );
+            newVec.mValue[i] = (F64) Mathf::Rint( mValue[i] );
         }
     
         return newVec;
@@ -130,13 +128,15 @@ private:
 // Math
 //
 
+
+
 inline ScalarVec4d operator+( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
 {
     ScalarVec4d newVec;
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] + rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] + rhs.mValue[i];
     }
     
     return newVec;
@@ -148,7 +148,7 @@ inline ScalarVec4d operator-( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] - rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] - rhs.mValue[i];
     }
     
     return newVec;
@@ -160,7 +160,7 @@ inline ScalarVec4d operator*( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] * rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] * rhs.mValue[i];
     }
     
     return newVec;
@@ -172,7 +172,7 @@ inline ScalarVec4d operator/( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] / rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] / rhs.mValue[i];
     }
     
     return newVec;
@@ -188,7 +188,7 @@ inline ScalarVec4b operator== ( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] == rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] == rhs.mValue[i];
     }
     
     return newVec;
@@ -200,7 +200,7 @@ inline ScalarVec4b operator!= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] != rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] != rhs.mValue[i];
     }
     
     return newVec;
@@ -212,7 +212,7 @@ inline ScalarVec4b operator< ( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] < rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] < rhs.mValue[i];
     }
     
     return newVec;
@@ -224,7 +224,7 @@ inline ScalarVec4b operator<= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] <= rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] <= rhs.mValue[i];
     }
     
     return newVec;
@@ -236,7 +236,7 @@ inline ScalarVec4b operator> ( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] > rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] > rhs.mValue[i];
     }
     
     return newVec;
@@ -248,7 +248,7 @@ inline ScalarVec4b operator>= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = lhs()[i] >= rhs()[i];
+        newVec.mValue[i] = lhs.mValue[i] >= rhs.mValue[i];
     }
     
     return newVec;
@@ -259,13 +259,15 @@ inline ScalarVec4b operator>= ( const ScalarVec4d &lhs, const ScalarVec4d &rhs )
 // Special
 //
 
+
+
 inline ScalarVec4d SIMD_Sqrt( const ScalarVec4d &lhs )
 {
    ScalarVec4d newVec;
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = Mathf::Sqrt( lhs()[i] );
+        newVec.mValue[i] = Mathf::Sqrt( lhs.mValue[i] );
     }
     
     return newVec; 
@@ -277,7 +279,7 @@ inline ScalarVec4d SIMD_Rcp( const ScalarVec4d &lhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = Mathf::Rcp( lhs()[i] );
+        newVec.mValue[i] = Mathf::Rcp( lhs.mValue[i] );
     }
     
     return newVec; 
@@ -294,7 +296,7 @@ inline ScalarVec4d SIMD_Select( const ScalarVec4b &sel, const ScalarVec4d &lhs, 
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        newVec()[i] = sel()[i] ? lhs()[i] : rhs()[i];
+        newVec.mValue[i] = sel.mValue[i] ? lhs.mValue[i] : rhs.mValue[i];
     }
     
     return newVec;
@@ -306,7 +308,7 @@ inline F64 SIMD_Hadd( const ScalarVec4d &lhs )
     
     for ( U32 i=0; i < 4; ++i ) 
     {
-        val += lhs()[i];
+        val += lhs.mValue[i];
     }
     
     return val;
