@@ -30,10 +30,16 @@
 
 #include "math/types.h"
 
+#include <assert.h>
+
+template< class T >
+class Vec3;
+
 class Vec3I
 {
     friend Vec3I operator+( const Vec3I &, const Vec3I & );
     friend Vec3I operator*( const Vec3I &, const Vec3I & );
+    friend Vec3I operator%( const Vec3I &, const Vec3I & );
     friend Vec3I operator-( const Vec3I &, const Vec3I & );
     friend Vec3I operator-( const Vec3I & );
     friend Vec3I operator*( const Vec3I &, const S32 );
@@ -50,23 +56,8 @@ public:
         mValues[2] = 0;
     }
     
-    template < class Vector3D >
-    inline Vec3I( const Vector3D &v )
-    {
-        SetValue( ( S32 )v.GetX(), ( S32 )v.GetY(), ( S32 )v.GetZ() );
-    }
-    
-    template < class Vector2D >
-    inline Vec3I( const Vector2D &v, S32 z )
-    {
-        SetValue( ( S32 )v[0], ( S32 )v[1], z );
-    }
-    
-    template < class Vector2D >
-    inline Vec3I( S32 x, const Vector2D &v )
-    {
-        SetValue( x, ( S32 )v[0], ( S32 )v[1] );
-    }
+    template < class T >
+    inline Vec3I( const Vec3< T > &v );
     
     inline Vec3I( const S32 x, const S32 y, const S32 z )
     {
@@ -183,6 +174,14 @@ inline Vec3I operator*( const Vec3I &v1, const Vec3I &v2 )
                   v1.mValues[1] * v2.mValues[1],
                   v1.mValues[2] * v2.mValues[2] );
 }
+
+inline Vec3I operator%( const Vec3I &v1, const Vec3I &v2 )
+{
+    return Vec3I( v1.mValues[0] % v2.mValues[0],
+                  v1.mValues[1] % v2.mValues[1],
+                  v1.mValues[2] % v2.mValues[2] );
+}
+
 
 inline Vec3I operator-( const Vec3I &v1, const Vec3I &v2 )
 {

@@ -24,6 +24,7 @@
  * @endcond
  */
 
+/*
 #include "math/scalar/boundingbox.h"
 
 BoundingBox::BoundingBox( const Vec3 &minAxis, const Vec3 &maxAxis, const Vec3 &offset )
@@ -62,3 +63,4 @@ Real BoundingBox::GetBoundingSphereR2() const
 
     return dist;
 }
+*/

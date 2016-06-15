@@ -28,6 +28,8 @@
 #ifndef __ENGINE_TRANSFORMHOLDER_H__
 #define __ENGINE_TRANSFORMHOLDER_H__
 
+/*
+
 #include "math/scalar/quaternion.h"
 #include "math/scalar/matrix4.h"
 
@@ -40,5 +42,7 @@ struct TransformHolder
     Matrix4 GetViewMatrix() const;
     Matrix4 GetWorldMatrix() const;
 };
+ 
+*/
 
 #endif

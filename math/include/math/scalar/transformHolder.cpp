@@ -23,6 +23,9 @@
  *
  * @endcond
  */
+
+/*
+ 
 #include "math/scalar/transformHolder.h"
 #include "math/scalar/mathUtil.h"
 
@@ -38,3 +41,5 @@ Matrix4 TransformHolder::GetWorldMatrix() const
 
     return worldMatrix;
 }
+
+*/

@@ -44,11 +44,20 @@ typedef Matrix3< Real > Matrix3r;
 template< class Number >
 class Matrix3
 {
-    friend Matrix3 operator+( const Matrix3 &m1, const Matrix3 &m2 );
-    friend Matrix3 operator-( const Matrix3 &m1, const Matrix3 &m2 );
-    friend Matrix3 operator*( const Matrix3 &m1, const Matrix3 &m2 );
-    friend Matrix3 operator*( const Matrix3 &m, const Real s );
-    friend Vec3< Number > operator*( const Matrix3 &m, const Vec3< Number > &v );
+    template< class T >
+    friend Matrix3< T > operator+( const Matrix3< T > &m1, const Matrix3< T > &m2 );
+    
+    template< class T >
+    friend Matrix3< T > operator-( const Matrix3< T > &m1, const Matrix3< T > &m2 );
+    
+    template< class T >
+    friend Matrix3< T > operator*( const Matrix3< T > &m1, const Matrix3< T > &m2 );
+    
+    template< class T >
+    friend Matrix3< T > operator*( const Matrix3< T > &m, const T s );
+    
+    template< class T >
+    friend Vec3< T > operator*( const Matrix3< T > &m, const Vec3< T > &v );
 
 public:
 
@@ -316,12 +325,10 @@ public:
         mValues[2].SetValue( a31, a32, a33 );
     }
     
-    inline Vec3< Number > &operator[]( const U8 axis )
+    inline Vec3< Number > &operator[]( const U32 axis )
     {
         return mValues[axis];
     }
-    
-    
     
     static inline Matrix3 GetZero()
     {

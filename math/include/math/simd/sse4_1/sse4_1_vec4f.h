@@ -26,8 +26,12 @@ struct SSE4_1SimdTraits<F32> : public BaseSimdTraits<F32>
     static const size_t alignment = 16;
 };
 
-class SSE41Vec4f : public SimdVectorBase< SSE41Vec4f, F32>
+class SSE41Vec4f
 {
+    friend SSE41Vec4f operator+( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs );
+    friend SSE41Vec4f operator-( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs );
+    friend SSE41Vec4f operator/( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs );
+    friend SSE41Vec4f operator*( const SSE41Vec4f &lhs, const SSE41Vec4f &rhs );
 public:
 
     union EasyConvert
@@ -86,21 +90,6 @@ public:
         _mm_store_ps( dest, mValue );
     }
 
-    void RotateOne( U32 rotation )
-    {
-        const S32 select = ( 1 ) | ( 2 << 2 ) | ( 3 << 4 ) | ( 0 << 6 );
-        mValue = _mm_shuffle_ps( mValue, mValue, select );
-    }
-    
-    static inline U32 RotateIndex( U32 rotation, U32 index )
-    {
-        const U32 registerOffset = 4;
-        
-        const U32 rotatedIndex = ( ( index + rotation ) & ( registerOffset - 1 ) );
-    
-        return rotatedIndex;
-    }
-
     inline SSE41Vec4f RoundToNearest() const
     {
         return _mm_round_ps( mValue, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC );
@@ -126,6 +115,9 @@ public:
         easyc.u = 0xFFFFFFFF;
         return _mm_set1_ps( easyc.f );
     }
+    
+    DEFINE_ASSIGNMENT_OPERATORS( SSE41Vec4f, F32 );
+    DEFINE_INC_OPERATORS( SSE41Vec4f, F32 );
 
 private:
 
@@ -199,6 +191,8 @@ inline SSE41Vec4f operator&( const SSE41Vec4f_b &lhs, const SSE41Vec4f &rhs )
 {
     return _mm_and_ps( lhs, rhs );
 }
+
+DEFINE_COMMON_OPERATORS( SSE41Vec4f_b, F32 );
 
 //
 // Special

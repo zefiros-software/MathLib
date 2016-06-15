@@ -20,145 +20,119 @@ struct BaseSimdTraits<F32>
     typedef F32 valueType;
 };
 
-
-template< typename TYPE, typename VALUE_TYPE >
-class SimdVectorBase
-{
-public:
-    
-    typedef typename BaseSimdTraits<VALUE_TYPE>::valueType valueType;
-    
-    //downcast
-    inline TYPE& operator()()
-    {
-        return *static_cast< TYPE* >( this );
-    }
-    
-    inline const TYPE& operator()() const
-    {
-        return *static_cast< const TYPE* >( this );
-    }
-    
-    //
-    // handle all self operators here
-    //
-    inline TYPE& operator+= ( const TYPE& rhs )
-    {
-        (*this)() = (*this)() + rhs;
-        return (*this)();
-    } 
-    
-    inline TYPE& operator+= ( const valueType& rhs )
-    {
-        (*this)() = (*this)() + TYPE( rhs );
-        return (*this)();
-    }
-    
-    inline TYPE& operator-= ( const TYPE& rhs )
-    {
-        (*this)() = (*this)() - rhs;
-        return (*this)();
-    } 
-    
-    inline TYPE& operator-= ( const valueType& rhs )
-    {
-        (*this)() = (*this)() - TYPE( rhs );
-        return (*this)();
-    }
-    
-    inline TYPE& operator*= ( const TYPE& rhs )
-    {
-        (*this)() = (*this)() * rhs;
-        return (*this)();
-    } 
-    
-    inline TYPE& operator*= ( const valueType& rhs )
-    {
-        (*this)() = (*this)() * TYPE( rhs );
-        return (*this)();
-    }
-    
-    inline TYPE& operator/= ( const TYPE& rhs )
-    {
-        (*this)() = (*this)() / rhs;
-        return (*this)();
-    } 
-    
-    inline TYPE& operator/= ( const valueType& rhs )
-    {
-        (*this)() = (*this)() / TYPE( rhs );
-        return (*this)();
-    }
-    
-    // Increment decrement
-    inline TYPE& operator++()
-    {
-        (*this)() += valueType( 1 );
-        return (*this)();
-    }
-    
-    inline TYPE& operator--()
-    {
-        (*this)() -= valueType( 1 );
-        return (*this)();
+// Big thanks again http://jmabille.github.io/blog/2014/11/20/performance-considerations-about-simd-wrappers/
+#define DEFINE_OPERATOR_PLUS_ASSIGN( RTYPE, ARG )\
+    inline RTYPE& operator+=( const ARG &rhs )\
+    {\
+        *this = *this + RTYPE( rhs );\
+        return *this;\
     }
 
-protected:
+#define DEFINE_OPERATOR_MIN_ASSIGN( RTYPE, ARG )\
+    inline RTYPE& operator-=( const ARG &rhs )\
+    {\
+        *this = *this - RTYPE( rhs );\
+        return *this;\
+    }
 
-    inline SimdVectorBase(){}
-    inline ~SimdVectorBase(){}
-    	
-    inline SimdVectorBase( const SimdVectorBase & ){}
-    inline SimdVectorBase( const SimdVectorBase && ){}
-    inline SimdVectorBase& operator= ( const SimdVectorBase & ){ return *this; }
-};
+#define DEFINE_OPERATOR_MUL_ASSIGN( RTYPE, ARG )\
+    inline RTYPE& operator*=( const ARG &rhs )\
+    {\
+        *this = *this * RTYPE( rhs );\
+        return *this;\
+    }
 
-template< typename TYPE >
-inline TYPE operator+( const TYPE &lhs, const typename TYPE::valueType &rhs )
-{
-    return lhs() + TYPE( rhs );
-}
+#define DEFINE_OPERATOR_DIV_ASSIGN( RTYPE, ARG )\
+    inline RTYPE& operator/=( const ARG &rhs )\
+    {\
+        *this = *this / RTYPE( rhs );\
+        return *this;\
+    }
 
-template< typename TYPE >
-inline TYPE operator+( const typename TYPE::valueType &lhs, const TYPE &rhs )
-{
-    return TYPE(lhs) + rhs();
-}
+#define DEFINE_OPERATOR_PLUSPLUS(RTYPE, ARG)\
+    inline RTYPE& operator++()\
+    {\
+        (*this) += ARG( 1 );\
+        return (*this);\
+    }\
+    inline RTYPE operator++(int)\
+    {\
+        RTYPE r = (*this) + ARG( 1 );\
+        return r;\
+    }
 
-template< typename TYPE >
-inline TYPE operator-( const TYPE &lhs, const typename TYPE::valueType &rhs )
-{
-    return lhs() - TYPE( rhs );
-}
+#define DEFINE_OPERATOR_MINMIN(RTYPE, ARG)\
+    inline RTYPE& operator--()\
+    {\
+        (*this) -= ARG( 1 );\
+        return (*this);\
+    }\
+    inline RTYPE operator--(int)\
+    {\
+        RTYPE r = (*this) - ARG( 1 );\
+        return r;\
+    }
 
-template< typename TYPE >
-inline TYPE operator-( const typename TYPE::valueType &lhs, const TYPE &rhs )
-{
-    return TYPE(lhs) - rhs();
-}
+#define DEFINE_OPERATOR_PLUS( RTYPE, VALUE_TYPE )\
+    inline RTYPE operator+( const RTYPE &lhs, const VALUE_TYPE rhs )\
+    {\
+        return lhs + RTYPE( rhs );\
+    }\
+    inline RTYPE operator+( const VALUE_TYPE lhs, const RTYPE &rhs )\
+    {\
+        return RTYPE(lhs) + rhs;\
+    }
 
-template< typename TYPE >
-inline TYPE operator*( const TYPE &lhs, const typename TYPE::valueType &rhs )
-{
-    return lhs() * TYPE( rhs );
-}
+#define DEFINE_OPERATOR_MIN( RTYPE, VALUE_TYPE )\
+    inline RTYPE operator-( const RTYPE &lhs, const VALUE_TYPE rhs )\
+    {\
+        return lhs - RTYPE( rhs );\
+    }\
+    inline RTYPE operator-( const VALUE_TYPE lhs, const RTYPE &rhs )\
+    {\
+        return RTYPE(lhs) - rhs;\
+    }
 
-template< typename TYPE >
-inline TYPE operator*( const typename TYPE::valueType &lhs, const TYPE &rhs )
-{
-    return TYPE(lhs) * rhs();
-}
+#define DEFINE_OPERATOR_MUL( RTYPE, VALUE_TYPE )\
+    inline RTYPE operator*( const RTYPE &lhs, const VALUE_TYPE rhs )\
+    {\
+        return lhs * RTYPE( rhs );\
+    }\
+    inline RTYPE operator*( const VALUE_TYPE lhs, const RTYPE &rhs )\
+    {\
+        return RTYPE(lhs) * rhs;\
+    }
 
-template< typename TYPE >
-inline TYPE operator/( const TYPE &lhs, const typename TYPE::valueType &rhs )
-{
-    return lhs() / TYPE( rhs );
-}
+#define DEFINE_OPERATOR_DIV( RTYPE, VALUE_TYPE )\
+    inline RTYPE operator/( const RTYPE &lhs, const VALUE_TYPE rhs )\
+    {\
+        return lhs / RTYPE( rhs );\
+    }\
+    inline RTYPE operator/( const VALUE_TYPE lhs, const RTYPE &rhs )\
+    {\
+        return RTYPE(lhs) / rhs;\
+    }
 
-template< typename TYPE >
-inline TYPE operator/( const typename TYPE::valueType &lhs, const TYPE &rhs )
-{
-    return TYPE(lhs) / rhs();
-}
+#define DEFINE_ASSIGNMENT_OPERATORS( VEC_TYPE, VALUE_TYPE )\
+    DEFINE_OPERATOR_PLUS_ASSIGN( VEC_TYPE, VEC_TYPE );\
+    DEFINE_OPERATOR_PLUS_ASSIGN( VEC_TYPE, VALUE_TYPE );\
+    DEFINE_OPERATOR_MIN_ASSIGN( VEC_TYPE,VEC_TYPE );\
+    DEFINE_OPERATOR_MIN_ASSIGN( VEC_TYPE,VALUE_TYPE );\
+    DEFINE_OPERATOR_MUL_ASSIGN( VEC_TYPE,VEC_TYPE );\
+    DEFINE_OPERATOR_MUL_ASSIGN( VEC_TYPE,VALUE_TYPE );\
+    DEFINE_OPERATOR_DIV_ASSIGN( VEC_TYPE,VEC_TYPE );\
+    DEFINE_OPERATOR_DIV_ASSIGN( VEC_TYPE,VALUE_TYPE );
+
+
+#define DEFINE_INC_OPERATORS( VEC_TYPE, VALUE_TYPE )\
+    DEFINE_OPERATOR_PLUSPLUS(VEC_TYPE,VEC_TYPE);\
+    DEFINE_OPERATOR_MINMIN(VEC_TYPE,VEC_TYPE);
+
+#define DEFINE_COMMON_OPERATORS( VEC_TYPE, VALUE_TYPE )\
+    DEFINE_OPERATOR_PLUS(VEC_TYPE,VALUE_TYPE);\
+    DEFINE_OPERATOR_MIN(VEC_TYPE,VALUE_TYPE);\
+    DEFINE_OPERATOR_MUL(VEC_TYPE,VALUE_TYPE);\
+    DEFINE_OPERATOR_DIV(VEC_TYPE,VALUE_TYPE);
+
 
 #endif

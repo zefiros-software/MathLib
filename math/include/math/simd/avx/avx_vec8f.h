@@ -28,8 +28,13 @@ struct AvxSimdTraits<F32> : public BaseSimdTraits<F32>
     static const size_t alignment = 32;
 };
 
-class AvxVec8f : public SimdVectorBase< AvxVec8f, F32>
+class AvxVec8f
 {
+    friend AvxVec8f operator+( const AvxVec8f &lhs, const AvxVec8f &rhs );
+    friend AvxVec8f operator-( const AvxVec8f &lhs, const AvxVec8f &rhs );
+    friend AvxVec8f operator*( const AvxVec8f &lhs, const AvxVec8f &rhs );
+    friend AvxVec8f operator/( const AvxVec8f &lhs, const AvxVec8f &rhs );
+    
 public:
     
     union EasyConvert
@@ -134,6 +139,9 @@ public:
         return _mm256_set1_ps( easyc.f );
     }
 
+    DEFINE_ASSIGNMENT_OPERATORS( AvxVec8f, F32 );
+    DEFINE_INC_OPERATORS( AvxVec8f, F32 )
+    
     //
     // Non-generic
     //
@@ -236,6 +244,9 @@ inline AvxVec8f operator&( const AvxVec8f_b &lhs, const AvxVec8f &rhs )
 {
     return _mm256_and_ps( lhs, rhs );
 }
+
+
+DEFINE_COMMON_OPERATORS( AvxVec8f, F32 );
 
 
 //
