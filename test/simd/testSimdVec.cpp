@@ -3,14 +3,14 @@
 #include "helper.h"
 
 #include "math/types.h"
-
+#include "math/scalar/mathf.h"
 #include "math/util/memory/alignedAllocator.h"
 #include "math/util/memory/stackAlign.h"
 #include "math/util/hardware/simdStatus.h"
 
 #include "math/simd/avx.h"
-#include "math/simd/sse41.h"
-#include "math/simd/fpu.h"
+//#include "math/simd/sse41.h"
+//#include "math/simd/fpu.h"
 
 #include <iostream>
 #include <stdlib.h>
@@ -18,15 +18,25 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <limits>
 
-/*
+const static size_t NUM_RAND_TEST_PERMUTATIONS = 1000;
+
+
 static SimdStatus hardwareStatus;
 
 template< typename TYPE >
-Real RandomVal()
+TYPE RandomVal()
 {
     return static_cast <TYPE>(rand())/static_cast <TYPE>( (RAND_MAX/100) );
 }
+
+template< typename TYPE >
+TYPE RandomVal( TYPE maxVal )
+{
+    return RandomVal< TYPE >() % maxVal;
+}
+
 
 void PrintFeatureSupport( std::string feat, bool issupp )
 {
@@ -48,979 +58,845 @@ TEST( P( Hardware ), SimdStatus )
      std::cout << "SIMD_LEVEL: " << hardwareStatus.SIMDLevel() << std::endl;
 }
 
+
 template< typename SimdTraitsReal >
 struct SIMD_TESTS
 {
     // SIMD types
     typedef typename SimdTraitsReal::vec_type simd_vec;
     typedef typename SimdTraitsReal::value_type simd_value_type;
-    typedef typename SimdTraitsReal::bool_type simd_bool;
+    typedef typename SimdTraitsReal::int_type simd_int_type;
+    typedef typename SimdTraitsReal::veci_type simd_veci;
+    typedef typename SimdTraitsReal::vecb_type simd_bool;
+    typedef typename SimdTraitsReal::type_array type_array;
+    typedef typename SimdTraitsReal::int_array int_array;
+    typedef typename SimdTraitsReal::bool_array bool_array;
     
-    static void TestBroadCast()
+    static void TestBoolVecConstructors()
     {
-        simd_value_type val =  RandomVal< simd_value_type >();
-        
-        simd_vec testVec1(val);
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
         {
-            ASSERT_REAL_EQ( val, tempOut1[i] );      
-        }
-    }
-    
-    static void TestLoadUnload()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData );
-        testVec2.LoadUnaligned( tempData );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut2[ SimdTraitsReal::width ];
-        
-        testVec1.StoreAligned( tempOut1 );
-        testVec2.StoreUnaligned( tempOut2 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData[i], tempOut1[i] );   
-            ASSERT_REAL_EQ( tempData[i], tempOut2[i] );   
-        }
-    }
-    
-    static void TestOperatorAddInp()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        testVec1 += testVec2;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] + tempData2[i], tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorAddValInp()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_value_type toAddVal = RandomVal< simd_value_type >();
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        
-        testVec1 += toAddVal;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] + toAddVal, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorSubInp()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        testVec1 -= testVec2;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] - tempData2[i], tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorSubValInp()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_value_type toAddVal = RandomVal< simd_value_type >();
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        
-        testVec1 -= toAddVal;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] - toAddVal, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorMulInp()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        testVec1 *= testVec2;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] * tempData2[i], tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorMulValInp()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_value_type toAddVal = RandomVal< simd_value_type >();
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        
-        testVec1 *= toAddVal;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] * toAddVal, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorDivInp()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        testVec1 /= testVec2;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] / tempData2[i], tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorDivValInp()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_value_type toAddVal = RandomVal< simd_value_type >();
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        
-        testVec1 /= toAddVal;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] / toAddVal, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorIncr()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        ++testVec1;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] + simd_value_type( 1 ), tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorDecr()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        --testVec1;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec1.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] - simd_value_type( 1 ), tempOut1[i] );   
-        }
-    }
-    
-    //
-    // DEBUG FROM HERE
-    //
-    
-    static void TestOperatorAdd()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_vec testVec3 = testVec1 + testVec2;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] + tempData2[i], tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorAddVal()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_value_type toAddVal = RandomVal< simd_value_type >();
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        simd_vec testVec3 = testVec1 + toAddVal;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] + toAddVal, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorSub()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_vec testVec3 = testVec1 - testVec2;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] - tempData2[i], tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorSubVal()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_value_type toAddVal = RandomVal< simd_value_type >();
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        simd_vec testVec3 = testVec1 - toAddVal;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] - toAddVal, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorMul()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_vec testVec3 = testVec1 * testVec2;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] * tempData2[i], tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorMulVal()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_value_type toAddVal = RandomVal< simd_value_type >();
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        simd_vec testVec3 = testVec1 * toAddVal;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] * toAddVal, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorDiv()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_vec testVec3 = testVec1 / testVec2;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] / tempData2[i], tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorDivVal()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_value_type toAddVal = RandomVal< simd_value_type >();
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        
-        simd_vec testVec3 = testVec1 / toAddVal;
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] / toAddVal, tempOut1[i] );   
-        }
-    }
-    
-    static void TestRoundToNearest()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        simd_vec testVec3 = testVec1.RoundToNearest();
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( (simd_value_type)((S64)(tempData1[i] + 0.5 )), tempOut1[i] );   
-        }
-    }
-    
-    static void TestSqrt()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        simd_vec testVec3 = SIMD_Sqrt( testVec1 );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( Mathf::Sqrt(tempData1[i]), tempOut1[i] );   
-        }
-    }
-    
-    static void TestRcp()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        simd_vec testVec3 = SIMD_Rcp( testVec1 );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( Mathf::Rcp(tempData1[i]), tempOut1[i] );   
-        }
-    }
-    
-    static void TestRotateOne()
-    {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-        }
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        for ( size_t rotation = 0; rotation < SimdTraitsReal::width; ++rotation )
-        {
-            Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-            testVec1.StoreAligned( tempOut1 );
+            simd_bool trueVec( true );
             
-            const U32 registerOffset = SimdTraitsReal::width / SimdTraitsReal::registers;
-            U32 shift = rotation / registerOffset;
-            
-            for ( size_t it = 0, itend = SimdTraitsReal::width; it < itend; ++it )
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
-                 // as we do not rotate the vdw indices we need to calculate their true indices after rotation
-                 U32 offset = it / registerOffset;
-    
-                 // ( it + rotation ): rolling offset with rotation to accomodate the full matrix mul.
-                 // & ( registerOffset - 1 ): rotation is only in width of one register ( AVX has 2x 128 bit ); cheap version of  % registerOffset
-                 // ( shift ^ offset ) provides and easy means to shift both register one and register two at the correct time            
-                 U32 rotatedIndex = ( ( it + rotation ) & ( registerOffset - 1 ) ) + ( ( shift ^ offset ) * registerOffset );
-           
-                 ASSERT_REAL_EQ( tempData1[rotatedIndex], tempOut1[it] ); 
+                ASSERT_TRUE( trueVec[i] );
             }
             
-            bool permute128 = false;
+            simd_bool falseVec( false );
             
-            switch( SimdTraitsReal::width )
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
-                case 4:
-                    permute128 = ( rotation == 1 || rotation == 3 );
-                    break;
-                case 8:
-                    permute128 = ( rotation == 3 || rotation == 7 );
-                    break;
-            };
-            
-            testVec1.RotateOne( permute128 );
-        }
-    }
-    
-    static void TestOperatorEqSelect()
-    {
-        simd_vec simd_true( 1.0 );
-        simd_vec simd_false( 0.0 );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        tempData1[0] = 20.2;
-        tempData2[0] = 20.2;
-        for ( U32 i=1; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        } 
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_bool comp = testVec1 == testVec2;
-        
-        simd_vec testVec3 = SIMD_Select( comp, simd_true, simd_false );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] == tempData2[i] ? 1.0 : 0.0, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorNeqSelect()
-    {
-        simd_vec simd_true( 1.0 );
-        simd_vec simd_false( 0.0 );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        tempData1[0] = 20.2;
-        tempData2[0] = 20.2;
-        for ( U32 i=1; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        } 
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_bool comp = testVec1 != testVec2;
-        
-        simd_vec testVec3 = SIMD_Select( comp, simd_true, simd_false );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] != tempData2[i] ? 1.0 : 0.0, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorLtSelect()
-    {
-        simd_vec simd_true( 1.0 );
-        simd_vec simd_false( 0.0 );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        tempData1[0] = 18.2;
-        tempData2[0] = 20.2;
-        for ( U32 i=1; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        } 
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_bool comp = testVec1 < testVec2;
-        
-        simd_vec testVec3 = SIMD_Select( comp, simd_true, simd_false );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] < tempData2[i] ? 1.0 : 0.0, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorLeSelect()
-    {
-        simd_vec simd_true( 1.0 );
-        simd_vec simd_false( 0.0 );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        tempData1[0] = 20.2;
-        tempData2[0] = 20.2;
-        tempData1[1] = 18.2;
-        tempData2[1] = 20.2;
-        for ( U32 i=2; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        } 
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_bool comp = testVec1 <= testVec2;
-        
-        simd_vec testVec3 = SIMD_Select( comp, simd_true, simd_false );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] <= tempData2[i] ? 1.0 : 0.0, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorGtSelect()
-    {
-        simd_vec simd_true( 1.0 );
-        simd_vec simd_false( 0.0 );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        tempData1[0] = 20.2;
-        tempData2[0] = 20.2;
-        tempData1[1] = 22.2;
-        tempData2[1] = 20.2;
-        for ( U32 i=2; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        } 
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_bool comp = testVec1 > testVec2;
-        
-        simd_vec testVec3 = SIMD_Select( comp, simd_true, simd_false );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] > tempData2[i] ? 1.0 : 0.0, tempOut1[i] );   
-        }
-    }
-    
-    static void TestOperatorGeSelect()
-    {
-        simd_vec simd_true( 1.0 );
-        simd_vec simd_false( 0.0 );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        tempData1[0] = 20.2;
-        tempData2[0] = 20.2;
-        tempData1[1] = 22.2;
-        tempData2[1] = 20.2;
-        
-        for ( U32 i=2; i < SimdTraitsReal::width; ++i )
-        {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
-        } 
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_bool comp = testVec1 >= testVec2;
-        
-        simd_vec testVec3 = SIMD_Select( comp, simd_true, simd_false );
-        
-        Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-        testVec3.StoreAligned( tempOut1 );
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            ASSERT_REAL_EQ( tempData1[i] >= tempData2[i] ? 1.0 : 0.0, tempOut1[i] );   
-        }
-    }
-    
-    static void TestMaskLoad()
-    {
-        U64 flags = 0;
-        
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            flags |= (U64)1 << ( ( i * SimdTraitsReal::width ) + i );
-        }
-        
-        std::cout << "MASK: " << std::endl;
-        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
-        {
-            for ( U32 j=0; j < SimdTraitsReal::width; ++j )
-            {
-                std::cout << "\t " << ( ( flags >> ( ( i * SimdTraitsReal::width ) + j )  ) & 0x01 );
+                ASSERT_FALSE( falseVec[i] );
             }
             
-            std::cout << std::endl;
-        }
-        
-        std::cout << "Result: " << std::endl;
-        for ( size_t rotation = 0; rotation < SimdTraitsReal::width; ++rotation )
-        {
-            simd_bool mask;
-            mask.LoadMask( rotation, flags );
+            // Fill an bool array
+            bool_array fillArray;
             
-            simd_vec simd_true( 1.0 );
-            simd_vec simd_false( 0.0 );
-            
-            simd_vec testVec3 = SIMD_Select( mask, simd_true, simd_false );
-        
-            Real StackAlign( SimdTraitsReal::alignment ) tempOut1[ SimdTraitsReal::width ];
-            testVec3.StoreAligned( tempOut1 );
-            
-    	    const U32 registerOffset = SimdTraitsReal::width / SimdTraitsReal::registers;
-            U32 shift = rotation / registerOffset;      
-            
-            Real StackAlign( SimdTraitsReal::alignment ) ddd[ SimdTraitsReal::width ];
-            mask.StoreAligned( ddd );
-            
-            std::cout << "M: ";
-            for ( size_t it = 0, itend = SimdTraitsReal::width; it < itend; ++it )
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
-            
-                std::cout << "\t " << ddd[it];
+                fillArray.values[i] = RandomVal<U32>( 2 );
             }
-            std::cout << std::endl;
             
-            std::cout << "R: ";
-            for ( size_t it = 0, itend = SimdTraitsReal::width; it < itend; ++it )
+            simd_bool fillVec( fillArray );
+            simd_bool fillVec2( fillArray.values );
+            simd_bool fillVec3( fillVec );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
-                 // as we do not rotate the vdw indices we need to calculate their true indices after rotation
-                 U32 offset = it / registerOffset;
-    
-                 // ( it + rotation ): rolling offset with rotation to accomodate the full matrix mul.
-                 // & ( registerOffset - 1 ): rotation is only in width of one register ( AVX has 2x 128 bit ); cheap version of  % registerOffset
-                 // ( shift ^ offset ) provides and easy means to shift both register one and register two at the correct time            
-                 U32 rotatedIndex = ( ( it + rotation ) & ( registerOffset - 1 ) ) + ( ( shift ^ offset ) * registerOffset );
-
-                std::cout << "\t " << tempOut1[it];
+                ASSERT_EQ( fillVec[i],  bool( fillArray.values[i] ) );
+                ASSERT_EQ( fillVec2[i], bool( fillArray.values[i] ) );
+                ASSERT_EQ( fillVec3[i], bool( fillArray.values[i] ) );
                 
-                if ( rotation == 0 )
-                ASSERT_REAL_EQ( 1.0, tempOut1[it] );   
-                else
-                ASSERT_REAL_EQ( 0.0, tempOut1[it] );   
+            }
+        }
+    }
+    
+    static void TestBoolVecAnyAll()
+    {
+        bool_array boolArray;
+        
+        for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+        {
+            boolArray.values[i] = false;
+        }
+        
+        simd_bool boolVec( boolArray );
+        
+        ASSERT_FALSE( boolVec.Any() );
+        ASSERT_FALSE( boolVec.All() );
+        
+        for ( U32 i=0; i < (SimdTraitsReal::width - 1); ++i )
+        {
+            boolArray.values[i] = true;
+            
+            boolVec = simd_bool( boolArray );
+            
+            ASSERT_TRUE( boolVec.Any() );
+            ASSERT_FALSE( boolVec.All() );
+        }
+        
+        boolArray.values[ (SimdTraitsReal::width - 1) ] = true;
+        boolVec = simd_bool( boolArray );
+        
+        ASSERT_TRUE( boolVec.Any() );
+        ASSERT_TRUE( boolVec.All() );
+    }
+    
+    static void TestBoolVecAnd()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            bool_array boolArray1;
+            bool_array boolArray2;
+            bool_array boolArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                boolArray1.values[i] = bool( RandomVal<U32>(2) );
+                boolArray2.values[i] = bool( RandomVal<U32>(2) );
+                boolArrayResult.values[i] = boolArray1.values[i] & boolArray2.values[i];
             }
             
-            std::cout << std::endl;
+            simd_bool boolVec1( boolArray1 );
+            simd_bool boolVec2( boolArray2 );
+            
+            simd_bool boolVecResult = boolVec1 & boolVec2;
+            boolVec1 &= boolVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( boolVecResult[i], boolArrayResult.values[i] );
+                ASSERT_EQ( boolVec1[i], boolArrayResult.values[i] );
+            }
         }
     }
     
-    static void TestMaskStore()
+    static void TestBoolVecOr()
     {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        Real StackAlign( SimdTraitsReal::alignment ) tempData2[ SimdTraitsReal::width ];
-        
-        tempData1[0] = 18.2;
-        tempData2[0] = 20.2;
-        for ( U32 i=1; i < SimdTraitsReal::width; ++i )
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
         {
-            tempData1[i] = RandomVal< simd_value_type >();
-            tempData2[i] = RandomVal< simd_value_type >();
+            bool_array boolArray1;
+            bool_array boolArray2;
+            bool_array boolArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                boolArray1.values[i] = bool( RandomVal<U32>(2) );
+                boolArray2.values[i] = bool( RandomVal<U32>(2) );
+                boolArrayResult.values[i] = boolArray1.values[i] | boolArray2.values[i];
+            }
+            
+            simd_bool boolVec1( boolArray1 );
+            simd_bool boolVec2( boolArray2 );
+            
+            simd_bool boolVecResult = boolVec1 | boolVec2;
+            boolVec1 |= boolVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( boolVecResult[i], boolArrayResult.values[i] );
+                ASSERT_EQ( boolVec1[i], boolArrayResult.values[i] );
+            }
         }
-        
-        simd_vec testVec1, testVec2;
-        testVec1.LoadAligned( tempData1 );
-        testVec2.LoadAligned( tempData2 );
-        
-        simd_bool comp = testVec1 < testVec2;
-        
-        U64 mask = comp.StoreMask();
-        
-        std::cout << "MASK: " << mask << std::endl;
-        
-        for ( size_t it = 0, itend = SimdTraitsReal::width; it < itend; ++it )
-        {  
-            std::cout << tempData1[it] << " " << tempData2[it] << " " << ( tempData1[it] < tempData2[it] ? 1 : 0 ) << " " << ( (mask >> it) & 0x01 ) << std::endl;
-        }
-        
-        for ( size_t it = 0, itend = SimdTraitsReal::width; it < itend; ++it )
+    }
+    
+    static void TestBoolVecXOr()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
         {
-            ASSERT_REAL_EQ( tempData1[it] < tempData2[it] ? 1 : 0, (mask >> it) & 0x01 );       
+            bool_array boolArray1;
+            bool_array boolArray2;
+            bool_array boolArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                boolArray1.values[i] = bool( RandomVal<U32>(2) );
+                boolArray2.values[i] = bool( RandomVal<U32>(2) );
+                boolArrayResult.values[i] = boolArray1.values[i] ^ boolArray2.values[i];
+            }
+            
+            simd_bool boolVec1( boolArray1 );
+            simd_bool boolVec2( boolArray2 );
+            
+            simd_bool boolVecResult = boolVec1 ^ boolVec2;
+            boolVec1 ^= boolVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( boolVecResult[i], boolArrayResult.values[i] );
+                ASSERT_EQ( boolVec1[i], boolArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestBoolVecAndAnd()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            bool_array boolArray1;
+            bool_array boolArray2;
+            bool_array boolArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                boolArray1.values[i] = bool( RandomVal<U32>(2) );
+                boolArray2.values[i] = bool( RandomVal<U32>(2) );
+                boolArrayResult.values[i] = boolArray1.values[i] && boolArray2.values[i];
+            }
+            
+            simd_bool boolVec1( boolArray1 );
+            simd_bool boolVec2( boolArray2 );
+            
+            simd_bool boolVecResult = boolVec1 && boolVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( boolVecResult[i], boolArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestBoolVecOrOr()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            bool_array boolArray1;
+            bool_array boolArray2;
+            bool_array boolArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                boolArray1.values[i] = bool( RandomVal<U32>(2) );
+                boolArray2.values[i] = bool( RandomVal<U32>(2) );
+                boolArrayResult.values[i] = boolArray1.values[i] || boolArray2.values[i];
+            }
+            
+            simd_bool boolVec1( boolArray1 );
+            simd_bool boolVec2( boolArray2 );
+            
+            simd_bool boolVecResult = boolVec1 || boolVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( boolVecResult[i], boolArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestBoolVecEqNeq()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            bool_array boolArray1;
+            bool_array boolArray2;
+            bool_array boolArrayResult1;
+            bool_array boolArrayResult2;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                boolArray1.values[i] = bool( RandomVal<U32>(2) );
+                boolArray2.values[i] = bool( RandomVal<U32>(2) );
+                boolArrayResult1.values[i] = boolArray1.values[i] == boolArray2.values[i];
+                boolArrayResult2.values[i] = boolArray1.values[i] != boolArray2.values[i];
+            }
+            
+            const simd_bool boolVec1( boolArray1 );
+            const simd_bool boolVec2( boolArray2 );
+            
+            const simd_bool boolVecResult1 = boolVec1 == boolVec2;
+            const simd_bool boolVecResult2 = boolVec1 != boolVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( boolVecResult1[i], boolArrayResult1.values[i] );
+                ASSERT_EQ( boolVecResult2[i], boolArrayResult2.values[i] );
+            }
+        }
+    }
+    
+    static void TestBoolVecNot()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            bool_array boolArray1;
+            bool_array boolArrayResult1;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                boolArray1.values[i] = bool( RandomVal<U32>(2) );
+                boolArrayResult1.values[i] = !boolArray1.values[i];
+            }
+            
+            simd_bool boolVec1( boolArray1 );
+            
+            simd_bool boolVecResult1 = !boolVec1;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( boolVecResult1[i], boolArrayResult1.values[i] );
+            }
+        }
+    }
+    
+    static void TestBoolIfThenElse()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            bool_array boolArray1;
+            bool_array boolArray2;
+            bool_array boolArray3;
+            bool_array boolArrayResult1;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                boolArray1.values[i] = bool( RandomVal<U32>(2) );
+                boolArray2.values[i] = bool( RandomVal<U32>(2) );
+                boolArray3.values[i] = bool( RandomVal<U32>(2) );
+                boolArrayResult1.values[i] = boolArray1.values[i] ? boolArray2.values[i] : boolArray3.values[i];
+            }
+            
+            simd_bool boolVec1( boolArray1 );
+            simd_bool boolVec2( boolArray2 );
+            simd_bool boolVec3( boolArray3 );
+            
+            simd_bool boolVecResult1 = Mathf::SIMD< SimdTraitsReal >::IfThenElse( boolVec1, boolVec2, boolVec3 );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( boolVecResult1[i], boolArrayResult1.values[i] );
+            }
+        }
+    }
+    
+    static void TestIntVecConstruct()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            simd_int_type val = RandomVal< simd_int_type >();
+            
+            simd_veci testVec1(val);
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( val, testVec1[i] );
+            }
+            
+            int_array valArray;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                valArray.values[i] = RandomVal< simd_int_type >();
+            }
+            
+            simd_veci testVec3(valArray.values);
+            simd_veci testVec4( testVec3 );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( testVec3[i], valArray.values[i] );
+                ASSERT_EQ( testVec4[i], valArray.values[i] );
+            }
             
         }
+    }
+    
+    
+    static void TestTypeVecConstruct()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            simd_value_type val = RandomVal< simd_value_type >();
+            
+            simd_vec testVec1(val);
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( val, testVec1[i] );
+            }
+            
+            type_array valArray;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                valArray.values[i] = RandomVal< simd_value_type >();
+            }
+            
+            simd_vec testVec2(valArray);
+            simd_vec testVec3(valArray.values);
+            simd_vec testVec4( testVec2 );
+
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( testVec2[i], valArray.values[i] );
+                ASSERT_REAL_EQ( testVec3[i], valArray.values[i] );
+                ASSERT_REAL_EQ( testVec4[i], valArray.values[i] );
+            }
+        
+        }
+    }
+    
+    static void TestTypeVecLoadStore()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array valArray;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                valArray.values[i] = RandomVal< simd_value_type >();
+            }
+            
+            simd_vec testVec2, testVec3;
+            
+            testVec2.LoadAligned( valArray.values );
+            testVec3.LoadUnaligned( valArray.values );
+            
+            type_array testArray1, testArray2;
+            testVec2.StoreAligned( testArray1.values );
+            testVec3.StoreUnaligned( testArray2.values );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( testVec2[i], valArray.values[i] );
+                ASSERT_REAL_EQ( testVec3[i], valArray.values[i] );
+                ASSERT_REAL_EQ( testArray1.values[i], valArray.values[i] );
+                ASSERT_REAL_EQ( testArray2.values[i], valArray.values[i] );
+            }
+            
+        }
+    }
+    
+    static void TestTypeVecAdd()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArray2;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArray2.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] = typeArray1.values[i] + typeArray2.values[i];
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2( typeArray2 );
+            
+            simd_vec vecResult = tVec1 + tVec2;
+            tVec1 += tVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( vecResult[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( tVec1[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecSub()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArray2;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArray2.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] = typeArray1.values[i] - typeArray2.values[i];
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2( typeArray2 );
+            
+            simd_vec vecResult = tVec1 - tVec2;
+            tVec1 -= tVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( vecResult[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( tVec1[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecMul()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArray2;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArray2.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] = typeArray1.values[i] * typeArray2.values[i];
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2( typeArray2 );
+            
+            simd_vec vecResult = tVec1 * tVec2;
+            tVec1 *= tVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( vecResult[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( tVec1[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecDiv()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArray2;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArray2.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] = typeArray1.values[i] / typeArray2.values[i];
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2( typeArray2 );
+            
+            simd_vec vecResult = tVec1 / tVec2;
+            tVec1 /= tVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( vecResult[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( tVec1[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecIncr()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] = typeArray1.values[i] + 1.0;
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2 = tVec1++;
+            simd_vec tVec3 = ++tVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( tVec1[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( tVec2[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( tVec3[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecDecr()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] = typeArray1.values[i] - 1.0;
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2 = tVec1--;
+            simd_vec tVec3 = --tVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( tVec1[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( tVec2[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( tVec3[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecSqrt()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] = Mathf::Sqrt( typeArray1.values[i] );
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::Sqrt( tVec1 );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( tVec2[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecRcpSqrt()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] =  Mathf::Rcp( Mathf::Sqrt( typeArray1.values[i] ) );
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::RcpSqrt( tVec1 );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( tVec2[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecRcp()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] =  Mathf::Rcp(typeArray1.values[i]);
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::Rcp( tVec1 );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( tVec2[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecRint()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] =  Mathf::Rint(typeArray1.values[i]);
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::Rint( tVec1 );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( tVec2[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecSin()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArrayResult;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArrayResult.values[i] =  Mathf::Sin(typeArray1.values[i]);
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::Sin( tVec1 );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( tVec2[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecSum()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            
+            simd_value_type sumRef = 0.0;
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                
+                sumRef += typeArray1.values[i];
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_value_type sum = Mathf::SIMD<SimdTraitsReal>::Sum( tVec1 );
+            
+            ASSERT_REAL_EQ( sum, sumRef );
+        }
+    }
+    
+    static void TestTypeVecConditionals()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArray2;
+            
+            bool_array typeArrayResultEq;
+            bool_array typeArrayResultNeq;
+            bool_array typeArrayResultLt;
+            bool_array typeArrayResultLe;
+            bool_array typeArrayResultGt;
+            bool_array typeArrayResultGe;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>() / ( std::numeric_limits< simd_value_type >::max() / 10.0 );
+                typeArray2.values[i] = RandomVal<simd_value_type>() / ( std::numeric_limits< simd_value_type >::max() / 10.0 );
+                
+                
+                typeArrayResultEq.values[i]  = typeArray1.values[i] == typeArray2.values[i];
+                typeArrayResultNeq.values[i] = typeArray1.values[i] != typeArray2.values[i];
+                typeArrayResultLt.values[i]  = typeArray1.values[i] <  typeArray2.values[i];
+                typeArrayResultLe.values[i]  = typeArray1.values[i] <= typeArray2.values[i];
+                typeArrayResultGt.values[i]  = typeArray1.values[i] >  typeArray2.values[i];
+                typeArrayResultGe.values[i]  = typeArray1.values[i] >= typeArray2.values[i];
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2( typeArray2 );
+            
+            simd_bool tVecEq  = tVec1 == tVec2;
+            simd_bool tVecNeq = tVec1 != tVec2;
+            simd_bool tVecLt  = tVec1 <  tVec2;
+            simd_bool tVecLe  = tVec1 <= tVec2;
+            simd_bool tVecGt  = tVec1 >  tVec2;
+            simd_bool tVecGe  = tVec1 >= tVec2;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_EQ( tVecEq[i],  typeArrayResultEq.values[i] );
+                ASSERT_EQ( tVecNeq[i], typeArrayResultNeq.values[i] );
+                ASSERT_EQ( tVecLt[i],  typeArrayResultLt.values[i] );
+                ASSERT_EQ( tVecLe[i],  typeArrayResultLe.values[i] );
+                ASSERT_EQ( tVecGt[i],  typeArrayResultGt.values[i] );
+                ASSERT_EQ( tVecGe[i],  typeArrayResultGe.values[i] );
+            }
+        }
+    }
+    
+    static void TestTypeVecMasking()
+    {
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
+        {
+            type_array typeArray1;
+            type_array typeArray2;
+            type_array typeArray3;
+            
+            type_array typeArrayResult;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                typeArray1.values[i] = RandomVal<simd_value_type>();
+                typeArray2.values[i] = RandomVal<simd_value_type>();
+                typeArray3.values[i] = RandomVal<simd_value_type>();
+                
+                typeArrayResult.values[i]  = typeArray1.values[i] < typeArray2.values[i] ? typeArray3.values[i] : 0.0;
+            }
+            
+            simd_vec tVec1( typeArray1 );
+            simd_vec tVec2( typeArray2 );
+            simd_vec tVec3( typeArray3 );
+            
+            simd_bool compare = tVec1 < tVec2;
+            simd_vec vecResult1 = Mathf::SIMD<SimdTraitsReal>::IfThenElse( compare, tVec3, simd_vec( 0.0 ) );
+            simd_vec vecResult2 = tVec3 & compare;
+            simd_vec vecResult3 = compare & tVec3;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                ASSERT_REAL_EQ( vecResult1[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( vecResult2[i], typeArrayResult.values[i] );
+                ASSERT_REAL_EQ( vecResult3[i], typeArrayResult.values[i] );
+            }
+        }
+    }
+    
+    /*
+    template< U32 index >
+    static void BroadCastRotation( const type_array &compare, const simd_vec &vec  )
+    {
+        const simd_vec testVec1 = vec.BroadCastIndex< index >();
+        
+        ASSERT_REAL_EQ( vec[index], compare.values[index] );
+        
+        if ( index != 0 )
+        {
+            BroadCastRotation< index - 1 >( compare, vec );
+        }
         
     }
     
-    static void TestHadd()
+    static void TestTypeVecValueBroadcast()
     {
-        Real StackAlign( SimdTraitsReal::alignment ) tempData1[ SimdTraitsReal::width ];
-        
-        for ( U32 i=1; i < SimdTraitsReal::width; ++i )
+        for ( size_t t=0; t < NUM_RAND_TEST_PERMUTATIONS; ++t )
         {
-            tempData1[i] = RandomVal< simd_value_type >();
+            type_array valArray;
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                valArray.values[i] = RandomVal< simd_value_type >();
+            }
+            
+            simd_vec vec1( valArray );
+            
+            for ( U32 i=0; i < SimdTraitsReal::width; ++i )
+            {
+                
+            }
+            
         }
-        
-        simd_vec testVec1;
-        testVec1.LoadAligned( tempData1 );
-        
-        Real comb = SIMD_Hadd( testVec1 );
-        
-        Real cadd = 0.0;
-        
-        for ( size_t it = 0, itend = SimdTraitsReal::width; it < itend; ++it )
-        {
-            cadd += tempData1[it];
-        }
-        
-        ASSERT_REAL_EQ( comb, cadd );
     }
-   
+    */
+
 };
 
+
 #define TestPlatforms( function, semantic ) \
-    TEST( P( AVX_VecReal ), semantic ) \
+    TEST( P( AVX_VecReal_F32 ), semantic ) \
     { \
         srand( 2015 ); \
         if( hardwareStatus.SupportsAVX() ) \
         { \
-            SIMD_TESTS< AvxSimdTraits<Real> >:: function (); \
+            SIMD_TESTS< AvxSimdTraits<F32> >:: function (); \
         } \
     } \
+    TEST( P( AVX_VecReal_F64 ), semantic ) \
+    { \
+        srand( 2015 ); \
+        if( hardwareStatus.SupportsAVX() ) \
+        { \
+            SIMD_TESTS< AvxSimdTraits<F64> >:: function (); \
+        } \
+    }
+/*
     TEST( P( SSE41_VecReal ), semantic ) \
     { \
         srand( 2015 ); \
@@ -1034,54 +910,43 @@ struct SIMD_TESTS
         srand( 2015 ); \
         SIMD_TESTS< FpuSimdTraits<Real> >:: function (); \
     } \
-
-
-TestPlatforms( TestBroadCast, BroadCast );
-
-TestPlatforms( TestLoadUnload, LoadUnload );
-
-TestPlatforms( TestOperatorAddInp,    OperatorAddInp );
-TestPlatforms( TestOperatorAddValInp, OperatorAddValInp );
-
-TestPlatforms( TestOperatorSubInp,    OperatorSubInp );
-TestPlatforms( TestOperatorSubValInp, OperatorSubValInp );
-
-TestPlatforms( TestOperatorMulInp,    OperatorMulInp );
-TestPlatforms( TestOperatorMulValInp, OperatorMulValInp );
-
-TestPlatforms( TestOperatorDivInp,    OperatorDivInp );
-TestPlatforms( TestOperatorDivValInp, OperatorDivValInp );
-
-TestPlatforms( TestOperatorIncr,      OperatorIncr );
-TestPlatforms( TestOperatorDecr,      OperatorDescr );
-
-TestPlatforms( TestOperatorAdd,    OperatorAdd );
-TestPlatforms( TestOperatorAddVal, OperatorAddVal );
-
-TestPlatforms( TestOperatorSub,    OperatorSub );
-TestPlatforms( TestOperatorSubVal, OperatorSubVal );
-
-TestPlatforms( TestOperatorMul,    OperatorMul );
-TestPlatforms( TestOperatorMulVal, OperatorMulVal );
-
-TestPlatforms( TestOperatorDiv,    OperatorDiv );
-TestPlatforms( TestOperatorDivVal, OperatorDivVal );
-
-TestPlatforms( TestRoundToNearest, RoundToNearest );
-TestPlatforms( TestSqrt, Sqrt );
-TestPlatforms( TestRcp, Rcp );
-
-TestPlatforms( TestRotateOne, RotateOne );
-TestPlatforms( TestMaskLoad, MaskLoad );
-TestPlatforms( TestMaskStore, MaskStore );
-
-
-TestPlatforms( TestOperatorEqSelect, OperatorEqSelect );
-TestPlatforms( TestOperatorNeqSelect, OperatorNeqSelect );
-TestPlatforms( TestOperatorGtSelect, OperatorGtSelect );
-TestPlatforms( TestOperatorGeSelect, OperatorGeSelect );
-TestPlatforms( TestOperatorLtSelect, OperatorLtSelect );
-TestPlatforms( TestOperatorLeSelect, OperatorLeSelect );
-
-TestPlatforms( TestHadd, Hadd );
 */
+
+TestPlatforms( TestBoolVecConstructors, BoolVecConstructors );
+TestPlatforms( TestBoolVecAnyAll, BoolVecAnyAll );
+TestPlatforms( TestBoolVecAnd, BoolVecAnd );
+TestPlatforms( TestBoolVecOr, BoolVecOr );
+TestPlatforms( TestBoolVecXOr, BoolVecXOr );
+TestPlatforms( TestBoolVecAndAnd, BoolVecAndAnd );
+TestPlatforms( TestBoolVecOrOr, BoolVecOrOr );
+TestPlatforms( TestBoolVecEqNeq, BoolVecEqNeq );
+TestPlatforms( TestBoolVecNot, BoolVecNot );
+TestPlatforms( TestBoolIfThenElse, BoolIfThenElse );
+
+TestPlatforms( TestIntVecConstruct, IntVecConstruct );
+
+
+TestPlatforms( TestTypeVecConstruct, TypeVecConstruct );
+TestPlatforms( TestTypeVecLoadStore, TypeVecLoadStore );
+//TestPlatforms( TestTypeVecValueBroadcast, TypeVecValueBroadcast );
+
+TestPlatforms( TestTypeVecAdd, TypeVecAdd );
+TestPlatforms( TestTypeVecSub, TypeVecSub );
+TestPlatforms( TestTypeVecMul, TypeVecMul );
+TestPlatforms( TestTypeVecDiv, TypeVecDiv );
+TestPlatforms( TestTypeVecIncr, TypeVecIncr );
+TestPlatforms( TestTypeVecDecr, TypeVecDecr );
+
+TestPlatforms( TestTypeVecConditionals, TypeVecConditionals );
+TestPlatforms( TestTypeVecMasking, TypeVecMasking );
+
+TestPlatforms( TestTypeVecSqrt, TypeVecSqrt );
+TestPlatforms( TestTypeVecRcpSqrt, TypeVecRcpSqrt );
+TestPlatforms( TestTypeVecRcp, TypeVecRcp );
+TestPlatforms( TestTypeVecRint, TypeVecRint );
+//TestPlatforms( TestTypeVecSin, TypeVecSin );
+
+TestPlatforms( TestTypeVecSum, TypeVecSum );
+
+
+

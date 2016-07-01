@@ -122,7 +122,7 @@ namespace Mathf
     }
     
     template< class Number >
-    inline Real Atan( const Real f )
+    inline Number Atan( const Number f )
     {
         return std::atan( f );
     }
@@ -237,7 +237,8 @@ namespace Mathf
         return ++y;
     }
     
-    inline Real Square( Real a )
+    template< class Number >
+    inline Number Square( Number a )
     {
         return a * a;
     }

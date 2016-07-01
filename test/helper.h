@@ -6,7 +6,8 @@
 
 #define CONCATEXT( a, b ) a##b
 #define CONCAT( a, b ) CONCATEXT( a, b )
-#define P( prefix ) CONCAT( PREFIX, prefix )
+//#define P( prefix ) CONCAT( PREFIX, prefix )
+#define P( prefix ) prefix
 
 template< class Type >
 inline void ASSERT_REAL_EQ( Type q, Type r );
