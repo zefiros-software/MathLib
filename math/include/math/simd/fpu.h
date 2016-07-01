@@ -5,5 +5,6 @@
 #include "math/simd/fpu/scalar_vec4f.h"
 #include "math/simd/fpu/scalar_vec4d.h"
 
+#error "The FPU pipeline has not been updated"
 
 #endif

@@ -5,20 +5,36 @@
 // big thanks to http://jmabille.github.io/blog/2014/10/10/writing-c-plus-plus-wrappers-for-simd-intrinsics-3/
 // for the idea's on how to nicely wrap
 
-template< class valueType >
-struct BaseSimdTraits;
 
+
+
+
+/*
 template<>
-struct BaseSimdTraits<F64>
+struct BaseSimdTraits<F64, 8 >
 {
-    typedef F64 valueType;
+    typedef F64 value_type;
+    static const size_t width = 8;
+    
+    struct TypeArray
+    {
+        value_type array[width];
+    };
+    
+    struct BoolArray
+    {
+        bool array[width];
+    };
 };
+
+
 
 template<>
 struct BaseSimdTraits<F32>
 {
-    typedef F32 valueType;
+    typedef F32 value_type;
 };
+*/
 
 // Big thanks again http://jmabille.github.io/blog/2014/11/20/performance-considerations-about-simd-wrappers/
 #define DEFINE_OPERATOR_PLUS_ASSIGN( RTYPE, ARG )\
@@ -57,7 +73,8 @@ struct BaseSimdTraits<F32>
     }\
     inline RTYPE operator++(int)\
     {\
-        RTYPE r = (*this) + ARG( 1 );\
+        RTYPE r = (*this);\
+        (*this) += ARG( 1 );\
         return r;\
     }
 
@@ -69,7 +86,8 @@ struct BaseSimdTraits<F32>
     }\
     inline RTYPE operator--(int)\
     {\
-        RTYPE r = (*this) - ARG( 1 );\
+        RTYPE r = (*this);\
+        (*this) -= ARG( 1 );\
         return r;\
     }
 
@@ -113,6 +131,7 @@ struct BaseSimdTraits<F32>
         return RTYPE(lhs) / rhs;\
     }
 
+/*
 #define DEFINE_ASSIGNMENT_OPERATORS( VEC_TYPE, VALUE_TYPE )\
     DEFINE_OPERATOR_PLUS_ASSIGN( VEC_TYPE, VEC_TYPE );\
     DEFINE_OPERATOR_PLUS_ASSIGN( VEC_TYPE, VALUE_TYPE );\
@@ -122,17 +141,26 @@ struct BaseSimdTraits<F32>
     DEFINE_OPERATOR_MUL_ASSIGN( VEC_TYPE,VALUE_TYPE );\
     DEFINE_OPERATOR_DIV_ASSIGN( VEC_TYPE,VEC_TYPE );\
     DEFINE_OPERATOR_DIV_ASSIGN( VEC_TYPE,VALUE_TYPE );
+*/
 
+#define DEFINE_ASSIGNMENT_BASE_OPERATORS( VEC_TYPE, VALUE_TYPE )\
+    DEFINE_OPERATOR_PLUS_ASSIGN( VEC_TYPE, VEC_TYPE );\
+    DEFINE_OPERATOR_MIN_ASSIGN( VEC_TYPE,VEC_TYPE );\
+
+#define DEFINE_ASSIGNMENT_EXT_OPERATORS( VEC_TYPE, VALUE_TYPE )\
+    DEFINE_OPERATOR_MUL_ASSIGN( VEC_TYPE,VEC_TYPE );\
+    DEFINE_OPERATOR_DIV_ASSIGN( VEC_TYPE,VEC_TYPE );\
 
 #define DEFINE_INC_OPERATORS( VEC_TYPE, VALUE_TYPE )\
     DEFINE_OPERATOR_PLUSPLUS(VEC_TYPE,VEC_TYPE);\
     DEFINE_OPERATOR_MINMIN(VEC_TYPE,VEC_TYPE);
 
+/*
 #define DEFINE_COMMON_OPERATORS( VEC_TYPE, VALUE_TYPE )\
     DEFINE_OPERATOR_PLUS(VEC_TYPE,VALUE_TYPE);\
     DEFINE_OPERATOR_MIN(VEC_TYPE,VALUE_TYPE);\
     DEFINE_OPERATOR_MUL(VEC_TYPE,VALUE_TYPE);\
     DEFINE_OPERATOR_DIV(VEC_TYPE,VALUE_TYPE);
-
+*/
 
 #endif
