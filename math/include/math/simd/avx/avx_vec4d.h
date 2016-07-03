@@ -36,14 +36,14 @@ struct AvxSimdTraits<F64>  : public BaseSimdTraits<F64, S64, 4, 32>
 
 class AvxVec4d_b
 {
-    friend inline AvxVec4d_b operator&&( AvxVec4d_b &lhs, const AvxVec4d_b &rhs );
-    friend inline AvxVec4d_b operator||( AvxVec4d_b &lhs, const AvxVec4d_b &rhs );
-    friend inline AvxVec4d_b operator!( const AvxVec4d_b &lhs );
-    friend inline AvxVec4d_b operator&( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs );
-    friend inline AvxVec4d_b operator|( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs );
-    friend inline AvxVec4d_b operator^( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs );
-    friend inline AvxVec4d_b operator==( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs );
-    friend inline AvxVec4d_b operator!=( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs );
+    friend inline AvxVec4d_b operator&&( AvxVec4d_b lhs, AvxVec4d_b rhs );
+    friend inline AvxVec4d_b operator||( AvxVec4d_b lhs, AvxVec4d_b rhs );
+    friend inline AvxVec4d_b operator!(  AvxVec4d_b lhs );
+    friend inline AvxVec4d_b operator&(  AvxVec4d_b lhs, AvxVec4d_b rhs );
+    friend inline AvxVec4d_b operator|(  AvxVec4d_b lhs, AvxVec4d_b rhs );
+    friend inline AvxVec4d_b operator^(  AvxVec4d_b lhs, AvxVec4d_b rhs );
+    friend inline AvxVec4d_b operator==( AvxVec4d_b lhs, AvxVec4d_b rhs );
+    friend inline AvxVec4d_b operator!=( AvxVec4d_b lhs, AvxVec4d_b rhs );
     
 public:
     
@@ -201,50 +201,50 @@ inline AvxVec4d_b& AvxVec4d_b::operator^= ( const AvxVec4d_b& rhs )
     return (*this);
 }
 
-inline AvxVec4d_b operator&&( AvxVec4d_b &lhs, const AvxVec4d_b &rhs )
+inline AvxVec4d_b operator&&( AvxVec4d_b lhs, AvxVec4d_b rhs )
 {
     return lhs & rhs;
 }
 
-inline AvxVec4d_b operator||( AvxVec4d_b &lhs, const AvxVec4d_b &rhs )
+inline AvxVec4d_b operator||( AvxVec4d_b lhs, AvxVec4d_b rhs )
 {
     return lhs | rhs;
 }
 
-inline AvxVec4d_b operator!( const AvxVec4d_b &lhs )
+inline AvxVec4d_b operator!( AvxVec4d_b lhs )
 {
     return _mm256_xor_pd(AvxVec4d_b(true), lhs );
 }
 
 
-inline AvxVec4d_b operator&( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs )
+inline AvxVec4d_b operator&( AvxVec4d_b lhs, AvxVec4d_b rhs )
 {
     return _mm256_and_pd( lhs, rhs );
 }
 
-inline AvxVec4d_b operator|( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs )
+inline AvxVec4d_b operator|( AvxVec4d_b lhs, AvxVec4d_b rhs )
 {
     return _mm256_or_pd( lhs, rhs );
 }
 
-inline AvxVec4d_b operator^( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs )
+inline AvxVec4d_b operator^( AvxVec4d_b lhs, AvxVec4d_b rhs )
 {
     return _mm256_xor_pd( lhs, rhs );
 }
 
-inline AvxVec4d_b operator==( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs )
+inline AvxVec4d_b operator==( AvxVec4d_b lhs, AvxVec4d_b rhs )
 {
     return !( lhs != rhs );
 }
 
-inline AvxVec4d_b operator!=( const AvxVec4d_b &lhs, const AvxVec4d_b &rhs )
+inline AvxVec4d_b operator!=( AvxVec4d_b lhs, AvxVec4d_b rhs )
 {
     return _mm256_xor_pd(lhs, rhs);
 }
 
 namespace SIMD
 {
-    inline AvxVec4d_b IfThenElse( const AvxVec4d_b &sel, const AvxVec4d_b &lhs, const AvxVec4d_b &rhs )
+    inline AvxVec4d_b IfThenElse( AvxVec4d_b sel, AvxVec4d_b lhs, AvxVec4d_b rhs )
     {
         return _mm256_blendv_ps( rhs, lhs, sel );
     }
@@ -451,10 +451,10 @@ inline AvxVec4i operator~(const AvxVec4i &lhs)
 
 class AvxVec4d
 {
-    friend AvxVec4d operator+( const AvxVec4d &lhs, const AvxVec4d &rhs );
-    friend AvxVec4d operator-( const AvxVec4d &lhs, const AvxVec4d &rhs );
-    friend AvxVec4d operator*( const AvxVec4d &lhs, const AvxVec4d &rhs );
-    friend AvxVec4d operator/( const AvxVec4d &lhs, const AvxVec4d &rhs );
+    friend AvxVec4d operator+( AvxVec4d lhs, AvxVec4d rhs );
+    friend AvxVec4d operator-( AvxVec4d lhs, AvxVec4d rhs );
+    friend AvxVec4d operator*( AvxVec4d lhs, AvxVec4d rhs );
+    friend AvxVec4d operator/( AvxVec4d lhs, AvxVec4d rhs );
     
 public:
 
@@ -616,22 +616,22 @@ inline AvxVec4d AvxVec4d::GetFullMask()
 // Math
 //
 
-inline AvxVec4d operator+( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d operator+( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_add_pd( lhs, rhs );
 }
 
-inline AvxVec4d operator-( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d operator-( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_sub_pd( lhs, rhs );
 }
 
-inline AvxVec4d operator*( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d operator*( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_mul_pd( lhs, rhs );
 }
 
-inline AvxVec4d operator/( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d operator/( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_div_pd( lhs, rhs );
 }
@@ -640,32 +640,32 @@ inline AvxVec4d operator/( const AvxVec4d &lhs, const AvxVec4d &rhs )
 // Comparison
 //
 
-inline AvxVec4d_b operator== ( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d_b operator== ( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_cmp_pd( lhs, rhs, 0 );
 }
 
-inline AvxVec4d_b operator!= ( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d_b operator!= ( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_cmp_pd( lhs, rhs, 12 );
 }
 
-inline AvxVec4d_b operator< ( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d_b operator< ( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_cmp_pd( lhs, rhs, 17 );
 }
 
-inline AvxVec4d_b operator<= ( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d_b operator<= ( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_cmp_pd( lhs, rhs, 18 );
 }
 
-inline AvxVec4d_b operator> ( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d_b operator> ( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_cmp_pd( lhs, rhs, 30 );
 }
 
-inline AvxVec4d_b operator>= ( const AvxVec4d &lhs, const AvxVec4d &rhs )
+inline AvxVec4d_b operator>= ( AvxVec4d lhs, AvxVec4d rhs )
 {
     return _mm256_cmp_pd( lhs, rhs, 29 );
 }
@@ -677,12 +677,12 @@ inline AvxVec4d operator&( const AvxVec4d &lhs, const AvxVec4d &rhs )
 }
 */
 
-inline AvxVec4d operator&( const AvxVec4d &lhs, const AvxVec4d_b &rhs ) 
+inline AvxVec4d operator&( AvxVec4d lhs, AvxVec4d_b rhs )
 {
     return _mm256_and_pd( lhs, rhs );
 }
 
-inline AvxVec4d operator&( const AvxVec4d_b &lhs, const AvxVec4d &rhs ) 
+inline AvxVec4d operator&( AvxVec4d_b lhs, AvxVec4d rhs )
 {
     return _mm256_and_pd( lhs, rhs );
 }
@@ -694,39 +694,39 @@ inline AvxVec4d operator&( const AvxVec4d_b &lhs, const AvxVec4d &rhs )
 //
 namespace SIMD
 {
-    inline AvxVec4d Sqrt( const AvxVec4d &lhs )
+    inline AvxVec4d Sqrt( AvxVec4d lhs )
     {
         return _mm256_sqrt_pd( lhs );
     }
     
-    inline AvxVec4d Rcp( const AvxVec4d &lhs )
+    inline AvxVec4d Rcp( AvxVec4d lhs )
     {
-        return ( 1.0 / lhs );
+        return ( AvxVec4d(1.0) / lhs );
     }
     
-    inline AvxVec4d RcpSqrt( const AvxVec4d &lhs )
+    inline AvxVec4d RcpSqrt( AvxVec4d lhs )
     {
         return Rcp( Sqrt( lhs ) );
     }
     
-    inline AvxVec4d IfThenElse( const AvxVec4d_b &sel, const AvxVec4d &lhs, const AvxVec4d &rhs )
+    inline AvxVec4d IfThenElse( AvxVec4d_b sel, AvxVec4d lhs, AvxVec4d rhs )
     {
         return _mm256_blendv_pd( rhs, lhs, sel );
     }
     
-    inline F64 Sum( const AvxVec4d &lhs )
+    inline F64 Sum( AvxVec4d lhs )
     {
         const __m128d x128 = _mm_add_pd(_mm256_extractf128_pd(lhs, 1), _mm256_castpd256_pd128(lhs));
         const __m128d x64 = _mm_add_sd( x128, _mm_shuffle_pd(x128, x128, 0x3 ) );
         return _mm_cvtsd_f64(x64);
     }
     
-    inline AvxVec4d Rint( const AvxVec4d &lhs )
+    inline AvxVec4d Rint( AvxVec4d lhs )
     {
         return _mm256_round_pd( lhs, _MM_FROUND_TO_NEAREST_INT );
     }
     
-    inline AvxVec4d Sin( const AvxVec4d &lhs )
+    inline AvxVec4d Sin( AvxVec4d lhs )
     {
         return Mathf::_SGA< AvxSimdTraits<F64> >::SGA_Sin_F64( lhs );
     }
@@ -754,12 +754,12 @@ namespace SIMD
     }
     */
     
-    inline AvxVec4d MADD( const AvxVec4d &mul1, const AvxVec4d &mul2, const AvxVec4d &add )
+    inline AvxVec4d MADD( AvxVec4d mul1, AvxVec4d mul2, AvxVec4d add )
     {
         return ( mul1 * mul2 ) + add;
     }
     
-    inline AvxVec4d MSUB( const AvxVec4d &mul1, const AvxVec4d &mul2, const AvxVec4d &sub )
+    inline AvxVec4d MSUB( AvxVec4d mul1, AvxVec4d mul2, AvxVec4d sub )
     {
         return ( mul1 * mul2 ) - sub;
     }
