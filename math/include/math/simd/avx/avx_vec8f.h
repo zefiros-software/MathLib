@@ -215,11 +215,15 @@ inline AvxVec8f_b operator!=( const AvxVec8f_b &lhs, const AvxVec8f_b &rhs )
     return _mm256_xor_ps(lhs, rhs);
 }
 
-template<>
-inline AvxVec8f_b Mathf::SIMD< AvxSimdTraits<F32> >::IfThenElse( const AvxVec8f_b &sel, const AvxVec8f_b &lhs, const AvxVec8f_b &rhs )
+namespace SIMD
 {
-    return _mm256_blendv_ps( rhs, lhs, sel );
+    inline AvxVec8f_b IfThenElse( const AvxVec8f_b &sel, const AvxVec8f_b &lhs, const AvxVec8f_b &rhs )
+    {
+        return _mm256_blendv_ps( rhs, lhs, sel );
+    }
 }
+
+
 
 
 
@@ -500,12 +504,10 @@ public:
     inline AvxVec8i AsInt() const;
     inline AvxVec8i ConvertToInt() const;
 
-    /*
-    template< U32 index >
-    inline AvxVec8f BroadCastIndex() const;
-    */
+    //template< U32 index >
+    //inline AvxVec8f BroadCastIndex() const;
      
-    //inline static AvxVec8f GetZero();
+    inline static AvxVec8f GetZero();
     //inline static AvxVec8f GetFullMask();
 
     DEFINE_ASSIGNMENT_BASE_OPERATORS( AvxVec8f, F32 );
@@ -593,6 +595,11 @@ inline AvxVec8i AvxVec8f::ConvertToInt() const
     return _mm256_cvttps_epi32(mValue);
 }
 
+inline AvxVec8f AvxVec8f::GetZero()
+{
+    return _mm256_setzero_ps();
+}
+
 /*
 template< U32 index >
 inline AvxVec8f AvxVec8f::BroadCastIndex() const
@@ -613,13 +620,6 @@ inline AvxVec8f AvxVec8f::BroadCastIndex() const
     const S32 select = ( selector ) | ( selector << 2 ) | ( selector << 4 ) | ( selector << 6 );
     
     return _mm256_shuffle_ps( temp, temp, select );
-}
-*/
-
-/*
-inline AvxVec8f AvxVec8f::GetZero()
-{
-    return _mm256_setzero_ps();
 }
 
 inline AvxVec8f AvxVec8f::GetFullMask()
@@ -749,97 +749,88 @@ inline AvxVec8f operator&( const AvxVec8f_b &lhs, const AvxVec8f &rhs )
 // MATHF
 //
 
-template<>
-inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::Sqrt( const AvxVec8f &lhs )
+namespace SIMD
 {
-    return _mm256_sqrt_ps( lhs );
-}
-
-template<>
-inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::RcpSqrt( const AvxVec8f &lhs )
-{
-    __m256 temp = _mm256_rsqrt_ps( lhs );
-    
-    // newton rhapson cycle
-    __m256 temp2 = _mm256_mul_ps( _mm256_sub_ps( _mm256_set1_ps(3.0f), _mm256_mul_ps(_mm256_mul_ps(temp, temp), lhs) ), temp );
-    
-    return _mm256_mul_ps( _mm256_set1_ps(0.5f), temp2 );
-}
-
-template<>
-inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::Rcp( const AvxVec8f &lhs )
-{
-    return 1.0 / lhs;
-}
-
-template<>
-inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::IfThenElse( const AvxVec8f_b &sel, const AvxVec8f &lhs, const AvxVec8f &rhs )
-{
-    return _mm256_blendv_ps( rhs, lhs, sel );
-}
-
-
-//
-// REVIEW !!!!
-//
-template<>
-inline F32 Mathf::SIMD< AvxSimdTraits<F32> >::Sum( const AvxVec8f &lhs )
-{
-    const __m128 x128 = _mm_add_ps(_mm256_extractf128_ps(lhs, 1), _mm256_castps256_ps128(lhs));
-    const __m128 x64 = _mm_add_ps(x128, _mm_movehl_ps(x128, x128));
-    const __m128 x32 = _mm_add_ss(x64, _mm_shuffle_ps(x64, x64, 0x55));
-    return _mm_cvtss_f32(x32);
-}
-
-template<>
-inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::Rint( const simdvector &lhs )
-{
-    return _mm256_round_ps( lhs, _MM_FROUND_TO_NEAREST_INT );
-}
-
-template<>
-inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::Sin( const AvxVec8f &lhs )
-{
-    return Mathf::_SGA< AvxSimdTraits<F32> >::SGA_Sin_F32( lhs );
-}
-
-/*
-template<>
-template< U32 index >
-inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::HaddToIndex( const AvxVec8f &lhs )
-{
-    const __m128 x128 = _mm_add_ps(_mm256_extractf128_ps(lhs, 1), _mm256_castps256_ps128(lhs));
-    const __m128 x64 = _mm_add_ps(x128, _mm_movehl_ps(x128, x128));
-    const __m128 x32 = _mm_add_ps(_mm_shuffle_ps(x64,x64,0), _mm_shuffle_ps(x64, x64, 0x55));
- 
-    // Two cases, either target is hi register or target is low register
-    __m256 zero = _mm256_setzero_ps();
-        
-    const U32 controll = 1 << ( index % 4 );
-    __m256 result = _mm256_blend_ps( zero, _mm256_castps128_ps256(x32), controll );
-    
-    if ( index >= 4 )
+    inline AvxVec8f Sqrt( const AvxVec8f &lhs )
     {
-        //switch halves
-        result = _mm256_permute2f128_ps( result, result, 1 );
+        return _mm256_sqrt_ps( lhs );
     }
     
-    return result;
-}
-*/
+    inline AvxVec8f RcpSqrt( const AvxVec8f &lhs )
+    {
+        __m256 temp = _mm256_rsqrt_ps( lhs );
+        
+        // newton rhapson cycle
+        __m256 temp2 = _mm256_mul_ps( _mm256_sub_ps( _mm256_set1_ps(3.0f), _mm256_mul_ps(_mm256_mul_ps(temp, temp), lhs) ), temp );
+        
+        return _mm256_mul_ps( _mm256_set1_ps(0.5f), temp2 );
+    }
+    
+    inline AvxVec8f Rcp( const AvxVec8f &lhs )
+    {
+        return 1.0 / lhs;
+    }
 
-template<>
-inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::MAD( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &add )
-{
-    return ( mul1 * mul2 ) + add;
-}
+    inline AvxVec8f IfThenElse( const AvxVec8f_b &sel, const AvxVec8f &lhs, const AvxVec8f &rhs )
+    {
+        return _mm256_blendv_ps( rhs, lhs, sel );
+    }
+    
+    
+    // REVIEW !!!!
+    inline F32 Sum( const AvxVec8f &lhs )
+    {
+        const __m128 x128 = _mm_add_ps(_mm256_extractf128_ps(lhs, 1), _mm256_castps256_ps128(lhs));
+        const __m128 x64 = _mm_add_ps(x128, _mm_movehl_ps(x128, x128));
+        const __m128 x32 = _mm_add_ss(x64, _mm_shuffle_ps(x64, x64, 0x55));
+        return _mm_cvtss_f32(x32);
+    }
+    
+    inline AvxVec8f Rint( const AvxVec8f &lhs )
+    {
+        return _mm256_round_ps( lhs, _MM_FROUND_TO_NEAREST_INT );
+    }
+    
+    inline AvxVec8f Sin( const AvxVec8f &lhs )
+    {
+        return Mathf::_SGA< AvxSimdTraits<F32> >::SGA_Sin_F32( lhs );
+    }
+    
+    /*
+    template< U32 index >
+    inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::SumToIndex( const AvxVec8f &lhs )
+    {
+        const __m128 x128 = _mm_add_ps(_mm256_extractf128_ps(lhs, 1), _mm256_castps256_ps128(lhs));
+        const __m128 x64 = _mm_add_ps(x128, _mm_movehl_ps(x128, x128));
+        const __m128 x32 = _mm_add_ps(_mm_shuffle_ps(x64,x64,0), _mm_shuffle_ps(x64, x64, 0x55));
+        
+        // Two cases, either target is hi register or target is low register
+        __m256 zero = _mm256_setzero_ps();
+        
+        const U32 controll = 1 << ( index % 4 );
+        __m256 result = _mm256_blend_ps( zero, _mm256_castps128_ps256(x32), controll );
+        
+        if ( index >= 4 )
+        {
+            //switch halves
+            result = _mm256_permute2f128_ps( result, result, 1 );
+        }
+        
+        return result;
+    }
+    */
 
-template<>
-inline AvxVec8f Mathf::SIMD< AvxSimdTraits<F32> >::MSUB( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &sub )
-{
-    return ( mul1 * mul2 ) - sub;
+    inline AvxVec8f MADD( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &add )
+    {
+        return ( mul1 * mul2 ) + add;
+    }
+    
+    inline AvxVec8f MSUB( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &sub )
+    {
+        return ( mul1 * mul2 ) - sub;
+    }
 }
-
+    
 //
 // Int vec
 //

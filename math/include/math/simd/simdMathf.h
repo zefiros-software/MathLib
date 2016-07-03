@@ -11,45 +11,6 @@
 
 namespace Mathf
 {
-    template < typename simdTraits >
-    struct SIMD
-    {
-        //
-        // Defined for each specific vector type
-        //
-        
-        typedef typename simdTraits::vec_type simdvector;
-        typedef typename simdTraits::vecb_type boolvector;
-        typedef typename simdTraits::value_type valueType;
-
-        static inline simdvector Sqrt( const simdvector &lhs );
-        static inline simdvector RcpSqrt( const simdvector &lhs );
-        static inline simdvector Rcp( const simdvector &lhs );
-        
-        static inline simdvector IfThenElse( const boolvector &sel, const simdvector &lhs, const simdvector &rhs );
-        static inline boolvector IfThenElse( const boolvector &sel, const boolvector &lhs, const boolvector &rhs );
-        
-        static inline valueType Sum( const simdvector &lhs );
-        
-        static inline simdvector Rint( const simdvector &lhs );
-        
-        /*
-        template< U32 index >
-        static inline simdvector HaddToIndex( const simdvector &lhs );
-        */
-         
-        static inline simdvector MAD(  const simdvector &mul1, const simdvector &mul2, const simdvector &add );
-        static inline simdvector MSUB( const simdvector &mul1, const simdvector &mul2, const simdvector &add );
-        
-        
-        //
-        // Generic methods
-        //
-        
-        static inline simdvector Sin( const simdvector &lhs );
-        
-    };
-    
     // SIMD General Algorithms
     template < typename simdTraits >
     struct _SGA
