@@ -14,10 +14,6 @@
 #include <iostream>
 #include <limits>
 
-class AvxVecd;
-class AvxVeci;
-class AvxVecd_b;
-
 class AvxVec4d;
 class AvxVec4i;
 class AvxVec4d_b;
@@ -25,12 +21,9 @@ class AvxVec4d_b;
 template <>
 struct AvxSimdTraits<F64>  : public BaseSimdTraits<F64, S64, 4, 32>
 {  
-    typedef AvxVec4d vec_n_type;
-    typedef AvxVec4i veci_n_type;
-    typedef AvxVec4d_b vecb_n_type;
-    typedef AvxVecd vec_1_type;
-    typedef AvxVeci veci_1_type;
-    typedef AvxVecd_b vecb_1_type;
+    typedef AvxVec4d vec_type;
+    typedef AvxVec4i veci_type;
+    typedef AvxVec4d_b vecb_type;
     static const size_t bytesPerValue = 8;
     static const size_t registers = 2;
 };
@@ -59,6 +52,11 @@ public:
     //inline AvxVec4d_b( const bool *ptr );
     inline AvxVec4d_b( const __m256d &rhs );
     //inline AvxVec4d_b( const AvxSimdTraits<F64>::bool_array &array );
+    
+    inline bool operator[](   U32 loc )
+    {
+        return ConvertToBool( SimdHelper::ExtractValueFromVector<AvxVec4d_b, __m256d, U64>( mValue, loc ) );
+    }
     
     inline operator __m256d () const;
     
@@ -390,15 +388,14 @@ class AvxVec4d
 public:
 
     inline AvxVec4d();
-    inline AvxVec4d( F64 val );
-    //inline AvxVec4d( const F64 *src );
-    //inline AvxVec4d( F64 v0, F64 v1, F64 v2, F64 v3 );
     inline AvxVec4d( const __m256d &rhs );
-    //inline AvxVec4d( const AvxSimdTraits<F64>::type_array &array );
 
     inline operator __m256d() const;
 
-    static inline AvxVec4d GetZero();
+    inline F64 operator[](  U32 loc )
+    {
+        return SimdHelper::ExtractValueFromVector<AvxVec4d, __m256d, F64>( mValue, loc );
+    }
     
     //DEFINE_ASSIGNMENT_BASE_OPERATORS( AvxVec4d, F64 );
     //DEFINE_ASSIGNMENT_EXT_OPERATORS( AvxVec4d, F64 );
@@ -417,9 +414,6 @@ private:
 inline AvxVec4d::AvxVec4d()
 {}
 
-inline AvxVec4d::AvxVec4d( F64 val ) : mValue( _mm256_set1_pd( val ) )
-{
-}
 
 inline AvxVec4d::AvxVec4d( const __m256d &rhs ) : mValue( rhs )
 {
@@ -431,14 +425,13 @@ inline AvxVec4d::operator __m256d() const
     return mValue;
 }
 
-inline AvxVec4d AvxVec4d::GetZero()
-{
-    return _mm256_setzero_pd();
-}
-
-
 namespace SIMD
 {
+    inline AvxVec4d Scatter( F64 val )
+    {
+        return _mm256_set1_pd( val );
+    }
+    
     inline F64 ExtractValue( AvxVec4d lhs, U32 loc )
     {
         return SimdHelper::ExtractValueFromVector<AvxVec4d, __m256d, F64>( lhs, loc );
@@ -481,9 +474,16 @@ namespace SIMD
         return r;
     }
     
-    
-    
+    template<  class Type  >
+    inline Type GetZero();
 }
+
+template< >
+inline AvxVec4d SIMD::GetZero()
+{
+    return _mm256_setzero_pd();
+}
+
 
 
 //
@@ -568,12 +568,24 @@ namespace SIMD
     
     inline AvxVec4d Rcp( AvxVec4d lhs )
     {
-        return ( AvxVec4d(1.0) / lhs );
+        return ( Scatter(1.0) / lhs );
     }
     
     inline AvxVec4d RcpSqrt( AvxVec4d lhs )
     {
-        return Rcp( Sqrt( lhs ) );
+        __m128 x = _mm256_cvtpd_ps(lhs);
+        
+        // Cheat by hijacking the ps version
+        __m128 result  = _mm_rsqrt_ps( x );
+        
+        __m256d nr = _mm256_cvtps_pd( result );
+        
+        // Perform 3 nr cycles in double space
+        nr = _mm256_mul_pd( _mm256_add_pd( _mm256_mul_pd( _mm256_mul_pd( nr, lhs ) , nr ),  _mm256_set1_pd( -3.0f ) ),  _mm256_mul_pd(  nr, _mm256_set1_pd( -0.5f ) ) );
+        nr = _mm256_mul_pd( _mm256_add_pd( _mm256_mul_pd( _mm256_mul_pd( nr, lhs ) , nr ),  _mm256_set1_pd( -3.0f ) ),  _mm256_mul_pd(  nr, _mm256_set1_pd( -0.5f ) ) );
+        nr = _mm256_mul_pd( _mm256_add_pd( _mm256_mul_pd( _mm256_mul_pd( nr, lhs ) , nr ),  _mm256_set1_pd( -3.0f ) ),  _mm256_mul_pd(  nr, _mm256_set1_pd( -0.5f ) ) );
+        
+        return ( nr );
     }
     
     inline AvxVec4d IfThenElse( AvxVec4d_b sel, AvxVec4d lhs, AvxVec4d rhs )
