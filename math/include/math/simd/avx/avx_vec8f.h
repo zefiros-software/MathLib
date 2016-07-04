@@ -14,10 +14,6 @@
 #include <iostream>
 #include <limits>
 
-// Single value vector
-class AvxVecf;
-class AvxVeci;
-class AvxVecf_b;
 
 // Hetrogeneous vector
 class AvxVec8f;
@@ -28,12 +24,9 @@ template <>
 struct AvxSimdTraits<F32> : public BaseSimdTraits<F32, S32, 8, 32>
 {
     
-    typedef AvxVec8f vec_n_type;
-    typedef AvxVec8i veci_n_type;
-    typedef AvxVec8f_b vecb_n_type;
-    typedef AvxVecf vec_1_type;
-    typedef AvxVeci veci_1_type;
-    typedef AvxVecf_b vecb_1_type;
+    typedef AvxVec8f vec_type;
+    typedef AvxVec8i veci_type;
+    typedef AvxVec8f_b vecb_type;
     static const size_t bytesPerValue = 4;
     static const size_t registers = 2;
 
@@ -63,6 +56,8 @@ public:
     inline AvxVec8f_b( const __m256 &rhs );
     //inline AvxVec8f_b( const AvxSimdTraits<F32>::bool_array &array );
     
+    inline bool operator[]( U32 loc );
+    
     inline operator __m256 () const;
     
 private:
@@ -80,6 +75,11 @@ inline U32  ConvertFromBool( bool b )
 {
     // Set the complete mask and enable the sign bit
     return -U32( b );
+}
+
+inline bool AvxVec8f_b::operator[]( U32 loc )
+{
+    return ConvertToBool( SimdHelper::ExtractValueFromVector<AvxVec8f_b, __m256, U32>( mValue, loc ) );
 }
 
 
@@ -446,6 +446,11 @@ public:
     inline AvxVec8f( const __m256 &rhs );
     inline operator __m256() const;
 
+    inline F32 operator[](U32 loc )
+    {
+        return SimdHelper::ExtractValueFromVector<AvxVec8f, __m256, F32>( mValue, loc );
+    }
+    
     static inline AvxVec8f GetZero();
     
 private:
@@ -460,10 +465,6 @@ private:
 inline AvxVec8f::AvxVec8f()
 {}
 
-
-inline AvxVec8f::AvxVec8f( F32 val ) : mValue( _mm256_set1_ps( val ) )
-{
-}
 
 /*
 inline AvxVec8f::AvxVec8f( const F32 *ptr ) :
@@ -491,13 +492,15 @@ inline AvxVec8f::operator __m256() const
     return mValue;
 }
 
-inline AvxVec8f AvxVec8f::GetZero()
-{
-    return _mm256_setzero_ps();
-}
 
 namespace SIMD
 {
+    inline AvxVec8f Scatter( F32 val ) 
+    {
+        return _mm256_set1_ps( val );
+    }
+
+    
     inline F32 ExtractValue( AvxVec8f lhs, U32 loc )
     {
         return SimdHelper::ExtractValueFromVector<AvxVec8f, __m256, F32>( lhs, loc );
@@ -533,8 +536,16 @@ namespace SIMD
         return _mm256_cvttps_epi32(lhs);
     }
     
-    
+    template< class Type  >
+    inline Type GetZero();
 }
+
+template<  >
+inline AvxVec8f SIMD::GetZero()
+{
+    return _mm256_setzero_ps();
+}
+
 
 /*
 template< U32 index >
@@ -697,14 +708,14 @@ namespace SIMD
         __m256 temp = _mm256_rsqrt_ps( lhs );
         
         // newton rhapson cycle
-        __m256 temp2 = _mm256_mul_ps( _mm256_sub_ps( _mm256_set1_ps(3.0f), _mm256_mul_ps(_mm256_mul_ps(temp, temp), lhs) ), temp );
+        temp = _mm256_mul_ps( _mm256_sub_ps( _mm256_set1_ps(3.0f), _mm256_mul_ps(_mm256_mul_ps(temp, temp), lhs) ), temp );
         
-        return _mm256_mul_ps( _mm256_set1_ps(0.5f), temp2 );
+        return _mm256_mul_ps( _mm256_set1_ps(0.5f), temp );
     }
     
     inline AvxVec8f Rcp( const AvxVec8f &lhs )
     {
-        return 1.0 / lhs;
+        return Scatter( F32(1.0) ) / lhs;
     }
 
     inline AvxVec8f IfThenElse( const AvxVec8f_b &sel, const AvxVec8f &lhs, const AvxVec8f &rhs )
@@ -794,12 +805,20 @@ namespace SIMD
 
     inline AvxVec8f MADD( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &add )
     {
+//#ifdef __AVX2__
+//        return _mm256_fmadd_ps( mul1, mul2, add );
+//#else
         return ( mul1 * mul2 ) + add;
+//#endif
     }
     
     inline AvxVec8f MSUB( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &sub )
     {
+//#ifdef __AVX2__
+//        return _mm256_fmsub_ps( mul1, mul2, sub );
+//#else
         return ( mul1 * mul2 ) - sub;
+//#endif
     }
 }
     

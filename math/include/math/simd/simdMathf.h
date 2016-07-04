@@ -15,8 +15,8 @@ namespace Mathf
     template < typename simdTraits >
     struct _SGA
     {
-        typedef typename simdTraits::vec_n_type simdvector;
-        typedef typename simdTraits::vecb_n_type boolvector;
+        typedef typename simdTraits::vec_type simdvector;
+        typedef typename simdTraits::vecb_type boolvector;
         typedef typename simdTraits::value_type valueType;
         
         static simdvector SGA_Sin_F32( const simdvector &lhs );
