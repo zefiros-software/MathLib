@@ -588,6 +588,35 @@ namespace SIMD
         return _mm_cvtsd_f64(x64);
     }
     
+    // Inspired by GROMACS
+    inline F64 SumStoreN( AvxVec4d lhs[4], F64 *dest )
+    {
+        // temp0: v0l v1l v0u v1u
+        __m256d temp0 = _mm256_hadd_pd( lhs[0], lhs[1] );
+        
+        // temp1: v2l v3l v2u v3u
+        __m256d temp1 = _mm256_hadd_pd( lhs[2], lhs[3] );
+        
+        // temp2: v0u v1u v2l v3l
+        const S32 controll1 = ( 1 ) | ( 2 << 4 );
+        __m256d temp2 = _mm256_permute2f128_pd(temp0, temp1, controll1);
+
+        // temp0: v0lu v1ul X X
+        temp0 = _mm256_add_pd( temp0, temp2 );
+        
+        // temp0: X X v2ul v3ul
+        temp1 = _mm256_add_pd( temp1, temp2 );
+        
+        const S32 controll2 = ( 1 << 2 ) | ( 1 << 3 );
+        // temp0: v0lu v1ul v2ul v3ul
+        temp0 = _mm256_blend_pd(temp0, temp1, controll2);
+        
+        __m256d lv = Load( dest );
+        Store( lv + temp0, dest );
+        
+        return Sum( AvxVec4d(temp0) );
+    }
+    
     inline AvxVec4d Rint( AvxVec4d lhs )
     {
         return _mm256_round_pd( lhs, _MM_FROUND_TO_NEAREST_INT );
@@ -607,6 +636,7 @@ namespace SIMD
     {
         return ( mul1 * mul2 ) - sub;
     }
+
 }
 
 //

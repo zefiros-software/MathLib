@@ -755,6 +755,42 @@ namespace SIMD
         return result;
     }
     */
+    
+    // Inspired by GROMACS
+    inline F64 SumStoreN( AvxVec8f lhs[8], F32 *dest )
+    {
+        // v0l1 v0l2 v1l1 v1l2 v0u1 v0u2 v1u1 v1u2
+        __m256 temp0 = _mm256_hadd_ps( lhs[0], lhs[1] );
+        
+        // v2l1 v2l2 v3l1 v3l2 v2u1 v2u2 v3u1 v3u2
+        __m256 temp1 = _mm256_hadd_ps( lhs[2], lhs[3] );
+        
+        // v4l1 v4l2 v5l1 v5l2 v4u1 v4u2 v5u1 v5u2
+        __m256 temp2 = _mm256_hadd_ps( lhs[4], lhs[5] );
+        
+        // v6l1 v6l2 v7l1 v7l2 v6u1 v6u2 v7u1 v7u2
+        __m256 temp3 = _mm256_hadd_ps( lhs[6], lhs[7] );
+        
+        // v0l v1l v2l v3l v0u v1u v2u v3u
+        temp0 = _mm256_hadd_ps( temp0, temp1 );
+        
+        // v4l v5l v6l v7l v4u v5u v6u v7u
+        temp2 = _mm256_hadd_ps( temp2, temp3 );
+    
+        // v0l v1l v2l v3l v4l v5l v6l v7l
+        temp1 = _mm256_permute2f128_ps( temp0, temp2,  ( 2 << 4 ) );
+        
+        // v0u v1u v2u v3u v4u v5u v6u v7u
+        temp0 = _mm256_permute2f128_ps( temp0, temp2, 1 | ( 3 << 4 ) );
+        
+        // v0 v1 v2 v3 v4 v5 v6 v7
+        temp0 = _mm256_add_ps( temp0, temp1 );
+        
+        __m256 lv = Load( dest );
+        Store( lv + temp0, dest );
+        
+        return Sum( temp0 );
+    }
 
     inline AvxVec8f MADD( const AvxVec8f &mul1, const AvxVec8f &mul2, const AvxVec8f &add )
     {
