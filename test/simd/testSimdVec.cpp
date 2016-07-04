@@ -63,11 +63,11 @@ template< typename SimdTraitsReal >
 struct SIMD_TESTS
 {
     // SIMD types
-    typedef typename SimdTraitsReal::vec_type simd_vec;
+    typedef typename SimdTraitsReal::vec_n_type simd_vec;
     typedef typename SimdTraitsReal::value_type simd_value_type;
     typedef typename SimdTraitsReal::int_type simd_int_type;
-    typedef typename SimdTraitsReal::veci_type simd_veci;
-    typedef typename SimdTraitsReal::vecb_type simd_bool;
+    typedef typename SimdTraitsReal::veci_n_type simd_veci;
+    typedef typename SimdTraitsReal::vecb_n_type simd_bool;
     typedef typename SimdTraitsReal::type_array type_array;
     typedef typename SimdTraitsReal::int_array int_array;
     typedef typename SimdTraitsReal::bool_array bool_array;
@@ -80,14 +80,14 @@ struct SIMD_TESTS
             
             for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
-                ASSERT_TRUE( trueVec[i] );
+                ASSERT_TRUE( SIMD::ExtractValue( trueVec, i ) );
             }
             
             simd_bool falseVec( false );
             
             for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
-                ASSERT_FALSE( falseVec[i] );
+                ASSERT_FALSE( SIMD::ExtractValue( falseVec, i ) );
             }
             
             // Fill an bool array
@@ -352,7 +352,7 @@ struct SIMD_TESTS
             simd_bool boolVec2( boolArray2 );
             simd_bool boolVec3( boolArray3 );
             
-            simd_bool boolVecResult1 = Mathf::SIMD< SimdTraitsReal >::IfThenElse( boolVec1, boolVec2, boolVec3 );
+            simd_bool boolVecResult1 = SIMD::IfThenElse( boolVec1, boolVec2, boolVec3 );
             
             for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
@@ -634,7 +634,7 @@ struct SIMD_TESTS
             }
             
             simd_vec tVec1( typeArray1 );
-            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::Sqrt( tVec1 );
+            simd_vec tVec2 = SIMD::Sqrt( tVec1 );
             
             for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
@@ -656,7 +656,7 @@ struct SIMD_TESTS
             }
             
             simd_vec tVec1( typeArray1 );
-            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::RcpSqrt( tVec1 );
+            simd_vec tVec2 = SIMD::RcpSqrt( tVec1 );
             
             for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
@@ -678,7 +678,7 @@ struct SIMD_TESTS
             }
             
             simd_vec tVec1( typeArray1 );
-            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::Rcp( tVec1 );
+            simd_vec tVec2 = SIMD::Rcp( tVec1 );
             
             for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
@@ -700,7 +700,7 @@ struct SIMD_TESTS
             }
             
             simd_vec tVec1( typeArray1 );
-            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::Rint( tVec1 );
+            simd_vec tVec2 = SIMD::Rint( tVec1 );
             
             for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
@@ -722,7 +722,7 @@ struct SIMD_TESTS
             }
             
             simd_vec tVec1( typeArray1 );
-            simd_vec tVec2 = Mathf::SIMD<SimdTraitsReal>::Sin( tVec1 );
+            simd_vec tVec2 = SIMD::Sin( tVec1 );
             
             for ( U32 i=0; i < SimdTraitsReal::width; ++i )
             {
@@ -746,7 +746,7 @@ struct SIMD_TESTS
             }
             
             simd_vec tVec1( typeArray1 );
-            simd_value_type sum = Mathf::SIMD<SimdTraitsReal>::Sum( tVec1 );
+            simd_value_type sum = SIMD::Sum( tVec1 );
             
             ASSERT_REAL_EQ( sum, sumRef );
         }
@@ -826,7 +826,7 @@ struct SIMD_TESTS
             simd_vec tVec3( typeArray3 );
             
             simd_bool compare = tVec1 < tVec2;
-            simd_vec vecResult1 = Mathf::SIMD<SimdTraitsReal>::IfThenElse( compare, tVec3, simd_vec( 0.0 ) );
+            simd_vec vecResult1 = SIMD::IfThenElse( compare, tVec3, simd_vec( 0.0 ) );
             simd_vec vecResult2 = tVec3 & compare;
             simd_vec vecResult3 = compare & tVec3;
             

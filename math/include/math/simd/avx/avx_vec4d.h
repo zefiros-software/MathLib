@@ -14,6 +14,10 @@
 #include <iostream>
 #include <limits>
 
+class AvxVecd;
+class AvxVeci;
+class AvxVecd_b;
+
 class AvxVec4d;
 class AvxVec4i;
 class AvxVec4d_b;
@@ -21,9 +25,12 @@ class AvxVec4d_b;
 template <>
 struct AvxSimdTraits<F64>  : public BaseSimdTraits<F64, S64, 4, 32>
 {  
-    typedef AvxVec4d vec_type;
-    typedef AvxVec4i veci_type;
-    typedef AvxVec4d_b vecb_type;
+    typedef AvxVec4d vec_n_type;
+    typedef AvxVec4i veci_n_type;
+    typedef AvxVec4d_b vecb_n_type;
+    typedef AvxVecd vec_1_type;
+    typedef AvxVeci veci_1_type;
+    typedef AvxVecd_b vecb_1_type;
     static const size_t bytesPerValue = 8;
     static const size_t registers = 2;
 };
@@ -49,93 +56,19 @@ public:
     
     inline AvxVec4d_b();
     inline AvxVec4d_b( bool val );
-    inline AvxVec4d_b( const bool *ptr );
+    //inline AvxVec4d_b( const bool *ptr );
     inline AvxVec4d_b( const __m256d &rhs );
-    inline AvxVec4d_b( const AvxSimdTraits<F64>::bool_array &array );
+    //inline AvxVec4d_b( const AvxSimdTraits<F64>::bool_array &array );
     
     inline operator __m256d () const;
     
-    inline bool operator []( U32 loc ) const;
-    
-    inline U64 StoreMask() const
-    {
-        return (U64)_mm256_movemask_pd( mValue );
-    }
-    
-    inline void LoadBinaryMask( U64 mask )
-    {
-        mValue = _mm256_castsi256_pd( _mm256_setr_epi64x(
-                                                         -(S64) ( ( mask >> 0 ) & 0x1 ),
-                                                         -(S64) ( ( mask >> 1 ) & 0x1 ),
-                                                         -(S64) ( ( mask >> 2 ) & 0x1 ),
-                                                         -(S64) ( ( mask >> 3 ) & 0x1 )
-                                                         ) );
-    } 
-
-
-    
-    inline bool Any() const;
-    inline bool All() const;
-    
-    inline AvxVec4d_b& operator&= ( const AvxVec4d_b& rhs );
-    inline AvxVec4d_b& operator|= ( const AvxVec4d_b& rhs );
-    inline AvxVec4d_b& operator^= ( const AvxVec4d_b& rhs );
-    
-private:
-    
-    // Used to convert from and to the internal
-    // SIMD bool representation of sign bit value
-    static inline  bool ConvertToBool( U64 val );
-    static inline  U64  ConvertFromBool( bool b );
+    static inline bool ConvertToBool( U64 val );
+    static inline U64 ConvertFromBool( bool b );
     
 private:
     
     __m256d mValue;
 };
-
-AvxVec4d_b::AvxVec4d_b()
-{}
-
-inline AvxVec4d_b::AvxVec4d_b( bool val ) :
-mValue( _mm256_castsi256_pd( _mm256_set1_epi64x( ConvertFromBool( val ) ) ) )
-{
-}
-
-inline AvxVec4d_b::AvxVec4d_b( const bool *ptr ) :
-mValue( _mm256_castsi256_pd( _mm256_set_epi64x(
-                        ConvertFromBool( ptr[3] ), ConvertFromBool( ptr[2] ),
-                        ConvertFromBool( ptr[1] ), ConvertFromBool( ptr[0] ) ) ) )
-{
-}
-
-
-inline AvxVec4d_b::AvxVec4d_b( const __m256d &rhs ) :
-mValue( rhs )
-{
-}
-
-inline AvxVec4d_b::AvxVec4d_b( const AvxSimdTraits<F64>::bool_array &array ) :
-mValue( _mm256_castsi256_pd( _mm256_set_epi64x(
-                                ConvertFromBool( array.values[3] ), ConvertFromBool( array.values[2] ),
-                                ConvertFromBool( array.values[1] ), ConvertFromBool( array.values[0] ) ) ) )
-{
-    
-}
-
-inline bool AvxVec4d_b::operator []( U32 loc ) const
-{
-    return ConvertToBool( SimdHelper::ExtractValueFromVector<AvxVec4d_b, __m256d, U64>( mValue, loc ) );
-}
-
-bool AvxVec4d_b::Any() const
-{
-    return !bool( _mm256_testz_si256( _mm256_castpd_si256(mValue), _mm256_castpd_si256(mValue) ) );
-}
-
-inline bool AvxVec4d_b::All() const
-{
-    return !(!*this).Any();
-}
 
 inline bool AvxVec4d_b::ConvertToBool( U64 val )
 {
@@ -149,56 +82,24 @@ inline U64 AvxVec4d_b::ConvertFromBool( bool b )
     return -U64( b );
 }
 
+
+AvxVec4d_b::AvxVec4d_b()
+{}
+
+inline AvxVec4d_b::AvxVec4d_b( bool val ) :
+mValue( _mm256_castsi256_pd( _mm256_set1_epi64x( ConvertFromBool( val ) ) ) )
+{
+}
+
+
+inline AvxVec4d_b::AvxVec4d_b( const __m256d &rhs ) :
+mValue( rhs )
+{
+}
+
 inline AvxVec4d_b::operator __m256d () const
 {
     return mValue;
-}
-
-// TODO: MIGHT CAUSE PROBLEMS WITH MANUAL LOADED VALS
-/*
-inline U64 StoreMask() const
-{
-    return (U64)_mm256_movemask_pd( mValue );
-}
-
-void StoreAligned( F64 *dest ) const
-{
-    _mm256_store_pd( dest, mValue );
-}
-
-void LoadAligned( const F64 *src )
-{
-    mValue = _mm256_load_pd( src );
-}
-
-
-inline void LoadBinaryMask( U8 mask )
-{
-    mValue = _mm256_castsi256_pd( _mm256_setr_epi64x(
-                                                     -(S64) ( ( mask >> 0 ) & 0x1 ),
-                                                     -(S64) ( ( mask >> 1 ) & 0x1 ),
-                                                     -(S64) ( ( mask >> 2 ) & 0x1 ),
-                                                     -(S64) ( ( mask >> 3 ) & 0x1 )
-                                                     ) );
-}
-*/
-
-inline AvxVec4d_b& AvxVec4d_b::operator&= ( const AvxVec4d_b& rhs )
-{
-    (*this) = (*this) && rhs;
-    return (*this);
-}
-
-inline AvxVec4d_b& AvxVec4d_b::operator|= ( const AvxVec4d_b& rhs )
-{
-    (*this) = (*this) || rhs;
-    return (*this);
-}
-
-inline AvxVec4d_b& AvxVec4d_b::operator^= ( const AvxVec4d_b& rhs )
-{
-    (*this) = (*this) ^ rhs;
-    return (*this);
 }
 
 inline AvxVec4d_b operator&&( AvxVec4d_b lhs, AvxVec4d_b rhs )
@@ -244,6 +145,36 @@ inline AvxVec4d_b operator!=( AvxVec4d_b lhs, AvxVec4d_b rhs )
 
 namespace SIMD
 {
+    inline bool ExtractValue(  AvxVec4d_b lhs, U32 loc )
+    {
+        return ConvertToBool( SimdHelper::ExtractValueFromVector<AvxVec4d_b, __m256d, U64>( lhs, loc ) );
+    }
+    
+    inline U64 StoreMask( AvxVec4d_b lhs )
+    {
+        return (U64)_mm256_movemask_pd( lhs );
+    }
+    
+    inline void LoadBinaryMask( AvxVec4d_b &lhs, U64 mask )
+    {
+        lhs = _mm256_castsi256_pd( _mm256_setr_epi64x(
+                                   -(S64) ( ( mask >> 0 ) & 0x1 ),
+                                   -(S64) ( ( mask >> 1 ) & 0x1 ),
+                                            -(S64) ( ( mask >> 2 ) & 0x1 ),
+                                            -(S64) ( ( mask >> 3 ) & 0x1 )
+                                                         ) );
+    }
+    
+    inline bool Any( AvxVec4d_b lhs )
+    {
+        return !bool( _mm256_testz_si256( _mm256_castpd_si256(lhs), _mm256_castpd_si256(lhs) ) );
+    }
+    
+    inline bool All( AvxVec4d_b lhs )
+    {
+        return !Any(lhs);
+    }
+    
     inline AvxVec4d_b IfThenElse( AvxVec4d_b sel, AvxVec4d_b lhs, AvxVec4d_b rhs )
     {
         return _mm256_blendv_ps( rhs, lhs, sel );
@@ -460,32 +391,18 @@ public:
 
     inline AvxVec4d();
     inline AvxVec4d( F64 val );
-    inline AvxVec4d( const F64 *src );
-    inline AvxVec4d( F64 v0, F64 v1, F64 v2, F64 v3 );
+    //inline AvxVec4d( const F64 *src );
+    //inline AvxVec4d( F64 v0, F64 v1, F64 v2, F64 v3 );
     inline AvxVec4d( const __m256d &rhs );
-    inline AvxVec4d( const AvxSimdTraits<F64>::type_array &array );
+    //inline AvxVec4d( const AvxSimdTraits<F64>::type_array &array );
 
     inline operator __m256d() const;
 
-    inline F64 operator []( U32 loc ) const;
+    static inline AvxVec4d GetZero();
     
-    inline void LoadUnaligned( const F64 *src );
-    inline void LoadAligned( const F64 *src );
-    inline void StoreUnaligned( F64 *dest ) const;
-    inline void StoreAligned( F64 *dest ) const;
-    
-    AvxVec4i AsInt() const;
-    AvxVec4i ConvertToInt() const;
-    
-    //template< U32 index >
-    //inline AvxVec4d BroadCastIndex() const;
-    
-    inline static AvxVec4d GetZero();
-    //inline static AvxVec4d GetFullMask();
-    
-    DEFINE_ASSIGNMENT_BASE_OPERATORS( AvxVec4d, F64 );
-    DEFINE_ASSIGNMENT_EXT_OPERATORS( AvxVec4d, F64 );
-    DEFINE_INC_OPERATORS( AvxVec4d, F64 )
+    //DEFINE_ASSIGNMENT_BASE_OPERATORS( AvxVec4d, F64 );
+    //DEFINE_ASSIGNMENT_EXT_OPERATORS( AvxVec4d, F64 );
+    //DEFINE_INC_OPERATORS( AvxVec4d, F64 )
 
 private:
 
@@ -500,28 +417,11 @@ private:
 inline AvxVec4d::AvxVec4d()
 {}
 
-inline AvxVec4d::AvxVec4d( const F64 *src ) :
-    mValue( _mm256_setr_pd( src[0], src[1], src[2], src[3] ) )
-{
-}
-
 inline AvxVec4d::AvxVec4d( F64 val ) : mValue( _mm256_set1_pd( val ) )
 {
 }
 
-
-inline AvxVec4d::AvxVec4d( F64 v0, F64 v1, F64 v2, F64 v3 ) :
-mValue( _mm256_setr_pd( v0, v1, v2, v3 ) )
-{
-}
-
 inline AvxVec4d::AvxVec4d( const __m256d &rhs ) : mValue( rhs )
-{
-    
-}
-
-inline AvxVec4d::AvxVec4d( const AvxSimdTraits<F64>::type_array &array ) :
-    mValue( _mm256_load_pd( array.values ) )
 {
     
 }
@@ -531,87 +431,61 @@ inline AvxVec4d::operator __m256d() const
     return mValue;
 }
 
-inline F64 AvxVec4d::operator []( U32 loc ) const
-{
-    return SimdHelper::ExtractValueFromVector<AvxVec4d, __m256d, F64>( mValue, loc );
-}
-
-inline void AvxVec4d::LoadUnaligned( const F64 *src )
-{
-    mValue =  _mm256_loadu_pd( src );
-}
-
-inline void AvxVec4d::LoadAligned( const F64 *src )
-{
-    mValue = _mm256_load_pd( src );
-}
-
-inline void AvxVec4d::StoreUnaligned( F64 *dest ) const
-{
-    _mm256_storeu_pd( dest, mValue );
-}
-
-inline void AvxVec4d::StoreAligned( F64 *dest ) const
-{
-    _mm256_store_pd( dest, mValue );
-}
-
-inline AvxVec4i AvxVec4d::AsInt() const
-{
-    return _mm256_castpd_si256(mValue);
-}
-
-inline AvxVec4i AvxVec4d::ConvertToInt() const
-{
-    AvxVec4i r;
-    
-    for (U32 i = 0; i < 4; ++i)
-    {
-        SimdHelper::SetValueInVector<AvxVec4i, __m256i, S64>( r, i, S64((*this)[i]) );
-    }
-    
-    return r;
-}
-
 inline AvxVec4d AvxVec4d::GetZero()
 {
     return _mm256_setzero_pd();
 }
 
-/*
-template< U32 index >
-inline AvxVec4d AvxVec4d::BroadCastIndex() const
+
+namespace SIMD
 {
-    __m256d temp;
-    
-    if ( index >= 2 )
+    inline F64 ExtractValue( AvxVec4d lhs, U32 loc )
     {
-        temp = _mm256_permute2f128_pd( mValue, mValue, 1 | ( 1 << 4 ) );
-    }
-    else
-    {
-        temp = _mm256_permute2f128_pd( mValue, mValue, 0 );
+        return SimdHelper::ExtractValueFromVector<AvxVec4d, __m256d, F64>( lhs, loc );
     }
     
-    const S32 selector = index % 2;
-    const S32 select = ( selector ) | ( selector << 1 ) | ( selector << 2 ) | ( selector << 3 );
+    inline AvxVec4d LoadU( const F64 *src )
+    {
+        return  _mm256_loadu_pd( src );
+    }
     
-    return _mm256_shuffle_pd( temp, temp, select );
+    inline AvxVec4d Load( const F64 *src )
+    {
+        return _mm256_load_pd( src );
+    }
+    
+    inline void StoreU( AvxVec4d lhs, F64 *dest )
+    {
+        _mm256_storeu_pd( dest, lhs );
+    }
+    
+    inline void Store( AvxVec4d lhs,  F64 *dest )
+    {
+        _mm256_store_pd( dest, lhs );
+    }
+    
+    inline AvxVec4i AsInt( AvxVec4d lhs )
+    {
+        return _mm256_castpd_si256(lhs);
+    }
+    
+    inline AvxVec4i ConvertToInt( AvxVec4d lhs )
+    {
+        AvxVec4i r;
+        
+        for (U32 i = 0; i < 4; ++i)
+        {
+            SimdHelper::SetValueInVector<AvxVec4i, __m256i, S64>( r, i, S64(ExtractValue(lhs,i)) );
+        }
+        
+        return r;
+    }
+    
+    
+    
 }
-*/
-
-/*
 
 
-
-inline AvxVec4d AvxVec4d::GetFullMask()
-{
-    EasyConvert easyc;
-    easyc.ul = 0xFFFFFFFFFFFFFFFF;
-    return _mm256_set1_pd( easyc.d );
-}
-*/
- 
 //
 // Math
 //
@@ -670,13 +544,6 @@ inline AvxVec4d_b operator>= ( AvxVec4d lhs, AvxVec4d rhs )
     return _mm256_cmp_pd( lhs, rhs, 29 );
 }
 
-/*
-inline AvxVec4d operator&( const AvxVec4d &lhs, const AvxVec4d &rhs ) 
-{
-    return _mm256_and_pd( lhs, rhs );
-}
-*/
-
 inline AvxVec4d operator&( AvxVec4d lhs, AvxVec4d_b rhs )
 {
     return _mm256_and_pd( lhs, rhs );
@@ -730,29 +597,6 @@ namespace SIMD
     {
         return Mathf::_SGA< AvxSimdTraits<F64> >::SGA_Sin_F64( lhs );
     }
-    
-    /*
-    template< U32 index >
-    inline AvxVec4d SumToIndex( const AvxVec4d &lhs )
-    {
-        const __m128d x128 = _mm_add_pd(_mm256_extractf128_pd(lhs, 1), _mm256_castpd256_pd128(lhs));
-        const __m128d x64 = _mm_add_pd( _mm_shuffle_pd(x128, x128, 0 ), _mm_shuffle_pd(x128, x128, 0x3 ) );
-        
-        // Two cases, either target is hi register or target is low register
-        __m256d zero = _mm256_setzero_pd();
-        
-        const U32 controll = 1 << ( index % 2 );
-        __m256d result = _mm256_blend_pd( zero, _mm256_castpd128_pd256(x64), controll );
-        
-        if ( index >= 2 )
-        {
-            //switch halves
-            result = _mm256_permute2f128_pd( result, result, 1 );
-        }
-        
-        return result;
-    }
-    */
     
     inline AvxVec4d MADD( AvxVec4d mul1, AvxVec4d mul2, AvxVec4d add )
     {
