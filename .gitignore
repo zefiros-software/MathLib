@@ -1,20 +1,38 @@
-math/math.sdf
-math/math.sln
-math/math.v11.suo
-math/math.vcxproj.filters
-math/math.vcxproj.user
+-- artifacts
 bin/*
-build/
-*.opensdf
-*.vcxproj
-*.filters
-*.user
-test/lib/
+test/obj/*
+test/bin/*
+
+-- zpm
+.config.json
+
+-- git
 *.orig
-documentation/out/
-math/.vs/*
-math/.vs/*
-math/include/math/simd/vectorize_BACKUP_22292.h
-math/include/math/simd/vectorize_BASE_22292.h
-math/include/math/simd/vectorize_LOCAL_22292.h
-math/include/math/simd/vectorize_REMOTE_22292.h
+
+-- make
+Makefile
+*.make
+
+-- visual studio code
+*/.vs/*
+
+-- visual studio
+*.sdf
+*.sln
+*.suo
+*.VC.*
+*.opensdf
+*.vcxproj*
+
+-- Intel Tools
+*Amplifier*
+
+-- Docs
+*.chi
+*.chm
+
+-- ZPM 
+extern/
+assets/
+test/extern
+test/assets
