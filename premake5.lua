@@ -27,5 +27,5 @@ local zefiros = require( "Zefiros-Software/Zefiros-Defaults", "@head" )
 
 workspace "MathLib"
 
-	zefiros.setDefaults( "math" )
+	zefiros.setDefaults( "math", { mayLink=false } )
             
