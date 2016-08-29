@@ -262,7 +262,7 @@ namespace Mathf
     template< class Number >
     inline Number Abs( const Number f )
     {
-        return std::abs( f );
+        return abs( f );
     }
 
     template<>
