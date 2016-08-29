@@ -265,6 +265,18 @@ namespace Mathf
         return std::abs( f );
     }
 
+    template<>
+    inline F32 Abs( const F32 f )
+    {
+        return fabsf( f );
+    }
+
+    template<>
+    inline F64 Abs( const F64 f )
+    {
+        return fabs( f );
+    }
+
     template< class Number >
     inline Number Rint( Number x )
     {
