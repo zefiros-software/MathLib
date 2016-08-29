@@ -118,6 +118,17 @@ F32 Mathf::Floor( const F32 f )
     return floorf( f );
 }
 
+
+F64 Mathf::Round( const F64 f )
+{
+    return std::round( f );
+}
+
+F32 Mathf::Round( const F32 f )
+{
+    return std::round( f );
+}
+
 F64 Mathf::Ceil( const F64 f )
 {
     return ceil( f );
@@ -126,6 +137,54 @@ F64 Mathf::Ceil( const F64 f )
 F64 Mathf::Floor( const F64 f )
 {
     return floor( f );
+}
+
+
+F32 Mathf::Trunc( const F32 f )
+{
+    return std::trunc( f );
+}
+
+
+F64 Mathf::Trunc( const F64 f )
+{
+    return std::trunc( f );
+}
+
+
+F64 Mathf::Trunc( const F64 f, const F64 exp )
+{
+    return std::pow( f, exp );
+}
+
+F32 Mathf::Trunc( const F32 f, const F32 exp )
+{
+    return std::powf( f, exp );
+}
+
+F64 Mathf::Rint( const F64 x )
+{
+    return std::rint( x );
+}
+
+F32 Mathf::Rint( const F32 x )
+{
+    return std::rint( x );
+}
+
+
+F64 Mathf::Sqrt( const F64 f )
+{
+    assert( f >= 0.0f );
+
+    return std::sqrt( f );
+}
+
+F32 Mathf::Sqrt( const F32 f )
+{
+    assert( f >= 0.0f );
+
+    return std::sqrt( f );
 }
 
 F32 Mathf::Log( const F32 f )
@@ -196,12 +255,23 @@ F32 Mathf::Log10( const F32 f )
 F64 Mathf::Log10( const F64 f )
 {
     assert( f > 0.0f );
-    return log10f( f );
+    return log10( f );
 }
 
 bool Mathf::IsPow2( const U32 n )
 {
     return ( !( n & ( n - 1 ) ) && n );
+}
+
+U32 Mathf::NextPow2( const U32 x )
+{
+    U32 y = x - 1;
+    y |= y >> 1;
+    y |= y >> 2;
+    y |= y >> 4;
+    y |= y >> 8;
+    y |= y >> 16;
+    return ++y;
 }
 
 F32 Mathf::Abs( const F32 f )

@@ -34,19 +34,57 @@
 #include <cfloat>
 #include <cmath>
 
-#define M_E        2.71828182845904523536   // e
-#define M_LOG2E    1.44269504088896340736   // log2(e)
-#define M_LOG10E   0.434294481903251827651  // log10(e)
-#define M_LN2      0.693147180559945309417  // ln(2)
-#define M_LN10     2.30258509299404568402   // ln(10)
-#define M_PI       3.14159265358979323846   // pi
-#define M_PI_2     1.57079632679489661923   // pi/2
-#define M_PI_4     0.785398163397448309616  // pi/4
-#define M_1_PI     0.318309886183790671538  // 1/pi
-#define M_2_PI     0.636619772367581343076  // 2/pi
-#define M_2_SQRTPI 1.12837916709551257390   // 2/sqrt(pi)
-#define M_SQRT2    1.41421356237309504880   // sqrt(2)
-#define M_SQRT1_2  0.707106781186547524401  // 1/sqrt(2)
+#ifndef M_E
+#   define M_E        2.71828182845904523536   // e
+#endif
+
+#ifndef M_LOG2E
+#   define M_LOG2E    1.44269504088896340736   // log2(e)
+#endif
+
+#ifndef M_LOG10E
+#   define M_LOG10E   0.434294481903251827651  // log10(e)
+#endif
+
+#ifndef M_LN2
+#   define M_LN2      0.693147180559945309417  // ln(2)
+#endif
+
+#ifndef M_LN10
+#   define M_LN10     2.30258509299404568402   // ln(10)
+#endif
+
+#ifndef M_PI
+#   define M_PI       3.14159265358979323846   // pi
+#endif
+
+#ifndef M_PI_2
+#   define M_PI_2     1.57079632679489661923   // pi/2
+#endif
+
+#ifndef M_PI_4
+#   define M_PI_4     0.785398163397448309616  // pi/4
+#endif
+
+#ifndef M_1_PI
+#   define M_1_PI     0.318309886183790671538  // 1/pi
+#endif
+
+#ifndef M_2_PI
+#   define M_2_PI     0.636619772367581343076  // 2/pi
+#endif
+
+#ifndef M_2_SQRTPI
+#   define M_2_SQRTPI 1.12837916709551257390   // 2/sqrt(pi)
+#endif
+
+#ifndef M_SQRT2
+#   define M_SQRT2    1.41421356237309504880   // sqrt(2)
+#endif
+
+#ifndef M_SQRT1_2
+#   define M_SQRT1_2  0.707106781186547524401  // 1/sqrt(2)
+#endif
 
 BEGIN_MATH_NAMESPACE
 
@@ -137,11 +175,11 @@ namespace Mathf
     F64 Ceil( const F64 f );
     F64 Floor( const F64 f );
 
-    template< class Number >
-    inline Number Round( const Number f )
-    {
-        return f >= 0.0 ? f + 0.5f : ( ( f - ( Number )( S64 )f ) <= -0.5 ? f : f - 0.5f );
-    }
+    F32 Round( const F32 f );
+    F64 Round( const F64 f );
+
+    F32 Trunc( const F32 f );
+    F64 Trunc( const F64 f );
 
     F32 Log( const F32 f );
     F32 Log2( const F32 f );
@@ -152,11 +190,14 @@ namespace Mathf
     F32 Log10( const F32 f );
     F64 Log10( const F64 f );
 
-    template< class Number >
-    inline Number Pow( const Number base, const Number exp )
-    {
-        return ( Number )std::pow( base, exp );
-    }
+    F32 Trunc( const F32 f, const F32 exp );
+    F64 Trunc( const F64 f, const F64 exp );
+
+    F32 Rint( const F32 x );
+    F64 Rint( const F64 x );
+
+    F32 Sqrt( const F32 f );
+    F64 Sqrt( const F64 f );
 
     template< class Number >
     inline Number Clamp( const Number f, const Number min, const Number max )
@@ -184,16 +225,7 @@ namespace Mathf
 
     bool IsPow2( const U32 n );
 
-    inline U32 NextPow2( const U32 x )
-    {
-        U32 y = x - 1;
-        y |= y >> 1;
-        y |= y >> 2;
-        y |= y >> 4;
-        y |= y >> 8;
-        y |= y >> 16;
-        return ++y;
-    }
+    U32 NextPow2( const U32 x );
 
     template< class Number >
     inline Number Square( Number a )
@@ -201,25 +233,11 @@ namespace Mathf
         return a * a;
     }
 
-    template< class Number >
-    inline Number Sqrt( const Number f )
-    {
-        assert( f >= 0.0f );
-
-        return std::sqrt( f );
-    }
-
     F32 Abs( const F32 f );
     S32 Abs( const S32 f );
 
     F64 Abs( const F64 f );
     S64 Abs( const S64 f );
-
-    template< class Number >
-    inline Number Rint( Number x )
-    {
-        return std::rint( x );
-    }
 
     template< class Number >
     inline bool Equal( const Number a, const Number b )
