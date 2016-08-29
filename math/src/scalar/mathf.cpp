@@ -150,14 +150,24 @@ F64 Mathf::Trunc( const F64 f )
 }
 
 
-F64 Mathf::Trunc( const F64 f, const F64 exp )
+F64 Mathf::Pow( const F64 f, const F64 exp )
 {
     return std::pow( f, exp );
 }
 
-F32 Mathf::Trunc( const F32 f, const F32 exp )
+F32 Mathf::Pow( const F32 f, const F32 exp )
 {
     return std::pow( f, exp );
+}
+
+F64 Mathf::Trunc( const F64 x )
+{
+    return std::trunc( x );
+}
+
+F32 Mathf::Trunc( const F32 x )
+{
+    return std::trunc( x );
 }
 
 F64 Mathf::Rint( const F64 x )

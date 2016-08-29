@@ -190,8 +190,8 @@ namespace Mathf
     F32 Log10( const F32 f );
     F64 Log10( const F64 f );
 
-    F32 Trunc( const F32 f, const F32 exp );
-    F64 Trunc( const F64 f, const F64 exp );
+    F32 Pow( const F32 f, const F32 exp );
+    F64 Pow( const F64 f, const F64 exp );
 
     F32 Rint( const F32 x );
     F64 Rint( const F64 x );
