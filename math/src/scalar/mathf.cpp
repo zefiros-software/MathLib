@@ -27,10 +27,8 @@
 
 #include <assert.h>
 #include <cstdlib>
-#include <limits>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include <cmath>
 
 BEGIN_MATH_NAMESPACE
 
