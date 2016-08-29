@@ -292,10 +292,18 @@ inline AvxVec8i operator-( const AvxVec8i &lhs )
 
 // { START
 
+// forward declare
+inline AvxVec8f_b AvxVec8i::AsBool() const;
+inline AvxVec8f_b AvxVec8i::ConvertToBool() const;
+
+inline AvxVec8f_b operator!=( const AvxVec8i &lhs, const AvxVec8i &rhs );
+inline AvxVec8i operator+( const AvxVec8i &lhs, const AvxVec8i &rhs );
+inline AvxVec8i operator-( const AvxVec8i &lhs, const AvxVec8i &rhs );
 inline AvxVec8f_b AvxVec8i::AsBool() const
 {
     return _mm256_castsi256_ps( mValue );
 }
+
 
 inline AvxVec8f_b AvxVec8i::ConvertToBool() const
 {
@@ -507,7 +515,7 @@ namespace SIMD
     }
 
 
-    inline F32 ExtractValue( AvxVec8f lhs, U32 loc )
+    inline F32 ExtractValue( const AvxVec8f &lhs, U32 loc )
     {
         return SimdHelper::ExtractValueFromVector<AvxVec8f, __m256, F32>( lhs, loc );
     }
@@ -522,22 +530,22 @@ namespace SIMD
         return _mm256_load_ps( src );
     }
 
-    inline void StoreU( AvxVec8f lhs, F32 *dest )
+    inline void StoreU( const AvxVec8f &lhs, F32 *dest )
     {
         _mm256_storeu_ps( dest, lhs );
     }
 
-    inline void Store( AvxVec8f lhs, F32 *dest )
+    inline void Store( const AvxVec8f &lhs, F32 *dest )
     {
         _mm256_store_ps( dest, lhs );
     }
 
-    inline AvxVec8i AsInt( AvxVec8f lhs )
+    inline AvxVec8i AsInt( const AvxVec8f &lhs )
     {
         return _mm256_castps_si256( lhs );
     }
 
-    inline AvxVec8i ConvertToInt( AvxVec8f lhs )
+    inline AvxVec8i ConvertToInt( const AvxVec8f &lhs )
     {
         return _mm256_cvttps_epi32( lhs );
     }
@@ -714,7 +722,8 @@ namespace SIMD
         __m256 temp = _mm256_rsqrt_ps( lhs );
 
         // newton rhapson cycle
-        temp = _mm256_mul_ps( _mm256_sub_ps( _mm256_set1_ps( 3.0f ), _mm256_mul_ps( _mm256_mul_ps( temp, temp ), lhs ) ), temp );
+        temp = _mm256_mul_ps( _mm256_sub_ps( _mm256_set1_ps( 3.0f ), _mm256_mul_ps( _mm256_mul_ps( temp, temp ), lhs ) ),
+                              temp );
 
         return _mm256_mul_ps( _mm256_set1_ps( 0.5f ), temp );
     }
