@@ -44,75 +44,75 @@ namespace Mathf
 {
     template< class Number >
     inline Number GetEpsilon();
-    
+
     template<>
     inline F64 GetEpsilon()
     {
         return DBL_EPSILON;
     }
-    
+
     template<>
     inline F32 GetEpsilon()
     {
         return FLT_EPSILON;
     }
-    
+
     template< class Number >
     inline Number GetPi()
     {
         return ( Number )M_PI;
     }
-    
+
     template< class Number >
     inline Number Get2Pi()
     {
         return ( Number )M_PI_2;
     }
-    
+
     template< class Number >
     inline Number GetSqrt2()
     {
         return ( Number )M_SQRT2;
     }
-    
+
     template< class Number >
     inline Number GetE()
     {
         return ( Number )M_E;
     }
-    
+
     template< class Number >
     inline Number GetLog2E()
     {
         return ( Number )M_LOG2E;
     }
-    
+
     template< class Number >
     inline Number GetLog10E()
     {
         return ( Number )M_LOG10E;
     }
-    
+
     template< class Number >
     inline Number GetLn2()
     {
         return ( Number )M_LN2;
     }
-    
+
     template< class Number >
     inline Number GetLn10()
     {
         return ( Number )M_LN10;
     }
-    
+
     template< class Number >
     inline Number Acos( const Number f )
     {
         assert( f >= -1.0f && f <= 1.0f );
-        
+
         return std::acos( f );
     }
-    
+
     template< class Number >
     inline Number Asin( const Number f )
     {
@@ -120,112 +120,120 @@ namespace Mathf
 
         return asin( f );
     }
-    
+
     template< class Number >
     inline Number Atan( const Number f )
     {
         return std::atan( f );
     }
-    
+
     template< class Number >
     inline Number Atan2( const Number x, const Number y )
     {
         return std::atan2( x, y );
     }
-    
+
     template< class Number >
     inline Number Cos( const Number f )
     {
         return std::cos( f );
     }
-    
+
     template< class Number >
     inline Number Sin( const Number f )
     {
         return std::sin( f );
     }
-    
+
     template< class Number >
     inline Number Tan( const Number f )
     {
         return std::tan( f );
     }
-    
+
     template< class Number >
     inline Number Exp( const Number f )
     {
         return std::exp( f );
     }
-    
+
     template< class Number >
     inline Number Ceil( const Number f )
     {
         return std::ceil( f );
     }
-    
+
     template< class Number >
     inline Number Floor( const Number f )
     {
         return std::floor( f );
     }
-    
+
     template< class Number >
     inline Number Round( const Number f )
     {
         return f >= 0.0 ? f + 0.5f : ( ( f - ( Number )( S32 )f ) <= -0.5 ? f : f - 0.5f );
     }
-    
+
     template< class Number >
     inline Number Log( const Number f )
     {
         assert( f > 0.0f );
-    
+
         return std::log( f );
     }
-    
+
+    template< class Number >
+    inline Number Log2( const Number f )
+    {
+        assert( f > 0.0f );
+
+        return std::log2( f );
+    }
+
     template< class Number >
     inline Number Log10( const Number f )
     {
-        assert( f > 0.0f );   
+        assert( f > 0.0f );
 
         return std::log10( f );
     }
-    
+
     template< class Number >
     inline Number Pow( const Number base, const Number exp )
     {
         return std::pow( base, exp );
     }
-    
+
     template< class Number >
     inline Number Clamp( const Number f, const Number min, const Number max )
     {
         return f < min ? min : ( f > max ? max : f );
     }
-    
+
     template< class Number >
     inline Number RadToDeg( const Number f )
     {
         return f * 180.0f / GetPi< Number >();
     }
-    
+
     template< class Number >
     inline Number DegToRad( const Number f )
     {
         return f * GetPi< Number >() / 180.0f;
     }
-    
+
     template< class Number >
     inline Number Lerp( const Number a, const Number b, const Number t )
     {
         return a + ( b - a ) * t;
     }
-    
+
     inline bool IsPow2( const U32 n )
     {
         return ( !( n & ( n - 1 ) ) && n );
     }
-    
+
     inline U32 NextPow2( const U32 x )
     {
         U32 y = x - 1;
@@ -236,7 +244,7 @@ namespace Mathf
         y |= y >> 16;
         return ++y;
     }
-    
+
     template< class Number >
     inline Number Square( Number a )
     {
@@ -250,19 +258,19 @@ namespace Mathf
 
         return std::sqrt( f );
     }
-    
+
     template< class Number >
     inline Number Abs( const Number f )
     {
         return std::abs( f );
     }
-    
+
     template< class Number >
     inline Number Rint( Number x )
     {
         return std::rint( x );
     }
-    
+
     template< class Number >
     inline bool Equal( const Number a, const Number b )
     {
@@ -284,7 +292,7 @@ namespace Mathf
     template< typename Number >
     inline Number Rcp( const Number &_a )
     {
-        return (Number)1.0 / _a;
+        return ( Number )1.0 / _a;
     }
 }
 
