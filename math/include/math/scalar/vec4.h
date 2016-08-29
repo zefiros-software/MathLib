@@ -60,7 +60,7 @@ public:
     inline Vec4()
     {
     }
-    
+
     inline Vec4( const Number x, const Number y, const Number z, const Number w )
     {
         mValues[0] = x;
@@ -68,7 +68,7 @@ public:
         mValues[2] = z;
         mValues[3] = w;
     }
-    
+
     template< class Vector4D >
     inline Vec4( const Vector4D &v )
     {
@@ -77,7 +77,7 @@ public:
         mValues[2] = ( Number )v.GetZ();
         mValues[3] = ( Number )v.GetW();
     }
-    
+
     inline Vec4( Number x, const Vec3< Number > &v )
     {
         mValues[0] = x;
@@ -85,7 +85,7 @@ public:
         mValues[2] = ( Number )v[1];
         mValues[3] = ( Number )v[2];
     }
-    
+
     inline Vec4( const Vec3< Number > &v, Number w )
     {
         mValues[0] = ( Number )v[0];
@@ -93,7 +93,7 @@ public:
         mValues[2] = ( Number )v[2];
         mValues[3] = w;
     }
-    
+
     inline Vec4( const Vec2< Number > &v1, const Vec2< Number > &v2 )
     {
         mValues[0] = ( Number )v1[0];
@@ -101,105 +101,105 @@ public:
         mValues[2] = ( Number )v2[0];
         mValues[3] = ( Number )v2[1];
     }
-    
+
     inline Vec4 &operator=( const Vec4 &other )
     {
         mValues[0] = other.mValues[0];
         mValues[1] = other.mValues[1];
         mValues[2] = other.mValues[2];
         mValues[3] = other.mValues[3];
-        
+
         return *this;
     }
-    
+
     inline Vec4 &operator-=( const Vec4 &v )
     {
         mValues[0] -= v.mValues[0];
         mValues[1] -= v.mValues[1];
         mValues[2] -= v.mValues[2];
         mValues[3] -= v.mValues[3];
-        
+
         return *this;
     }
-    
+
     inline Vec4 &operator+=( const Vec4 &v )
     {
         mValues[0] += v.mValues[0];
         mValues[1] += v.mValues[1];
         mValues[2] += v.mValues[2];
         mValues[3] += v.mValues[3];
-        
+
         return *this;
     }
-    
+
     inline Vec4 &operator/=( Number s )
     {
         assert( s != 0.0f );
-        
+
         mValues[0] /= s;
         mValues[1] /= s;
         mValues[2] /= s;
         mValues[3] /= s;
-        
+
         return *this;
     }
-    
+
     inline Vec4 &operator*=( Number s )
     {
         mValues[0] *= s;
         mValues[1] *= s;
         mValues[2] *= s;
         mValues[3] *= s;
-        
+
         return *this;
     }
-    
+
     inline bool operator==( const Vec4 &other ) const
     {
         return Mathf::Equal( mValues[0], other.mValues[0] ) && Mathf::Equal( mValues[1], other.mValues[1] ) &&
-        Mathf::Equal( mValues[2], other.mValues[2] ) && Mathf::Equal( mValues[3], other.mValues[3] );
+               Mathf::Equal( mValues[2], other.mValues[2] ) && Mathf::Equal( mValues[3], other.mValues[3] );
     }
-    
+
     inline bool operator!=( const Vec4 &other ) const
     {
         return !( *this == other );
     }
-    
+
     inline Number &operator[]( const U8 axis )
     {
         return mValues[ axis ];
     }
-    
+
     inline const Number &operator[]( const U8 axis ) const
     {
         return mValues[ axis ];
     }
-    
+
     inline Number Dot( const Vec4 &v ) const
     {
         return mValues[0] * v.mValues[0] + mValues[1] * v.mValues[1] + mValues[2] * v.mValues[2] + mValues[3] * v.mValues[3];
     }
-    
+
     inline Number Length2() const
     {
         return Dot( *this );
     }
-    
+
     inline Number Length() const
     {
         return Mathf::Sqrt( Length2() );
     }
-    
+
     inline Number Distance2( const Vec4 &v ) const
     {
         return ( *this - v ).Length2();
     }
-    
+
     inline Number Distance( const Vec4 &v ) const
     {
         return ( *this - v ).Length();
     }
-    
+
     inline void SetValue( const Number x, const Number y, const Number z, const Number w )
     {
         mValues[0] = x;
@@ -207,46 +207,46 @@ public:
         mValues[2] = z;
         mValues[3] = w;
     }
-    
+
     inline Vec4 SafeNormalise()
     {
         Vec4 absv = Absolute();
         U8 max = absv.MaxAxis();
-        
+
         if ( absv.mValues[max] > 0 )
         {
             assert( absv[max] != 0.0f );
             assert( Length() != 0.0f );
-            
+
             *this /= absv.mValues[max];
             return *this /= Length();
         }
-        
+
         SetValue( 1.0f, 0.0f, 0.0f, 0.0f );
         return *this;
     }
-    
+
     inline Vec4 Normalise()
     {
         return *this /= Length();
     }
-    
+
     inline Vec4 Lerp( const Vec4 &v, const Number t ) const
     {
         return Vec4( mValues[0] + ( v.mValues[0] - mValues[0] ) * t, mValues[1] + ( v.mValues[1] - mValues[1] ) * t,
-                    mValues[2] + ( v.mValues[2] - mValues[2] ) * t, mValues[3] + ( v.mValues[3] - mValues[3] ) * t );
+                     mValues[2] + ( v.mValues[2] - mValues[2] ) * t, mValues[3] + ( v.mValues[3] - mValues[3] ) * t );
     }
-    
+
     inline Vec4 Absolute() const
     {
         return Vec4( Mathf::Abs( mValues[0] ), Mathf::Abs( mValues[1] ), Mathf::Abs( mValues[2] ), Mathf::Abs( mValues[3] ) );
     }
-    
+
     inline U8 MinAxis() const
     {
         U8 axis = 0;
         Number minvalue = mValues[0];
-        
+
         for ( U8 i = 1; i < 4; ++i )
         {
             if ( minvalue > mValues[i] )
@@ -255,15 +255,15 @@ public:
                 axis = i;
             }
         }
-        
+
         return axis;
     }
-    
+
     inline U8 MaxAxis() const
     {
         U8 axis = 0;
         Number maxvalue = mValues[0];
-        
+
         for ( U8 i = 1; i < 4; ++i )
         {
             if ( maxvalue < mValues[i] )
@@ -272,81 +272,81 @@ public:
                 axis = i;
             }
         }
-        
+
         return axis;
     }
-    
+
     inline void SetX( const Number x )
     {
         mValues[0] = x;
     }
-    
+
     inline Number GetX() const
     {
         return mValues[0];
     }
-    
+
     inline void SetY( const Number y )
     {
         mValues[1] = y;
     }
-    
+
     inline Number GetY() const
     {
         return mValues[1];
     }
-    
+
     inline void SetZ( const Number z )
     {
         mValues[2] = z;
     }
-    
+
     inline Number GetZ() const
     {
         return mValues[2];
     }
-    
+
     inline void SetW( const Number w )
     {
         mValues[3] = w;
     }
-    
+
     inline Number GetW() const
     {
         return mValues[3];
     }
-    
+
     inline void SetZero()
     {
         SetValue( 0.0f, 0.0f, 0.0f, 0.0f );
     }
-    
+
     inline bool IsZero() const
     {
         return mValues[0] == 0.0f && mValues[1] == 0.0f && mValues[2] == 0.0f && mValues[3] == 0.0f;
     }
-    
+
     inline bool IsFuzzyZero() const
     {
-        return Length2() < Mathf::GetEpsilon< Number >();
+        return Length2() <= Mathf::GetEpsilon< Number >() * 10;
     }
-    
+
     inline void Clear()
     {
         SetValue( 0.0f, 0.0f, 0.0f, 0.0f );
     }
-    
+
     static inline Vec4 GetZero()
     {
         return Vec4( 0.0f, 0.0f, 0.0f, 0.0f );
     }
-    
+
     static inline Vec4 GetOne()
     {
         return Vec4( 1.0f, 1.0f, 1.0f, 1.0f );
     }
-    
-    
+
+
 
 private:
 
@@ -402,7 +402,7 @@ template< class Number >
 inline Vec4< Number >  operator/( const Vec4< Number >  &v, const Number s )
 {
     assert( s != 0.0f );
-    
+
     return v * ( Number( 1.0 ) / s );
 }
 

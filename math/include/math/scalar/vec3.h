@@ -48,30 +48,30 @@ class Vec3
 {
     template< class T >
     friend Vec3< T > operator+( const Vec3< T > &, const Vec3< T > & );
-    
+
     template< class T >
     friend Vec3< T > operator*( const Vec3< T > &, const Vec3< T > & );
-    
+
     template< class T >
     friend Vec3< T > operator-( const Vec3< T > &, const Vec3< T > & );
-    
+
     template< class T >
     friend Vec3< T > operator-( const Vec3< T > & );
-    
+
     template< class T >
     friend Vec3< T > operator*( const Vec3< T > &, const T );
-    
+
     template< class T >
     friend Vec3< T > operator*( const T , const Vec3< T > & );
-    
+
     template< class T >
     friend Vec3< T > operator/( const Vec3< T > &, const T );
-    
+
     template< class T >
     friend Vec3< T > operator/( const Vec3< T > &, const Vec3< T > & );
 
 public:
-    
+
     inline Vec3()
     {
     }
@@ -89,7 +89,7 @@ public:
         mValues[1] = ( Number )v.GetY();
         mValues[2] = ( Number )v.GetZ();
     }
-    
+
     inline Vec3( const Vec2< Number > &v, Number z )
     {
         mValues[0] = ( Number )v[0];
@@ -336,7 +336,7 @@ public:
 
     inline bool IsFuzzyZero() const
     {
-        return Length2() < Mathf::GetEpsilon< Number >();
+        return Length2() <= Mathf::GetEpsilon< Number >() * 10;
     }
 
     inline void Clear()
@@ -435,7 +435,7 @@ template< class Number >
 Vec3< Number > operator/( const Vec3< Number > &v, Number s )
 {
     assert( s != 0.0f );
-    
+
     return v * ( Number( 1.0 ) / s );
 }
 
