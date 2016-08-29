@@ -128,6 +128,77 @@ F64 Mathf::Floor( const F64 f )
     return floor( f );
 }
 
+F32 Mathf::Log( const F32 f )
+{
+    assert( f > 0.0f );
+    return logf( f );
+}
+
+F32 Mathf::Log2( const F32 f )
+{
+    assert( f > 0.0f );
+    return logf( f ) / logf( 2 );
+}
+
+F64 Mathf::Log( const F64 f )
+{
+    assert( f > 0.0f );
+    return log( f );
+}
+
+F64 Mathf::Log2( const F64 f )
+{
+    assert( f > 0.0f );
+    return log( f ) / log( 2 );
+}
+
+U32 Mathf::Log2( U64 n )
+{
+    static const U32 tab64[64] =
+    {
+        0, 58, 1, 59, 47, 53, 2, 60, 39, 48, 27, 54, 33, 42, 3, 61,
+        51, 37, 40, 49, 18, 28, 20, 55, 30, 34, 11, 43, 14, 22, 4, 62,
+        57, 46, 52, 38, 26, 32, 41, 50, 36, 17, 19, 29, 10, 13, 21, 56,
+        45, 25, 31, 35, 16, 9, 12, 44, 24, 15, 8, 23, 7, 6, 5, 63
+    };
+
+    n |= n >> 1;
+    n |= n >> 2;
+    n |= n >> 4;
+    n |= n >> 8;
+    n |= n >> 16;
+    n |= n >> 32;
+    return tab64[( n * 0x03f6eaf2cd271461 ) >> 58];
+}
+
+U32 Mathf::Log2( U32 f )
+{
+    U32 s, t;
+
+    t = ( f > 0xffff ) << 4;
+    f >>= t;
+    s = ( f > 0xff ) << 3;
+    f >>= s, t |= s;
+    s = ( f > 0xf ) << 2;
+    f >>= s, t |= s;
+    s = ( f > 0x3 ) << 1;
+    f >>= s, t |= s;
+
+    return ( t | ( f >> 1 ) );
+}
+
+F32 Mathf::Log10( const F32 f )
+{
+    assert( f > 0.0f );
+    return log10f( f );
+}
+
+F64 Mathf::Log10( const F64 f )
+{
+    assert( f > 0.0f );
+    return log10f( f );
+}
+
 bool Mathf::IsPow2( const U32 n )
 {
     return ( !( n & ( n - 1 ) ) && n );

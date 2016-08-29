@@ -143,29 +143,14 @@ namespace Mathf
         return f >= 0.0 ? f + 0.5f : ( ( f - ( Number )( S64 )f ) <= -0.5 ? f : f - 0.5f );
     }
 
-    template< class Number >
-    inline Number Log( const Number f )
-    {
-        assert( f > 0.0f );
-
-        return ( Number )std::log( f );
-    }
-
-    template< class Number >
-    inline Number Log2( const Number f )
-    {
-        assert( f > 0.0f );
-
-        return ( Number )std::log2( f );
-    }
-
-    template< class Number >
-    inline Number Log10( const Number f )
-    {
-        assert( f > 0.0f );
-
-        return ( Number )std::log10( f );
-    }
+    F32 Log( const F32 f );
+    F32 Log2( const F32 f );
+    F64 Log( const F64 f );
+    F64 Log2( const F64 f );
+    U32 Log2( const U32 f );
+    U32 Log2( U64 n );
+    F32 Log10( const F32 f );
+    F64 Log10( const F64 f );
 
     template< class Number >
     inline Number Pow( const Number base, const Number exp )
