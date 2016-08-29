@@ -264,12 +264,12 @@ public:
 
         assert( s != 0.0f );
 
-        return Mathf::Acos( Mathf::Clamp< Number >( Dot( q ) / s, ( Number ) - 1.0, ( Number )1.0 ) );
+        return Mathf::Acos( Mathf::Clamp( Dot( q ) / s, ( Number ) - 1.0, ( Number )1.0 ) );
     }
 
     inline Number GetAngle() const
     {
-        return 2.0f * Mathf::Acos( Mathf::Clamp< Number >( mValues[3], ( Number ) - 1.0, ( Number )1.0 ) );
+        return 2.0f * Mathf::Acos( Mathf::Clamp( mValues[3], ( Number ) - 1.0, ( Number )1.0 ) );
     }
 
     inline Vec3< Number > GetAxis() const
@@ -309,7 +309,7 @@ public:
             return Lerp( q, t );
         }
 
-        const Number theta = Mathf::Acos( Mathf::Clamp< Number >( dotp, ( Number ) - 1.0, ( Number )1.0 ) ) * t;
+        const Number theta = Mathf::Acos( Mathf::Clamp( dotp, ( Number ) - 1.0, ( Number )1.0 ) ) * t;
         Quaternion q2 = q - *this * dotp;
         q2.Normalise();
 
