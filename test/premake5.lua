@@ -26,7 +26,7 @@ local zefiros = require( "Zefiros-Software/Zefiros-Defaults", "@head" )
 
 workspace "MathLib-ZPM"
 
-	zefiros.setTestZPMDefaults( "core" )
+	zefiros.setTestZPMDefaults( "math" )
     
 	project "math-zpm-test"
         zpm.uses {
