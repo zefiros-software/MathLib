@@ -2,7 +2,7 @@ set -e
 
 premake5 install-package --allow-install --allow-module
 premake5 gmake
-cd bsp
+cd math
 make config=debug_x86
 make config=debug_x86_64
 make config=release_x86
@@ -18,12 +18,12 @@ cd zpm/
 make
 cd ../../
 
-bin/x86/bsp-test
-bin/x86/bsp-testd
-#bin/x86/bsp-testcd
+bin/x86/math-test
+bin/x86/math-testd
+#bin/x86/math-testcd
 
-bin/x86_64/bsp-test
-bin/x86_64/bsp-testd
-#bin/x86_64/bsp-testcd
+bin/x86_64/math-test
+bin/x86_64/math-testd
+#bin/x86_64/math-testcd
 
-test/bin/x86/bsp-zpm-test
+test/bin/x86/math-zpm-test

@@ -1,0 +1,16 @@
+{
+    "name": "Zefiros-Software/MathLib-Dev",
+    "modules": [
+        "Zefiros-Software/Zefiros-Defaults"
+    ],
+    "requires": [
+        {
+            "name": "Zefiros-Software/CoreLib",
+            "version": "@head"
+        },
+        {
+            "name": "Zefiros-Software/GoogleTest",
+            "version": "@head"
+        }
+    ]
+}
