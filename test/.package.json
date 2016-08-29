@@ -5,7 +5,7 @@
     ],
     "requires": [
         {
-            "name": "Zefiros-Software/CoreLib",
+            "name": "Zefiros-Software/MathLib",
             "version": "@head"
         },
         {
