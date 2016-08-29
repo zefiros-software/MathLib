@@ -2,7 +2,11 @@
 
 project "MathLib"
 
-    kind "Utility"        
+    kind "StaticLib"       
+
+    files {
+        "math/src/**.cpp"
+    } 
 
     zpm.export [[
         includedirs "math/include/"
