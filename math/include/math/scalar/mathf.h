@@ -188,7 +188,7 @@ namespace Mathf
     {
         assert( f > 0.0f );
 
-        return std::log2( f );
+        return ( Number )std::log2( f );
     }
 
     template< class Number >
