@@ -32,6 +32,7 @@
 #include "math/scalar/mathf.h"
 
 #include <cstddef>
+#include <assert.h>
 
 class Vec4I
 {

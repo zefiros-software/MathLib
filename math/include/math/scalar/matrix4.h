@@ -31,6 +31,8 @@
 #include "math/scalar/matrix3.h"
 #include "math/scalar/vec4.h"
 
+#include <assert.h>
+
 template< class Number >
 class Matrix4;
 

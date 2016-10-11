@@ -32,6 +32,8 @@
 #include "math/scalar/vec3.h"
 #include "math/scalar/vec4.h"
 
+#include <assert.h>
+
 template< class Number >
 class Quaternion;
 

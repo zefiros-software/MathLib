@@ -33,6 +33,8 @@
 #include "math/scalar/vec2.h"
 #include "math/scalar/vec3i.h"
 
+#include <assert.h>
+
 template< class Number >
 class Vec3;
 

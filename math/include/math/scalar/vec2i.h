@@ -30,6 +30,8 @@
 
 #include "math/types.h"
 
+#include <assert.h>
+
 class Vec2I
 {
     friend Vec2I operator+( const Vec2I &, const Vec2I & );

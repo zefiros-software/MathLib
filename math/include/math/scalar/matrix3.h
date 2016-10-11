@@ -31,6 +31,8 @@
 #include "math/scalar/vec3.h"
 #include "math/scalar/quaternion.h"
 
+#include <assert.h>
+
 template< class Number >
 class Matrix3;
 
