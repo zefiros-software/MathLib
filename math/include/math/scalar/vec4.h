@@ -176,6 +176,16 @@ public:
     {
         return mValues[ axis ];
     }
+    
+    inline Number* Data() 
+    {
+        return &mValues[0];
+    }
+    
+    inline const Number* Data() const
+    {
+        return &mValues[0];
+    }
 
     inline Number Dot( const Vec4 &v ) const
     {

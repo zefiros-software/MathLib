@@ -36,11 +36,11 @@
 template< class Number >
 class Matrix4;
 
-typedef Matrix3< F32 > Matrix4f;
-typedef Matrix3< F64 > Matrix4d;
+typedef Matrix4< F32 > Matrix4f;
+typedef Matrix4< F64 > Matrix4d;
 
 #ifndef REAL_UNDEFINED
-typedef Matrix3< Real > Matrix4r;
+typedef Matrix4< Real > Matrix4r;
 #endif
 
 template< class Number >
@@ -59,8 +59,8 @@ public:
     }
     
     inline Matrix4( const Number a11, const Number a12, const Number a13, const Number a14, const Number a21, const Number a22,
-                     const Number a23, const Number a24, const Number a31, const Number a32, const Number a33, const Number a34, const Number a41, const Number a42,
-                     const Number a43, const Number a44 )
+                    const Number a23, const Number a24, const Number a31, const Number a32, const Number a33, const Number a34, const Number a41, const Number a42,
+                    const Number a43, const Number a44 )
     {
         SetValue( a11, a12, a13, a14, a21, a22, a23, a24, a31, a32, a33, a34, a41, a42, a43, a44 );
     }
@@ -138,6 +138,16 @@ public:
     inline bool operator!=( const Matrix4 &m ) const
     {
         return !( *this == m );
+    }
+    
+    inline Number* Data() 
+    {
+        return &mValues[0][0];
+    }
+    
+    inline const Number* Data() const
+    {
+        return &mValues[0][0];
     }
     
     inline void SetColumn( const U8 column, const Vec4< Number > &v )

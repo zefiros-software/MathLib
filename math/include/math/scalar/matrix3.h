@@ -139,6 +139,16 @@ public:
         return !( *this == m );
     }
     
+    inline Number* Data() 
+    {
+        return &mValues[0][0];
+    }
+    
+    inline const Number* Data() const
+    {
+        return &mValues[0][0];
+    }
+    
     inline void SetColumn( const U8 column, const Vec3< Number > &v )
     {
         mValues[0][column] = v[0];

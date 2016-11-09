@@ -94,6 +94,16 @@ public:
         return mValues[ axis ];
     }
     
+    inline S32* Data() 
+    {
+        return &mValues[0];
+    }
+    
+    inline const S32* Data() const
+    {
+        return &mValues[0];
+    }
+    
     inline S32 GetX() const
     {
         return mValues[0];

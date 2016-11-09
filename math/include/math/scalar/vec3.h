@@ -175,6 +175,16 @@ public:
         return mValues[ axis ];
     }
 
+    inline Number* Data() 
+    {
+        return &mValues[0];
+    }
+    
+    inline const Number* Data() const
+    {
+        return &mValues[0];
+    }
+    
     inline Number Dot( const Vec3 &v ) const
     {
         return mValues[0] * v.mValues[0] + mValues[1] * v.mValues[1] + mValues[2] * v.mValues[2];
