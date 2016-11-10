@@ -139,6 +139,16 @@ public:
         return !( *this == m );
     }
     
+    inline Vec3< Number > &operator[]( const size_t axis )
+    {
+        return mValues[ axis ];
+    }
+
+    inline const Vec3< Number > operator[]( const size_t axis ) const
+    {
+        return mValues[ axis ];
+    }
+    
     inline Number* Data() 
     {
         return &mValues[0][0];
