@@ -347,16 +347,6 @@ public:
         mValues[2].SetValue( a31, a32, a33 );
     }
     
-    inline Vec3< Number > &operator[]( const U32 axis )
-    {
-        return mValues[axis];
-    }
-    
-    inline const Vec3< Number > &operator[]( const U32 axis ) const
-    {
-        return mValues[axis];
-    }
-    
     static inline Matrix3 GetZero()
     {
         return Matrix3( Vec3< Number >::GetZero(), Vec3< Number >::GetZero(), Vec3< Number >::GetZero() );
