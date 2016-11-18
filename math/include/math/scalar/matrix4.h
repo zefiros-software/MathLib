@@ -32,6 +32,7 @@
 #include "math/scalar/vec4.h"
 
 #include <assert.h>
+#include <cstddef>
 
 template< class Number >
 class Matrix4;

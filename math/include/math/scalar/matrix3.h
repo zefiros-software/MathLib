@@ -32,6 +32,7 @@
 #include "math/scalar/quaternion.h"
 
 #include <assert.h>
+#include <cstddef>
 
 template< class Number >
 class Matrix3;

@@ -31,6 +31,7 @@
 #include "math/types.h"
 
 #include <assert.h>
+#include <cstddef>
 
 template< class T >
 class Vec3;

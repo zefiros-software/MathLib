@@ -34,6 +34,7 @@
 #include "math/scalar/vec3.h"
 
 #include <assert.h>
+#include <cstddef>
 
 template< class Number >
 class Vec4;
