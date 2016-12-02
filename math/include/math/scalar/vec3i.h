@@ -220,7 +220,7 @@ inline Vec3I operator/( const Vec3I &v, S32 s )
 {
     assert( s != 0 );
     
-    return v / Vec3I(s);
+    return v / Vec3I(s,s,s);
 }
 
 inline Vec3I operator/( const Vec3I &v1, const Vec3I &v2 )
