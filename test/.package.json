@@ -6,7 +6,7 @@
     "requires": [
         {
             "name": "Zefiros-Software/MathLib",
-            "version": "@head"
+            "path": "../"
         },
         {
             "name": "Zefiros-Software/GoogleTest",
