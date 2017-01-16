@@ -1,5 +1,5 @@
 --[[ @cond ___LICENSE___
--- Copyright (c) 2016 Koen Visscher, Paul Visscher and individual contributors.
+-- Copyright (c) 2017 Zefiros Software.
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
 -- of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,7 @@
 
 local zefiros = require( "Zefiros-Software/Zefiros-Defaults", "@head" )
 
-workspace "MathLib-ZPM"
+workspace "MathLib"
 
-	zefiros.setTestZPMDefaults( "math" )
-    
-	project "math-zpm-test"
-        zpm.uses {
-            "Zefiros-Software/GoogleTest",
-            "Zefiros-Software/MathLib"
-        }
+	zefiros.setDefaults( "math" )
+            

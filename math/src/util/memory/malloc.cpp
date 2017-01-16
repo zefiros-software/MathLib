@@ -24,25 +24,55 @@
  * @endcond
  */
 
-#pragma once
-#ifndef __ENGINE_MATHUTIL_H__
-#define __ENGINE_MATHUTIL_H__
+#include "malloc.h"
+
+#include <stdlib.h>
+#include <immintrin.h>
 
 /*
-
-#include "math/scalar/dualQuaternion.h"
-#include "math/scalar/matrix4.h"
-
-namespace MathUtil
+void *LibStruct::_InternalAlignedMalloc( size_t bytes, size_t alignment )
 {
-    Matrix4 ProjectionMatPerspectiveLH( Real fov, Real hwRatio, Real nearPlane, Real farPlane );
-    Matrix4 ProjectionMatOrthographicLH( Real width, Real height, Real nearPlane, Real farPlane );
+    size_t offset = alignment; //+ sizeof( size_t );
 
-    Matrix4 ViewMatrixLH( const Quaternion &rotation, const Vec3 &translation );
+    void *ptr = malloc( bytes + offset );
 
-    Vec3 DualQuaternionTransform( const Vec3 &pt, const DualQuaternion &DQ );
+    if ( !ptr )
+    {
+        return nullptr;
+    }
+
+    //offset and truncate under alignment
+    void **ptr2 = ( void ** )( ( ( size_t )( ptr ) & ~( alignment - 1 ) ) + offset );
+
+    //store malloc address above the requested memory
+    ptr2[-1] = ptr;
+
+    return ptr2;
 }
 
-*/ 
+void LibStruct::_InternalAlignedFree( void *ptr )
+{
+    if ( ptr != 0 )
+    {
+        free( *( ( void ** )( ptr ) - 1 ) );
+    }
+}
 
+void *LibStruct::ZefAlignedMalloc( size_t bytes, size_t alignment )
+{
+#if INTERNAL_ALIGNED_MALLOC
+    return _InternalAlignedMalloc( bytes, alignment );
+#else
+    return _mm_malloc( bytes, alignment );
 #endif
+}
+
+void LibStruct::ZefAlignedFree( void *ptr )
+{
+#if INTERNAL_ALIGNED_MALLOC
+    return _InternalAlignedFree( ptr );
+#else
+    return _mm_free( ptr );
+#endif
+}
+*/
