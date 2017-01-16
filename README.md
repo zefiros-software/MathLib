@@ -4,9 +4,9 @@ MathLib is a C++ math library used by [Zefiros Software](https://zefiros.eu).
 # Status
 Type        | Status
 ----------- | -------
-Linux & OSX | [![Build Status](https://travis-ci.org/Zefiros-Software/CoreLib.svg?branch=master)](https://travis-ci.org/Zefiros-Software/CoreLib)
+Linux & OSX | [![Build Status](https://travis-ci.org/Zefiros-Software/MathLib.svg?branch=master)](https://travis-ci.org/Zefiros-Software/MathLib)
 Windows     | [![Build status](https://ci.appveyor.com/api/projects/status/b804ar6c35tjds9v?svg=true)](https://ci.appveyor.com/project/PaulVisscher/mathlib)
-Coverage	| [![codecov](https://codecov.io/gh/Zefiros-Software/CoreLib/branch/master/graph/badge.svg)](https://codecov.io/gh/Zefiros-Software/CoreLib)
+Coverage	| [![codecov](https://codecov.io/gh/Zefiros-Software/MathLib/branch/master/graph/badge.svg)](https://codecov.io/gh/Zefiros-Software/MathLib)
 
 # [ZPM](http://zpm.zefiros.eu) Installation
 
