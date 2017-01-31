@@ -10,4 +10,5 @@ project "MathLib"
 
     zpm.export [[
         includedirs "math/include/"
+        flags "C++11"
     ]]
