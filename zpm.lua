@@ -22,11 +22,9 @@
 -- @endcond
 --]]
 
-local zefiros = require( "Zefiros-Software/Zefiros-Defaults", "@head" )
-
 workspace "MathLib"
 
-	flags "C++11"
+	cppdialect "C++11"
 	
 	zefiros.setDefaults( "math" )
             

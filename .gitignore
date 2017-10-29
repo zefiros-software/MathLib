@@ -37,3 +37,6 @@ assets/
 test/extern
 test/assets
 *.lock
+**/dummy.cpp
+**/@bin/**
+**/@obj/**
