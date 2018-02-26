@@ -32,184 +32,184 @@
 
 BEGIN_MATH_NAMESPACE
 
-F32 Mathf::Acos( const F32 f )
+F32 Mathf::Acos(const F32 f)
 {
-    assert( f >= -1.0f && f <= 1.0f );
-    return acosf( f );
+    assert(f >= -1.0f && f <= 1.0f);
+    return acosf(f);
 }
 
-F32 Mathf::Asin( const F32 f )
+F32 Mathf::Asin(const F32 f)
 {
-    assert( f >= -1.0f && f <= 1.0f );
-    return asinf( f );
+    assert(f >= -1.0f && f <= 1.0f);
+    return asinf(f);
 }
 
-F32 Mathf::Atan( const F32 f )
+F32 Mathf::Atan(const F32 f)
 {
-    return atanf( f );
+    return atanf(f);
 }
 
-F32 Mathf::Atan2( const F32 x, const F32 y )
+F32 Mathf::Atan2(const F32 x, const F32 y)
 {
-    return atan2f( x, y );
+    return atan2f(x, y);
 }
 
-F32 Mathf::Cos( const F32 f )
+F32 Mathf::Cos(const F32 f)
 {
-    return cosf( f );
+    return cosf(f);
 }
 
-F32 Mathf::Sin( const F32 f )
+F32 Mathf::Sin(const F32 f)
 {
-    return sinf( f );
+    return sinf(f);
 }
 
-F32 Mathf::Tan( const F32 f )
+F32 Mathf::Tan(const F32 f)
 {
-    return tanf( f );
+    return tanf(f);
 }
 
-F64 Mathf::Acos( const F64 f )
+F64 Mathf::Acos(const F64 f)
 {
-    assert( f >= -1.0f && f <= 1.0f );
-    return acos( f );
+    assert(f >= -1.0f && f <= 1.0f);
+    return acos(f);
 }
 
-F64 Mathf::Asin( const F64 f )
+F64 Mathf::Asin(const F64 f)
 {
-    assert( f >= -1.0f && f <= 1.0f );
-    return asin( f );
+    assert(f >= -1.0f && f <= 1.0f);
+    return asin(f);
 }
 
-F64 Mathf::Atan( const F64 f )
+F64 Mathf::Atan(const F64 f)
 {
-    return atan( f );
+    return atan(f);
 }
 
-F64 Mathf::Atan2( const F64 x, const F64 y )
+F64 Mathf::Atan2(const F64 x, const F64 y)
 {
-    return atan2( x, y );
+    return atan2(x, y);
 }
 
-F64 Mathf::Cos( const F64 f )
+F64 Mathf::Cos(const F64 f)
 {
-    return cos( f );
+    return cos(f);
 }
 
-F64 Mathf::Sin( const F64 f )
+F64 Mathf::Sin(const F64 f)
 {
-    return sin( f );
+    return sin(f);
 }
 
-F64 Mathf::Tan( const F64 f )
+F64 Mathf::Tan(const F64 f)
 {
-    return tan( f );
+    return tan(f);
 }
 
-F32 Mathf::Ceil( const F32 f )
+F32 Mathf::Ceil(const F32 f)
 {
-    return ceilf( f );
+    return ceilf(f);
 }
 
-F32 Mathf::Floor( const F32 f )
+F32 Mathf::Floor(const F32 f)
 {
-    return floorf( f );
-}
-
-
-F64 Mathf::Round( const F64 f )
-{
-    return std::round( f );
-}
-
-F32 Mathf::Round( const F32 f )
-{
-    return std::round( f );
-}
-
-F64 Mathf::Ceil( const F64 f )
-{
-    return ceil( f );
-}
-
-F64 Mathf::Floor( const F64 f )
-{
-    return floor( f );
+    return floorf(f);
 }
 
 
-F32 Mathf::Trunc( const F32 f )
+F64 Mathf::Round(const F64 f)
 {
-    return std::trunc( f );
+    return std::round(f);
+}
+
+F32 Mathf::Round(const F32 f)
+{
+    return std::round(f);
+}
+
+F64 Mathf::Ceil(const F64 f)
+{
+    return ceil(f);
+}
+
+F64 Mathf::Floor(const F64 f)
+{
+    return floor(f);
 }
 
 
-F64 Mathf::Trunc( const F64 f )
+F32 Mathf::Trunc(const F32 f)
 {
-    return std::trunc( f );
+    return std::trunc(f);
 }
 
 
-F64 Mathf::Pow( const F64 f, const F64 exp )
+F64 Mathf::Trunc(const F64 f)
 {
-    return std::pow( f, exp );
-}
-
-F32 Mathf::Pow( const F32 f, const F32 exp )
-{
-    return std::pow( f, exp );
-}
-
-F64 Mathf::Rint( const F64 x )
-{
-    return std::rint( x );
-}
-
-F32 Mathf::Rint( const F32 x )
-{
-    return std::rint( x );
+    return std::trunc(f);
 }
 
 
-F64 Mathf::Sqrt( const F64 f )
+F64 Mathf::Pow(const F64 f, const F64 exp)
 {
-    assert( f >= 0.0f );
-
-    return std::sqrt( f );
+    return std::pow(f, exp);
 }
 
-F32 Mathf::Sqrt( const F32 f )
+F32 Mathf::Pow(const F32 f, const F32 exp)
 {
-    assert( f >= 0.0f );
-
-    return std::sqrt( f );
+    return std::pow(f, exp);
 }
 
-F32 Mathf::Log( const F32 f )
+F64 Mathf::Rint(const F64 x)
 {
-    assert( f > 0.0f );
-    return logf( f );
+    return std::rint(x);
 }
 
-F32 Mathf::Log2( const F32 f )
+F32 Mathf::Rint(const F32 x)
 {
-    assert( f > 0.0f );
-    return logf( f ) / logf( 2 );
+    return std::rint(x);
 }
 
-F64 Mathf::Log( const F64 f )
+
+F64 Mathf::Sqrt(const F64 f)
 {
-    assert( f > 0.0f );
-    return log( f );
+    assert(f >= 0.0f);
+
+    return std::sqrt(f);
 }
 
-F64 Mathf::Log2( const F64 f )
+F32 Mathf::Sqrt(const F32 f)
 {
-    assert( f > 0.0f );
-    return log( f ) / log( 2 );
+    assert(f >= 0.0f);
+
+    return std::sqrt(f);
 }
 
-U32 Mathf::Log2( U64 n )
+F32 Mathf::Log(const F32 f)
+{
+    assert(f > 0.0f);
+    return logf(f);
+}
+
+F32 Mathf::Log2(const F32 f)
+{
+    assert(f > 0.0f);
+    return logf(f) / logf(2);
+}
+
+F64 Mathf::Log(const F64 f)
+{
+    assert(f > 0.0f);
+    return log(f);
+}
+
+F64 Mathf::Log2(const F64 f)
+{
+    assert(f > 0.0f);
+    return log(f) / log(2);
+}
+
+U32 Mathf::Log2(U64 n)
 {
     static const U32 tab64[64] =
     {
@@ -225,43 +225,43 @@ U32 Mathf::Log2( U64 n )
     n |= n >> 8;
     n |= n >> 16;
     n |= n >> 32;
-    return tab64[( n * 0x03f6eaf2cd271461 ) >> 58];
+    return tab64[(n * 0x03f6eaf2cd271461) >> 58];
 }
 
-U32 Mathf::Log2( U32 f )
+U32 Mathf::Log2(U32 f)
 {
     U32 s, t;
 
-    t = ( f > 0xffff ) << 4;
+    t = (f > 0xffff) << 4;
     f >>= t;
-    s = ( f > 0xff ) << 3;
+    s = (f > 0xff) << 3;
     f >>= s, t |= s;
-    s = ( f > 0xf ) << 2;
+    s = (f > 0xf) << 2;
     f >>= s, t |= s;
-    s = ( f > 0x3 ) << 1;
+    s = (f > 0x3) << 1;
     f >>= s, t |= s;
 
-    return ( t | ( f >> 1 ) );
+    return (t | (f >> 1));
 }
 
-F32 Mathf::Log10( const F32 f )
+F32 Mathf::Log10(const F32 f)
 {
-    assert( f > 0.0f );
-    return log10f( f );
+    assert(f > 0.0f);
+    return log10f(f);
 }
 
-F64 Mathf::Log10( const F64 f )
+F64 Mathf::Log10(const F64 f)
 {
-    assert( f > 0.0f );
-    return log10( f );
+    assert(f > 0.0f);
+    return log10(f);
 }
 
-bool Mathf::IsPow2( const U32 n )
+bool Mathf::IsPow2(const U32 n)
 {
-    return ( !( n & ( n - 1 ) ) && n );
+    return (!(n & (n - 1)) && n);
 }
 
-U32 Mathf::NextPow2( const U32 x )
+U32 Mathf::NextPow2(const U32 x)
 {
     U32 y = x - 1;
     y |= y >> 1;
@@ -272,22 +272,22 @@ U32 Mathf::NextPow2( const U32 x )
     return ++y;
 }
 
-F32 Mathf::Abs( const F32 f )
+F32 Mathf::Abs(const F32 f)
 {
-    return fabsf( f );
+    return fabsf(f);
 }
 
-S32 Mathf::Abs( const S32 f )
+S32 Mathf::Abs(const S32 f)
 {
-    return abs( f );
+    return abs(f);
 }
 
-F64 Mathf::Abs( const F64 f )
+F64 Mathf::Abs(const F64 f)
 {
-    return fabs( f );
+    return fabs(f);
 }
 
-S64 Mathf::Abs( const S64 f )
+S64 Mathf::Abs(const S64 f)
 {
-    return abs( f );
+    return abs(f);
 }

@@ -122,5 +122,5 @@ Vec3 MathUtil::DualQuaternionTransform( const Vec3 &pt, const DualQuaternion &DQ
 
     return finalPos;
 }
- 
+
 */

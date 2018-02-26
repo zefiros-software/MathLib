@@ -48,148 +48,148 @@ template< class Number >
 class Matrix3
 {
     template< class T >
-    friend Matrix3< T > operator+( const Matrix3< T > &m1, const Matrix3< T > &m2 );
-    
+    friend Matrix3< T > operator+(const Matrix3< T > &m1, const Matrix3< T > &m2);
+
     template< class T >
-    friend Matrix3< T > operator-( const Matrix3< T > &m1, const Matrix3< T > &m2 );
-    
+    friend Matrix3< T > operator-(const Matrix3< T > &m1, const Matrix3< T > &m2);
+
     template< class T >
-    friend Matrix3< T > operator*( const Matrix3< T > &m1, const Matrix3< T > &m2 );
-    
+    friend Matrix3< T > operator*(const Matrix3< T > &m1, const Matrix3< T > &m2);
+
     template< class T >
-    friend Matrix3< T > operator*( const Matrix3< T > &m, const T s );
-    
+    friend Matrix3< T > operator*(const Matrix3< T > &m, const T s);
+
     template< class T >
-    friend Vec3< T > operator*( const Matrix3< T > &m, const Vec3< T > &v );
+    friend Vec3< T > operator*(const Matrix3< T > &m, const Vec3< T > &v);
 
 public:
 
     inline Matrix3()
     {
     }
-    
-    inline Matrix3( const Quaternion< Number > &q )
+
+    inline Matrix3(const Quaternion< Number > &q)
     {
-        SetRotation( q );
+        SetRotation(q);
     }
-    
-    inline Matrix3( const Number a11, const Number a12, const Number a13,
-                     const Number a21, const Number a22, const Number a23,
-                     const Number a31, const Number a32, const Number a33 )
+
+    inline Matrix3(const Number a11, const Number a12, const Number a13,
+                   const Number a21, const Number a22, const Number a23,
+                   const Number a31, const Number a32, const Number a33)
     {
-        SetValue( a11, a12, a13, a21, a22, a23, a31, a32, a33 );
+        SetValue(a11, a12, a13, a21, a22, a23, a31, a32, a33);
     }
-    
-    inline Matrix3( const Matrix3 &other )
+
+    inline Matrix3(const Matrix3 &other)
     {
         mValues[0] = other.mValues[0];
         mValues[1] = other.mValues[1];
         mValues[2] = other.mValues[2];
     }
-    
-    inline Matrix3( const Vec3< Number > &v1, const Vec3< Number > &v2, const Vec3< Number > &v3 )
+
+    inline Matrix3(const Vec3< Number > &v1, const Vec3< Number > &v2, const Vec3< Number > &v3)
     {
         mValues[0] = v1;
         mValues[1] = v2;
         mValues[2] = v3;
     }
-    
-    inline Matrix3 &operator=( const Matrix3 &m )
+
+    inline Matrix3 &operator=(const Matrix3 &m)
     {
         mValues[0] = m.mValues[0];
         mValues[1] = m.mValues[1];
         mValues[2] = m.mValues[2];
-        
+
         return *this;
     }
-    
-    inline Matrix3 &operator*=( const Matrix3 &m )
+
+    inline Matrix3 &operator*=(const Matrix3 &m)
     {
-        SetValue( m.Dotx( mValues[0] ), m.Doty( mValues[0] ), m.Dotz( mValues[0] ),
-                 m.Dotx( mValues[1] ), m.Doty( mValues[1] ), m.Dotz( mValues[1] ),
-                 m.Dotx( mValues[2] ), m.Doty( mValues[2] ), m.Dotz( mValues[2] ) );
-        
+        SetValue(m.Dotx(mValues[0]), m.Doty(mValues[0]), m.Dotz(mValues[0]),
+                 m.Dotx(mValues[1]), m.Doty(mValues[1]), m.Dotz(mValues[1]),
+                 m.Dotx(mValues[2]), m.Doty(mValues[2]), m.Dotz(mValues[2]));
+
         return *this;
     }
-    
-    inline Matrix3 &operator+=( const Matrix3 &m )
+
+    inline Matrix3 &operator+=(const Matrix3 &m)
     {
-        SetValue( mValues[0][0] + m.mValues[0][0], mValues[0][1] + m.mValues[0][1], mValues[0][2] + m.mValues[0][2],
-                  mValues[1][0] + m.mValues[1][0], mValues[1][1] + m.mValues[1][1], mValues[1][2] + m.mValues[1][2],
-                  mValues[2][0] + m.mValues[2][0], mValues[2][1] + m.mValues[2][1], mValues[2][2] + m.mValues[2][2] );
-        
+        SetValue(mValues[0][0] + m.mValues[0][0], mValues[0][1] + m.mValues[0][1], mValues[0][2] + m.mValues[0][2],
+                 mValues[1][0] + m.mValues[1][0], mValues[1][1] + m.mValues[1][1], mValues[1][2] + m.mValues[1][2],
+                 mValues[2][0] + m.mValues[2][0], mValues[2][1] + m.mValues[2][1], mValues[2][2] + m.mValues[2][2]);
+
         return *this;
     }
-    
-    inline Matrix3 &operator-=( const Matrix3 &m )
+
+    inline Matrix3 &operator-=(const Matrix3 &m)
     {
-        SetValue( mValues[0][0] - m.mValues[0][0], mValues[0][1] - m.mValues[0][1], mValues[0][2] - m.mValues[0][2],
+        SetValue(mValues[0][0] - m.mValues[0][0], mValues[0][1] - m.mValues[0][1], mValues[0][2] - m.mValues[0][2],
                  mValues[1][0] - m.mValues[1][0], mValues[1][1] - m.mValues[1][1], mValues[1][2] - m.mValues[1][2],
-                 mValues[2][0] - m.mValues[2][0], mValues[2][1] - m.mValues[2][1], mValues[2][2] - m.mValues[2][2] );
-        
+                 mValues[2][0] - m.mValues[2][0], mValues[2][1] - m.mValues[2][1], mValues[2][2] - m.mValues[2][2]);
+
         return *this;
     }
-    
-    inline bool operator==( const Matrix3 &m ) const
+
+    inline bool operator==(const Matrix3 &m) const
     {
         return mValues[0] == m.mValues[0] && mValues[1] == m.mValues[1] && mValues[2] == m.mValues[2];
     }
-    
-    bool operator!=( const Matrix3 &m ) const
+
+    bool operator!=(const Matrix3 &m) const
     {
-        return !( *this == m );
+        return !(*this == m);
     }
-    
-    inline Vec3< Number > &operator[]( const size_t axis )
+
+    inline Vec3< Number > &operator[](const size_t axis)
     {
         return mValues[ axis ];
     }
 
-    inline const Vec3< Number > operator[]( const size_t axis ) const
+    inline const Vec3< Number > operator[](const size_t axis) const
     {
         return mValues[ axis ];
     }
-    
-    inline Number* Data() 
+
+    inline Number *Data()
     {
         return &mValues[0][0];
     }
-    
-    inline const Number* Data() const
+
+    inline const Number *Data() const
     {
         return &mValues[0][0];
     }
-    
-    inline void SetColumn( const U8 column, const Vec3< Number > &v )
+
+    inline void SetColumn(const U8 column, const Vec3< Number > &v)
     {
         mValues[0][column] = v[0];
         mValues[1][column] = v[1];
         mValues[2][column] = v[2];
     }
-    
-    inline Vec3< Number > GetColumn( const U8 column ) const
+
+    inline Vec3< Number > GetColumn(const U8 column) const
     {
-        return Vec3< Number >( mValues[0][column], mValues[1][column], mValues[2][column] );
+        return Vec3< Number >(mValues[0][column], mValues[1][column], mValues[2][column]);
     }
-    
-    inline void SetRow( const U8 row, const Vec3< Number > &v )
+
+    inline void SetRow(const U8 row, const Vec3< Number > &v)
     {
         mValues[row] = v;
     }
-    
-    inline Vec3< Number > GetRow( const U8 row ) const
+
+    inline Vec3< Number > GetRow(const U8 row) const
     {
         return mValues[row];
     }
-    
-    inline void SetRotation( const Quaternion< Number > &q )
+
+    inline void SetRotation(const Quaternion< Number > &q)
     {
         const Number norm2 = q.Length2();
-        
-        assert( norm2 != 0.0f );
-        
+
+        assert(norm2 != 0.0f);
+
         const Number s     = 2.0f / norm2;
-        
+
         const Number xs  = q[0] * s;
         const Number ys  = q[1] * s;
         const Number zs  = q[2] * s;
@@ -202,157 +202,157 @@ public:
         const Number yys = q[1] * ys;
         const Number yzs = q[1] * zs;
         const Number zzs = q[2] * zs;
-        
-        SetValue( 1.0f - ( yys + zzs ), xys - wzs, xzs + wys,
-                 xys + wzs, 1.0f - ( xxs + zzs ), yzs - wxs,
-                 xzs - wys, yzs + wxs, 1.0f - ( xxs + yys ) );
+
+        SetValue(1.0f - (yys + zzs), xys - wzs, xzs + wys,
+                 xys + wzs, 1.0f - (xxs + zzs), yzs - wxs,
+                 xzs - wys, yzs + wxs, 1.0f - (xxs + yys));
     }
-    
+
     inline Quaternion< Number > GetRotation() const
     {
         Number t[4];
         const Number trace = mValues[0][0] + mValues[1][1] + mValues[2][2];
-        
-        
-        if ( trace > 0.0f )
+
+
+        if (trace > 0.0f)
         {
-            const Number s  = Mathf::Sqrt( trace + 1.0f );
+            const Number s  = Mathf::Sqrt(trace + 1.0f);
             const Number s2 = 0.5f / s;
-            
-            t[0] = ( mValues[2][1] - mValues[1][2] ) * s2;
-            t[1] = ( mValues[0][2] - mValues[2][0] ) * s2;
-            t[2] = ( mValues[1][0] - mValues[0][1] ) * s2;
+
+            t[0] = (mValues[2][1] - mValues[1][2]) * s2;
+            t[1] = (mValues[0][2] - mValues[2][0]) * s2;
+            t[2] = (mValues[1][0] - mValues[0][1]) * s2;
             t[3] = 0.5f * s;
         }
         else
         {
             const U8 i = mValues[0][0] < mValues[1][1] ?
-            ( mValues[1][1] < mValues[2][2] ? 2 : 1 ) :
-            ( mValues[0][0] < mValues[2][2] ? 2 : 0 );
-            
-            const U8 j = ( i + 1 ) % 3;
-            const U8 k = ( i + 2 ) % 3;
-            
-            const Number s = Mathf::Sqrt( mValues[i][i] - mValues[j][j] - mValues[k][k] + 1.0f );
-            
-            assert( s != 0.0f );
-            
+                         (mValues[1][1] < mValues[2][2] ? 2 : 1) :
+                         (mValues[0][0] < mValues[2][2] ? 2 : 0);
+
+            const U8 j = (i + 1) % 3;
+            const U8 k = (i + 2) % 3;
+
+            const Number s = Mathf::Sqrt(mValues[i][i] - mValues[j][j] - mValues[k][k] + 1.0f);
+
+            assert(s != 0.0f);
+
             const Number s2 = 0.5f / s;
-            
+
             t[i] = 0.5f * s;
-            t[j] = ( mValues[j][i] - mValues[i][j] ) * s2;
-            t[k] = ( mValues[k][i] - mValues[i][k] ) * s2;
-            t[3] = ( mValues[k][j] - mValues[j][k] ) * s2;
+            t[j] = (mValues[j][i] - mValues[i][j]) * s2;
+            t[k] = (mValues[k][i] - mValues[i][k]) * s2;
+            t[3] = (mValues[k][j] - mValues[j][k]) * s2;
         }
-        
-        return Quaternion< Number >( t[0], t[1], t[2], t[3] );
+
+        return Quaternion< Number >(t[0], t[1], t[2], t[3]);
     }
-    
-    inline void SetEuler( const Number yaw, const Number pitch, const Number roll )
+
+    inline void SetEuler(const Number yaw, const Number pitch, const Number roll)
     {
-        Number cy( Mathf::Cos( yaw ) );
-        Number cp( Mathf::Cos( pitch ) );
-        Number cr( Mathf::Cos( roll ) );
-        
-        Number sy( Mathf::Sin( yaw ) );
-        Number sp( Mathf::Sin( pitch ) );
-        Number sr( Mathf::Sin( roll ) );
-        
-        
+        Number cy(Mathf::Cos(yaw));
+        Number cp(Mathf::Cos(pitch));
+        Number cr(Mathf::Cos(roll));
+
+        Number sy(Mathf::Sin(yaw));
+        Number sp(Mathf::Sin(pitch));
+        Number sr(Mathf::Sin(roll));
+
+
         Number cc = cr * cy;
         Number cs = cr * sy;
         Number sc = sr * cy;
         Number ss = sr * sy;
-        
-        SetValue( cp * cy, sp * sc - cs, sp * cc + ss,
+
+        SetValue(cp * cy, sp * sc - cs, sp * cc + ss,
                  cp * sy, sp * ss + cc, sp * cs - sc,
-                 -sp, cp * sr, cp * cr );
+                 -sp, cp * sr, cp * cr);
     }
-    
+
     inline Vec3< Number > GetEuler() const
     {
         return GetRotation().GetAxis();
     }
-    
-    inline Matrix3 Scale( const Vec3< Number > &v ) const
+
+    inline Matrix3 Scale(const Vec3< Number > &v) const
     {
-        return Matrix3( mValues[0][0] * v[0], mValues[0][1] * v[1], mValues[0][2] * v[2],
+        return Matrix3(mValues[0][0] * v[0], mValues[0][1] * v[1], mValues[0][2] * v[2],
                        mValues[1][0] * v[0], mValues[1][1] * v[1], mValues[1][2] * v[2],
-                       mValues[2][0] * v[0], mValues[2][1] * v[1], mValues[2][2] * v[2] );
+                       mValues[2][0] * v[0], mValues[2][1] * v[1], mValues[2][2] * v[2]);
     }
-    
+
     inline Matrix3 GetTranspose() const
     {
-        return Matrix3( mValues[0][0], mValues[1][0], mValues[2][0],
+        return Matrix3(mValues[0][0], mValues[1][0], mValues[2][0],
                        mValues[0][1], mValues[1][1], mValues[2][1],
-                       mValues[0][2], mValues[1][2], mValues[2][2] );
+                       mValues[0][2], mValues[1][2], mValues[2][2]);
     }
-    
+
     inline Matrix3 GetAbsolute() const
     {
-        return Matrix3( Mathf::Abs( mValues[0][0] ), Mathf::Abs( mValues[0][1] ), Mathf::Abs( mValues[0][2] ),
-                       Mathf::Abs( mValues[1][0] ), Mathf::Abs( mValues[1][1] ), Mathf::Abs( mValues[1][2] ),
-                       Mathf::Abs( mValues[2][0] ), Mathf::Abs( mValues[2][1] ), Mathf::Abs( mValues[2][2] ) );
+        return Matrix3(Mathf::Abs(mValues[0][0]), Mathf::Abs(mValues[0][1]), Mathf::Abs(mValues[0][2]),
+                       Mathf::Abs(mValues[1][0]), Mathf::Abs(mValues[1][1]), Mathf::Abs(mValues[1][2]),
+                       Mathf::Abs(mValues[2][0]), Mathf::Abs(mValues[2][1]), Mathf::Abs(mValues[2][2]));
     }
-    
+
     inline Matrix3 GetAdjoint() const
     {
-        return Matrix3( GetCofactor( 0, 0 ), GetCofactor( 0, 1 ), GetCofactor( 0, 2 ),
-                       GetCofactor( 1, 0 ), GetCofactor( 1, 1 ), GetCofactor( 1, 2 ),
-                       GetCofactor( 2, 0 ), GetCofactor( 2, 1 ), GetCofactor( 2, 2 ) );
+        return Matrix3(GetCofactor(0, 0), GetCofactor(0, 1), GetCofactor(0, 2),
+                       GetCofactor(1, 0), GetCofactor(1, 1), GetCofactor(1, 2),
+                       GetCofactor(2, 0), GetCofactor(2, 1), GetCofactor(2, 2));
     }
-    
+
     inline Matrix3 GetInverse() const
     {
         const Number det = GetDeterminant();
-        
-        assert( det != 0.0f );
-        
+
+        assert(det != 0.0f);
+
         const Number s = 1.0f / det;
         return GetAdjoint().GetTranspose() * s;
     }
-    
+
     inline void SetIdentity()
     {
-        SetValue( 1.0f, 0.0f, 0.0f,
+        SetValue(1.0f, 0.0f, 0.0f,
                  0.0f, 1.0f, 0.0f,
-                 0.0f, 0.0f, 1.0f );
+                 0.0f, 0.0f, 1.0f);
     }
-    
-    inline Number GetCofactor( const U8 row, const U8 column ) const
+
+    inline Number GetCofactor(const U8 row, const U8 column) const
     {
-        Number cof = mValues[( row + 1 ) % 3][( column + 1 ) % 3] * mValues[( row + 2 ) % 3][( column + 2 ) % 3] -
-        mValues[( row + 1 ) % 3][( column + 2 ) % 3] * mValues[( row + 2 ) % 3][( column + 1 ) % 3];
-        
-        if ( ( ( column + row ) & 1 ) == 1 )
+        Number cof = mValues[(row + 1) % 3][(column + 1) % 3] * mValues[(row + 2) % 3][(column + 2) % 3] -
+                     mValues[(row + 1) % 3][(column + 2) % 3] * mValues[(row + 2) % 3][(column + 1) % 3];
+
+        if (((column + row) & 1) == 1)
         {
             cof *= -1;
         }
-        
+
         return cof;
     }
-    
+
     inline Number GetDeterminant() const
     {
-        return  mValues[0][0] * GetCofactor( 0, 0 ) +
-        mValues[1][0] * GetCofactor( 1, 0 ) +
-        mValues[2][0] * GetCofactor( 2, 0 );
+        return  mValues[0][0] * GetCofactor(0, 0) +
+                mValues[1][0] * GetCofactor(1, 0) +
+                mValues[2][0] * GetCofactor(2, 0);
     }
-    
-    inline void SetValue( const Number a11, const Number a12, const Number a13,
-                           const Number a21, const Number a22, const Number a23,
-                           const Number a31, const Number a32, const Number a33 )
+
+    inline void SetValue(const Number a11, const Number a12, const Number a13,
+                         const Number a21, const Number a22, const Number a23,
+                         const Number a31, const Number a32, const Number a33)
     {
-        mValues[0].SetValue( a11, a12, a13 );
-        mValues[1].SetValue( a21, a22, a23 );
-        mValues[2].SetValue( a31, a32, a33 );
+        mValues[0].SetValue(a11, a12, a13);
+        mValues[1].SetValue(a21, a22, a23);
+        mValues[2].SetValue(a31, a32, a33);
     }
-    
+
     static inline Matrix3 GetZero()
     {
-        return Matrix3( Vec3< Number >::GetZero(), Vec3< Number >::GetZero(), Vec3< Number >::GetZero() );
+        return Matrix3(Vec3< Number >::GetZero(), Vec3< Number >::GetZero(), Vec3< Number >::GetZero());
     }
-    
+
     static inline Matrix3 GetIdentity()
     {
         Matrix3 mat;
@@ -364,72 +364,72 @@ private:
 
     Vec3< Number > mValues[3];
 
-    inline Number Dotx( const Vec3< Number > &v ) const
+    inline Number Dotx(const Vec3< Number > &v) const
     {
         return mValues[0][0] * v[0] + mValues[1][0] * v[1] + mValues[2][0] * v[2];
     }
-    
-    inline Number Doty( const Vec3< Number > &v ) const
+
+    inline Number Doty(const Vec3< Number > &v) const
     {
         return mValues[0][1] * v[0] + mValues[1][1] * v[1] + mValues[2][1] * v[2];
     }
-    
-    inline Number Dotz( const Vec3< Number > &v ) const
+
+    inline Number Dotz(const Vec3< Number > &v) const
     {
         return mValues[0][2] * v[0] + mValues[1][2] * v[1] + mValues[2][2] * v[2];
     }
 };
 
 template< class Number >
-Matrix3< Number > operator+( const Matrix3< Number > &m1, const Matrix3< Number > &m2 )
+Matrix3< Number > operator+(const Matrix3< Number > &m1, const Matrix3< Number > &m2)
 {
     return Matrix3< Number >(
-                   m1.mValues[0][0] + m2.mValues[0][0],
-                   m1.mValues[0][1] + m2.mValues[0][1],
-                   m1.mValues[0][2] + m2.mValues[0][2],
-                   m1.mValues[1][0] + m2.mValues[1][0],
-                   m1.mValues[1][1] + m2.mValues[1][1],
-                   m1.mValues[1][2] + m2.mValues[1][2],
-                   m1.mValues[2][0] + m2.mValues[2][0],
-                   m1.mValues[2][1] + m2.mValues[2][1],
-                   m1.mValues[2][2] + m2.mValues[2][2] );
+               m1.mValues[0][0] + m2.mValues[0][0],
+               m1.mValues[0][1] + m2.mValues[0][1],
+               m1.mValues[0][2] + m2.mValues[0][2],
+               m1.mValues[1][0] + m2.mValues[1][0],
+               m1.mValues[1][1] + m2.mValues[1][1],
+               m1.mValues[1][2] + m2.mValues[1][2],
+               m1.mValues[2][0] + m2.mValues[2][0],
+               m1.mValues[2][1] + m2.mValues[2][1],
+               m1.mValues[2][2] + m2.mValues[2][2]);
 }
 
 template< class Number >
-Matrix3< Number > operator-( const Matrix3< Number > &m1, const Matrix3< Number > &m2 )
+Matrix3< Number > operator-(const Matrix3< Number > &m1, const Matrix3< Number > &m2)
 {
     return Matrix3< Number >(
-                   m1.mValues[0][0] - m2.mValues[0][0],
-                   m1.mValues[0][1] - m2.mValues[0][1],
-                   m1.mValues[0][2] - m2.mValues[0][2],
-                   m1.mValues[1][0] - m2.mValues[1][0],
-                   m1.mValues[1][1] - m2.mValues[1][1],
-                   m1.mValues[1][2] - m2.mValues[1][2],
-                   m1.mValues[2][0] - m2.mValues[2][0],
-                   m1.mValues[2][1] - m2.mValues[2][1],
-                   m1.mValues[2][2] - m2.mValues[2][2] );
+               m1.mValues[0][0] - m2.mValues[0][0],
+               m1.mValues[0][1] - m2.mValues[0][1],
+               m1.mValues[0][2] - m2.mValues[0][2],
+               m1.mValues[1][0] - m2.mValues[1][0],
+               m1.mValues[1][1] - m2.mValues[1][1],
+               m1.mValues[1][2] - m2.mValues[1][2],
+               m1.mValues[2][0] - m2.mValues[2][0],
+               m1.mValues[2][1] - m2.mValues[2][1],
+               m1.mValues[2][2] - m2.mValues[2][2]);
 }
 
 template< class Number >
-Matrix3< Number > operator*( const Matrix3< Number > &m1, const Matrix3< Number > &m2 )
+Matrix3< Number > operator*(const Matrix3< Number > &m1, const Matrix3< Number > &m2)
 {
-    return Matrix3< Number >( m2.Dotx( m1.mValues[0] ), m2.Doty( m1.mValues[0] ), m2.Dotz( m1.mValues[0] ),
-                   m2.Dotx( m1.mValues[1] ), m2.Doty( m1.mValues[1] ), m2.Dotz( m1.mValues[1] ),
-                   m2.Dotx( m1.mValues[2] ), m2.Doty( m1.mValues[2] ), m2.Dotz( m1.mValues[2] ) );
+    return Matrix3< Number >(m2.Dotx(m1.mValues[0]), m2.Doty(m1.mValues[0]), m2.Dotz(m1.mValues[0]),
+                             m2.Dotx(m1.mValues[1]), m2.Doty(m1.mValues[1]), m2.Dotz(m1.mValues[1]),
+                             m2.Dotx(m1.mValues[2]), m2.Doty(m1.mValues[2]), m2.Dotz(m1.mValues[2]));
 }
 
 template< class Number >
-Matrix3< Number > operator*( const Matrix3< Number > &m, const Number s )
+Matrix3< Number > operator*(const Matrix3< Number > &m, const Number s)
 {
-    return Matrix3< Number >( m.mValues[0][0] * s, m.mValues[0][1] * s, m.mValues[0][2] * s,
-                   m.mValues[1][0] * s, m.mValues[1][1] * s, m.mValues[1][2] * s,
-                   m.mValues[2][0] * s, m.mValues[2][1] * s, m.mValues[2][2] * s );
+    return Matrix3< Number >(m.mValues[0][0] * s, m.mValues[0][1] * s, m.mValues[0][2] * s,
+                             m.mValues[1][0] * s, m.mValues[1][1] * s, m.mValues[1][2] * s,
+                             m.mValues[2][0] * s, m.mValues[2][1] * s, m.mValues[2][2] * s);
 }
 
 template< class Number >
-Vec3< Number > operator*( const Matrix3< Number > &m, const Vec3< Number > &v )
+Vec3< Number > operator*(const Matrix3< Number > &m, const Vec3< Number > &v)
 {
-    return Vec3< Number >( m.mValues[0].Dot( v ), m.mValues[1].Dot( v ), m.mValues[2].Dot( v ) );
+    return Vec3< Number >(m.mValues[0].Dot(v), m.mValues[1].Dot(v), m.mValues[2].Dot(v));
 }
 
 #endif

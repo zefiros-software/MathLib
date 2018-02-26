@@ -29,19 +29,19 @@
 #include <stdlib.h>
 #include <immintrin.h>
 
-void *LibStruct::_InternalAlignedMalloc( size_t bytes, size_t alignment )
+void *LibStruct::_InternalAlignedMalloc(size_t bytes, size_t alignment)
 {
     size_t offset = alignment; //+ sizeof( size_t );
 
-    void *ptr = malloc( bytes + offset );
+    void *ptr = malloc(bytes + offset);
 
-    if ( !ptr )
+    if (!ptr)
     {
         return nullptr;
     }
 
     //offset and truncate under alignment
-    void **ptr2 = ( void ** )( ( ( size_t )( ptr ) & ~( alignment - 1 ) ) + offset );
+    void **ptr2 = (void **)(((size_t)(ptr) & ~(alignment - 1)) + offset);
 
     //store malloc address above the requested memory
     ptr2[-1] = ptr;
@@ -49,28 +49,28 @@ void *LibStruct::_InternalAlignedMalloc( size_t bytes, size_t alignment )
     return ptr2;
 }
 
-void LibStruct::_InternalAlignedFree( void *ptr )
+void LibStruct::_InternalAlignedFree(void *ptr)
 {
-    if ( ptr != 0 )
+    if (ptr != 0)
     {
-        free( *( ( void ** )( ptr ) - 1 ) );
+        free(*((void **)(ptr) - 1));
     }
 }
 
-void *LibStruct::ZefAlignedMalloc( size_t bytes, size_t alignment )
+void *LibStruct::ZefAlignedMalloc(size_t bytes, size_t alignment)
 {
-#if INTERNAL_ALIGNED_MALLOC 
-    return _InternalAlignedMalloc( bytes, alignment );
+#if INTERNAL_ALIGNED_MALLOC
+    return _InternalAlignedMalloc(bytes, alignment);
 #else
-    return _mm_malloc( bytes, alignment );
+    return _mm_malloc(bytes, alignment);
 #endif
 }
 
-void LibStruct::ZefAlignedFree( void *ptr )
+void LibStruct::ZefAlignedFree(void *ptr)
 {
-#if INTERNAL_ALIGNED_MALLOC 
-    return _InternalAlignedFree( ptr );
+#if INTERNAL_ALIGNED_MALLOC
+    return _InternalAlignedFree(ptr);
 #else
-    return _mm_free( ptr );
+    return _mm_free(ptr);
 #endif
 }

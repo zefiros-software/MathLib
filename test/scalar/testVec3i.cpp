@@ -23,7 +23,7 @@
  *
  * @endcond
  */
- 
+
 #include "gtest/gtest.h"
 
 #include "helper.h"
@@ -52,10 +52,10 @@ TEST(P(Vec3iTest), ConstructAndAccess)
     ASSERT_EQ(testConst2[0], 10);
     ASSERT_EQ(testConst2[1], 20);
     ASSERT_EQ(testConst2[2], 30);
-    
+
     Vec2i testConst3(10, 20);
     Vec3i testConst4(testConst3,30);
-    
+
     ASSERT_EQ(testConst4[0], 10);
     ASSERT_EQ(testConst4[1], 20);
     ASSERT_EQ(testConst4[2], 30);

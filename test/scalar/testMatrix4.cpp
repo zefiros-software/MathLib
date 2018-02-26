@@ -23,7 +23,7 @@
  *
  * @endcond
  */
- 
+
 #include "gtest/gtest.h"
 
 #include "helper.h"

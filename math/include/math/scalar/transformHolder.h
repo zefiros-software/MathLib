@@ -42,7 +42,7 @@ struct TransformHolder
     Matrix4 GetViewMatrix() const;
     Matrix4 GetWorldMatrix() const;
 };
- 
+
 */
 
 #endif

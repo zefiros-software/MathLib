@@ -23,7 +23,7 @@
  *
  * @endcond
  */
- 
+
 #include "gtest/gtest.h"
 
 #include "helper.h"
@@ -55,7 +55,7 @@ TEST(P(Vec2iTest), RealCast)
 {
     Vec2i testConst(10, 50);
     Vec2  testCast(testConst);
-    
+
     ASSERT_REAL_EQ(testCast[0], 10.0);
     ASSERT_REAL_EQ(testCast[1], 50.0);
 }

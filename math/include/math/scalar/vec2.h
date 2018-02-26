@@ -50,28 +50,28 @@ template< class Number >
 class Vec2
 {
     template< class T >
-    friend Vec2< T > operator+( const Vec2< T > &, const Vec2< T > & );
+    friend Vec2< T > operator+(const Vec2< T > &, const Vec2< T > &);
 
     template< class T >
-    friend Vec2< T > operator*( const Vec2< T > &, const Vec2< T > & );
+    friend Vec2< T > operator*(const Vec2< T > &, const Vec2< T > &);
 
     template< class T >
-    friend Vec2< T > operator-( const Vec2< T > &, const Vec2< T > & );
+    friend Vec2< T > operator-(const Vec2< T > &, const Vec2< T > &);
 
     template< class T >
-    friend Vec2< T > operator-( const Vec2< T > & );
+    friend Vec2< T > operator-(const Vec2< T > &);
 
     template< class T >
-    friend Vec2< T > operator*( const Vec2< T > &, const T );
+    friend Vec2< T > operator*(const Vec2< T > &, const T);
 
     template< class T >
-    friend Vec2< T > operator*( const T , const Vec2< T > & );
+    friend Vec2< T > operator*(const T, const Vec2< T > &);
 
     template< class T >
-    friend Vec2< T > operator/( const Vec2< T > &, const T );
+    friend Vec2< T > operator/(const Vec2< T > &, const T);
 
     template< class T >
-    friend Vec2< T > operator/( const Vec2< T > &, const Vec2< T > & );
+    friend Vec2< T > operator/(const Vec2< T > &, const Vec2< T > &);
 
 public:
 
@@ -81,35 +81,35 @@ public:
     }
 
     // Done
-    inline Vec2( const Number num )
+    inline Vec2(const Number num)
     {
         mValues[0] = num;
         mValues[1] = num;
     }
 
     // Done
-    inline Vec2( const Number x, const Number y )
+    inline Vec2(const Number x, const Number y)
     {
         mValues[0] = x;
         mValues[1] = y;
     }
 
     // Done
-    inline Vec2( const Vec2I &v )
+    inline Vec2(const Vec2I &v)
     {
-        mValues[0] = ( Number )v.GetX();
-        mValues[1] = ( Number )v.GetY();
+        mValues[0] = (Number)v.GetX();
+        mValues[1] = (Number)v.GetY();
     }
 
     // Done
     inline Vec2I ToVec2I() const
     {
-        return Vec2I( ( S32 ) mValues[0],
-                      ( S32 ) mValues[1] );
+        return Vec2I((S32) mValues[0],
+                     (S32) mValues[1]);
     }
 
     // Done
-    inline Vec2 &operator=( const Vec2 &other )
+    inline Vec2 &operator=(const Vec2 &other)
     {
         mValues[0] = other.mValues[0];
         mValues[1] = other.mValues[1];
@@ -118,7 +118,7 @@ public:
     }
 
     // Done
-    inline Vec2 &operator-=( const Vec2 &v )
+    inline Vec2 &operator-=(const Vec2 &v)
     {
         mValues[0] -= v.mValues[0];
         mValues[1] -= v.mValues[1];
@@ -127,7 +127,7 @@ public:
     }
 
     // Done
-    inline Vec2 &operator+=( const Vec2 &v )
+    inline Vec2 &operator+=(const Vec2 &v)
     {
         mValues[0] += v.mValues[0];
         mValues[1] += v.mValues[1];
@@ -136,9 +136,9 @@ public:
     }
 
     // Done
-    inline Vec2 &operator/=( const Number s )
+    inline Vec2 &operator/=(const Number s)
     {
-        assert( s != 0.0f );
+        assert(s != 0.0f);
 
         mValues[0] /= s;
         mValues[1] /= s;
@@ -147,7 +147,7 @@ public:
     }
 
     // Done
-    inline Vec2 &operator*=( const Number s )
+    inline Vec2 &operator*=(const Number s)
     {
         mValues[0] *= s;
         mValues[1] *= s;
@@ -156,48 +156,48 @@ public:
     }
 
     // Done
-    inline bool operator==( const Vec2 &other ) const
+    inline bool operator==(const Vec2 &other) const
     {
-        return Mathf::Equal< Number >( mValues[0], other.mValues[0] ) && Mathf::Equal< Number >( mValues[1], other.mValues[1] );
+        return Mathf::Equal< Number >(mValues[0], other.mValues[0]) && Mathf::Equal< Number >(mValues[1], other.mValues[1]);
     }
 
     // Done
-    inline bool operator!=( const Vec2 &other ) const
+    inline bool operator!=(const Vec2 &other) const
     {
-        return !( *this == other );
+        return !(*this == other);
     }
 
     // Done
-    inline Number &operator[]( const U32 axis )
+    inline Number &operator[](const U32 axis)
     {
         return mValues[ axis ];
     }
 
     // Done
-    inline const Number &operator[]( const U32 axis ) const
+    inline const Number &operator[](const U32 axis) const
     {
         return mValues[ axis ];
     }
 
-    inline Number* Data() 
+    inline Number *Data()
     {
         return &mValues[0];
     }
-    
-    inline const Number* Data() const
+
+    inline const Number *Data() const
     {
         return &mValues[0];
     }
-    
+
     // Done
-    inline void SetValue( const Number x, const Number y )
+    inline void SetValue(const Number x, const Number y)
     {
         mValues[0] = x;
         mValues[1] = y;
     }
 
     // Done
-    inline Number Dot( const Vec2 &v ) const
+    inline Number Dot(const Vec2 &v) const
     {
         return mValues[0] * v.mValues[0] + mValues[1] * v.mValues[1];
     }
@@ -205,25 +205,25 @@ public:
     // Done
     inline Number Length2() const
     {
-        return Dot( *this );
+        return Dot(*this);
     }
 
     // Done
     inline Number Length() const
     {
-        return Mathf::Sqrt( Length2() );
+        return Mathf::Sqrt(Length2());
     }
 
     // Done
-    inline Number Distance2( const Vec2 &v ) const
+    inline Number Distance2(const Vec2 &v) const
     {
-        return ( *this - v ).Length2();
+        return (*this - v).Length2();
     }
 
     // Done
-    inline Number Distance( const Vec2 &v ) const
+    inline Number Distance(const Vec2 &v) const
     {
-        return ( *this - v ).Length();
+        return (*this - v).Length();
     }
 
     // Done
@@ -232,47 +232,47 @@ public:
         Vec2 absv = Absolute();
         U32 max = absv.MaxAxis();
 
-        if ( absv.mValues[max] > 0 )
+        if (absv.mValues[max] > 0)
         {
             *this /= absv.mValues[max];
             return *this /= Length();
         }
 
-        SetValue( 1.0f, 0.0f );
+        SetValue(1.0f, 0.0f);
         return *this;
     }
 
     // Done
     inline Vec2 Normalise()
     {
-        assert( Length() != 0.0f );
+        assert(Length() != 0.0f);
 
         return *this /= Length();
     }
 
     // Done
-    inline Vec2 Lerp( const Vec2 &v, const Number t ) const
+    inline Vec2 Lerp(const Vec2 &v, const Number t) const
     {
-        return Vec2( mValues[0] + ( v.mValues[0] - mValues[0] ) * t, mValues[1] + ( v.mValues[1] - mValues[1] ) * t );
+        return Vec2(mValues[0] + (v.mValues[0] - mValues[0]) * t, mValues[1] + (v.mValues[1] - mValues[1]) * t);
     }
 
     // Done
-    inline Vec2 Nlerp( const Vec2 &v, const Number t ) const
+    inline Vec2 Nlerp(const Vec2 &v, const Number t) const
     {
-        return Lerp( v, t ).Normalise();
+        return Lerp(v, t).Normalise();
     }
 
     // Done
-    inline Vec2 Rotate( const Number angle ) const
+    inline Vec2 Rotate(const Number angle) const
     {
-        return Vec2( Mathf::Cos( angle ) * mValues[0] - Mathf::Sin( angle ) * mValues[1],
-                     Mathf::Sin( angle ) * mValues[0] - Mathf::Cos( angle ) * mValues[1] );
+        return Vec2(Mathf::Cos(angle) * mValues[0] - Mathf::Sin(angle) * mValues[1],
+                    Mathf::Sin(angle) * mValues[0] - Mathf::Cos(angle) * mValues[1]);
     }
 
     // Done
     inline Vec2 Absolute() const
     {
-        return Vec2( Mathf::Abs( mValues[0] ), Mathf::Abs( mValues[1] ) );
+        return Vec2(Mathf::Abs(mValues[0]), Mathf::Abs(mValues[1]));
     }
 
     // Done
@@ -288,17 +288,17 @@ public:
     }
 
     // Done
-    inline Number Angle( const Vec2 &v ) const
+    inline Number Angle(const Vec2 &v) const
     {
-        Number s = Mathf::Sqrt( Length2() * v.Length2() );
+        Number s = Mathf::Sqrt(Length2() * v.Length2());
 
-        assert( s != 0.0f );
+        assert(s != 0.0f);
 
-        return Mathf::Acos( Mathf::Clamp< Number >( Dot( v ) / s, ( Number ) - 1.0, ( Number ) 1.0 ) );
+        return Mathf::Acos(Mathf::Clamp< Number >(Dot(v) / s, (Number) - 1.0, (Number) 1.0));
     }
 
     // Done
-    inline void SetX( const Number x )
+    inline void SetX(const Number x)
     {
         mValues[0] = x;
     }
@@ -310,7 +310,7 @@ public:
     }
 
     // Done
-    inline void SetY( const Number y )
+    inline void SetY(const Number y)
     {
         mValues[1] = y;
     }
@@ -324,7 +324,7 @@ public:
     // Done
     inline void SetZero()
     {
-        SetValue( 0.0f, 0.0f );
+        SetValue(0.0f, 0.0f);
     }
 
     // Done
@@ -342,43 +342,43 @@ public:
     // Done
     inline void Clear()
     {
-        SetValue( 0.0f, 0.0f );
+        SetValue(0.0f, 0.0f);
     }
 
     // Done
     static inline Vec2 GetZero()
     {
-        return Vec2( 0.0f, 0.0f );
+        return Vec2(0.0f, 0.0f);
     }
 
     // Done
     static inline Vec2 GetOne()
     {
-        return Vec2( 1.0f, 1.0f );
+        return Vec2(1.0f, 1.0f);
     }
 
     // Done
     static inline Vec2 GetDown()
     {
-        return Vec2( 0.0f, -1.0f );
+        return Vec2(0.0f, -1.0f);
     }
 
     // Done
     static inline Vec2 GetUp()
     {
-        return Vec2( 0.0f, 1.0f );
+        return Vec2(0.0f, 1.0f);
     }
 
     // Done
     static inline Vec2 GetLeft()
     {
-        return Vec2( -1.0f, 0.0f );
+        return Vec2(-1.0f, 0.0f);
     }
 
     // Done
     static inline Vec2 GetRight()
     {
-        return Vec2( 1.0f, 0.0f );
+        return Vec2(1.0f, 0.0f);
     }
 
 private:
@@ -388,64 +388,64 @@ private:
 
 // Done
 template< class Number >
-inline Vec2< Number > operator+( const Vec2< Number > &v1, const Vec2< Number > &v2 )
+inline Vec2< Number > operator+(const Vec2< Number > &v1, const Vec2< Number > &v2)
 {
-    return Vec2< Number >( v1.mValues[0] + v2.mValues[0],
-                           v1.mValues[1] + v2.mValues[1] );
+    return Vec2< Number >(v1.mValues[0] + v2.mValues[0],
+                          v1.mValues[1] + v2.mValues[1]);
 }
 
 // Done
 template< class Number >
-inline Vec2< Number > operator*( const Vec2< Number > &v1, const Vec2< Number > &v2 )
+inline Vec2< Number > operator*(const Vec2< Number > &v1, const Vec2< Number > &v2)
 {
-    return Vec2< Number >( v1.mValues[0] * v2.mValues[0],
-                           v1.mValues[1] * v2.mValues[1] );
+    return Vec2< Number >(v1.mValues[0] * v2.mValues[0],
+                          v1.mValues[1] * v2.mValues[1]);
 }
 
 // DOne
 template< class Number >
-inline Vec2< Number > operator-( const Vec2< Number > &v1, const Vec2< Number > &v2 )
+inline Vec2< Number > operator-(const Vec2< Number > &v1, const Vec2< Number > &v2)
 {
-    return Vec2< Number >( v1.mValues[0] - v2.mValues[0],
-                           v1.mValues[1] - v2.mValues[1] );
+    return Vec2< Number >(v1.mValues[0] - v2.mValues[0],
+                          v1.mValues[1] - v2.mValues[1]);
 }
 
 // Done
 template< class Number >
-inline Vec2< Number > operator-( const Vec2< Number > &v )
+inline Vec2< Number > operator-(const Vec2< Number > &v)
 {
-    return Vec2< Number >( -v.mValues[0], -v.mValues[1] );
+    return Vec2< Number >(-v.mValues[0], -v.mValues[1]);
 }
 
 // Done
 template< class Number >
-inline Vec2< Number > operator*( const Vec2< Number > &v, const Number s )
+inline Vec2< Number > operator*(const Vec2< Number > &v, const Number s)
 {
-    return Vec2< Number >( v.mValues[0] * s, v.mValues[1] * s );
+    return Vec2< Number >(v.mValues[0] * s, v.mValues[1] * s);
 }
 
 // Done
 template< class Number >
-inline Vec2< Number > operator*( const Number s, const Vec2< Number > &v )
+inline Vec2< Number > operator*(const Number s, const Vec2< Number > &v)
 {
     return v * s;
 }
 
 // Done
 template< class Number >
-inline Vec2< Number > operator/( const Vec2< Number > &v, const Number s )
+inline Vec2< Number > operator/(const Vec2< Number > &v, const Number s)
 {
-    assert( s != 0.0f );
+    assert(s != 0.0f);
 
-    return v * ( Number( 1.0 ) / s );
+    return v * (Number(1.0) / s);
 }
 
 // Done
 template< class Number >
-inline Vec2< Number > operator/( const Vec2< Number > &v1, const Vec2< Number > &v2 )
+inline Vec2< Number > operator/(const Vec2< Number > &v1, const Vec2< Number > &v2)
 {
-    return Vec2< Number >( v1.mValues[0] / v2.mValues[0],
-                           v1.mValues[1] / v2.mValues[1] );
+    return Vec2< Number >(v1.mValues[0] / v2.mValues[0],
+                          v1.mValues[1] / v2.mValues[1]);
 }
 
 #endif

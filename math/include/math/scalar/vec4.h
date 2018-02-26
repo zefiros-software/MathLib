@@ -49,14 +49,14 @@ typedef Vec4< Real > Vec4r;
 template< class Number >
 class Vec4
 {
-    friend Vec4 operator+( const Vec4 &, const Vec4 & );
-    friend Vec4 operator*( const Vec4 &, const Vec4 & );
-    friend Vec4 operator-( const Vec4 &, const Vec4 & );
-    friend Vec4 operator-( const Vec4 & );
-    friend Vec4 operator*( const Vec4 &, const Number );
-    friend Vec4 operator*( const Number , const Vec4 & );
-    friend Vec4 operator/( const Vec4 &, const Number );
-    friend Vec4 operator/( const Vec4 &, const Vec4 & );
+    friend Vec4 operator+(const Vec4 &, const Vec4 &);
+    friend Vec4 operator*(const Vec4 &, const Vec4 &);
+    friend Vec4 operator-(const Vec4 &, const Vec4 &);
+    friend Vec4 operator-(const Vec4 &);
+    friend Vec4 operator*(const Vec4 &, const Number);
+    friend Vec4 operator*(const Number, const Vec4 &);
+    friend Vec4 operator/(const Vec4 &, const Number);
+    friend Vec4 operator/(const Vec4 &, const Vec4 &);
 
 public:
 
@@ -64,7 +64,7 @@ public:
     {
     }
 
-    inline Vec4( const Number x, const Number y, const Number z, const Number w )
+    inline Vec4(const Number x, const Number y, const Number z, const Number w)
     {
         mValues[0] = x;
         mValues[1] = y;
@@ -73,39 +73,39 @@ public:
     }
 
     template< class Vector4D >
-    inline Vec4( const Vector4D &v )
+    inline Vec4(const Vector4D &v)
     {
-        mValues[0] = ( Number )v.GetX();
-        mValues[1] = ( Number )v.GetY();
-        mValues[2] = ( Number )v.GetZ();
-        mValues[3] = ( Number )v.GetW();
+        mValues[0] = (Number)v.GetX();
+        mValues[1] = (Number)v.GetY();
+        mValues[2] = (Number)v.GetZ();
+        mValues[3] = (Number)v.GetW();
     }
 
-    inline Vec4( Number x, const Vec3< Number > &v )
+    inline Vec4(Number x, const Vec3< Number > &v)
     {
         mValues[0] = x;
-        mValues[1] = ( Number )v[0];
-        mValues[2] = ( Number )v[1];
-        mValues[3] = ( Number )v[2];
+        mValues[1] = (Number)v[0];
+        mValues[2] = (Number)v[1];
+        mValues[3] = (Number)v[2];
     }
 
-    inline Vec4( const Vec3< Number > &v, Number w )
+    inline Vec4(const Vec3< Number > &v, Number w)
     {
-        mValues[0] = ( Number )v[0];
-        mValues[1] = ( Number )v[1];
-        mValues[2] = ( Number )v[2];
+        mValues[0] = (Number)v[0];
+        mValues[1] = (Number)v[1];
+        mValues[2] = (Number)v[2];
         mValues[3] = w;
     }
 
-    inline Vec4( const Vec2< Number > &v1, const Vec2< Number > &v2 )
+    inline Vec4(const Vec2< Number > &v1, const Vec2< Number > &v2)
     {
-        mValues[0] = ( Number )v1[0];
-        mValues[1] = ( Number )v1[1];
-        mValues[2] = ( Number )v2[0];
-        mValues[3] = ( Number )v2[1];
+        mValues[0] = (Number)v1[0];
+        mValues[1] = (Number)v1[1];
+        mValues[2] = (Number)v2[0];
+        mValues[3] = (Number)v2[1];
     }
 
-    inline Vec4 &operator=( const Vec4 &other )
+    inline Vec4 &operator=(const Vec4 &other)
     {
         mValues[0] = other.mValues[0];
         mValues[1] = other.mValues[1];
@@ -115,7 +115,7 @@ public:
         return *this;
     }
 
-    inline Vec4 &operator-=( const Vec4 &v )
+    inline Vec4 &operator-=(const Vec4 &v)
     {
         mValues[0] -= v.mValues[0];
         mValues[1] -= v.mValues[1];
@@ -125,7 +125,7 @@ public:
         return *this;
     }
 
-    inline Vec4 &operator+=( const Vec4 &v )
+    inline Vec4 &operator+=(const Vec4 &v)
     {
         mValues[0] += v.mValues[0];
         mValues[1] += v.mValues[1];
@@ -135,9 +135,9 @@ public:
         return *this;
     }
 
-    inline Vec4 &operator/=( Number s )
+    inline Vec4 &operator/=(Number s)
     {
-        assert( s != 0.0f );
+        assert(s != 0.0f);
 
         mValues[0] /= s;
         mValues[1] /= s;
@@ -147,7 +147,7 @@ public:
         return *this;
     }
 
-    inline Vec4 &operator*=( Number s )
+    inline Vec4 &operator*=(Number s)
     {
         mValues[0] *= s;
         mValues[1] *= s;
@@ -157,63 +157,63 @@ public:
         return *this;
     }
 
-    inline bool operator==( const Vec4 &other ) const
+    inline bool operator==(const Vec4 &other) const
     {
-        return Mathf::Equal( mValues[0], other.mValues[0] ) && Mathf::Equal( mValues[1], other.mValues[1] ) &&
-               Mathf::Equal( mValues[2], other.mValues[2] ) && Mathf::Equal( mValues[3], other.mValues[3] );
+        return Mathf::Equal(mValues[0], other.mValues[0]) && Mathf::Equal(mValues[1], other.mValues[1]) &&
+               Mathf::Equal(mValues[2], other.mValues[2]) && Mathf::Equal(mValues[3], other.mValues[3]);
     }
 
-    inline bool operator!=( const Vec4 &other ) const
+    inline bool operator!=(const Vec4 &other) const
     {
-        return !( *this == other );
+        return !(*this == other);
     }
 
-    inline Number &operator[]( const U8 axis )
+    inline Number &operator[](const U8 axis)
     {
         return mValues[ axis ];
     }
 
-    inline const Number &operator[]( const U8 axis ) const
+    inline const Number &operator[](const U8 axis) const
     {
         return mValues[ axis ];
     }
-    
-    inline Number* Data() 
-    {
-        return &mValues[0];
-    }
-    
-    inline const Number* Data() const
+
+    inline Number *Data()
     {
         return &mValues[0];
     }
 
-    inline Number Dot( const Vec4 &v ) const
+    inline const Number *Data() const
+    {
+        return &mValues[0];
+    }
+
+    inline Number Dot(const Vec4 &v) const
     {
         return mValues[0] * v.mValues[0] + mValues[1] * v.mValues[1] + mValues[2] * v.mValues[2] + mValues[3] * v.mValues[3];
     }
 
     inline Number Length2() const
     {
-        return Dot( *this );
+        return Dot(*this);
     }
 
     inline Number Length() const
     {
-        return Mathf::Sqrt( Length2() );
+        return Mathf::Sqrt(Length2());
     }
 
-    inline Number Distance2( const Vec4 &v ) const
+    inline Number Distance2(const Vec4 &v) const
     {
-        return ( *this - v ).Length2();
+        return (*this - v).Length2();
     }
 
-    inline Number Distance( const Vec4 &v ) const
+    inline Number Distance(const Vec4 &v) const
     {
-        return ( *this - v ).Length();
+        return (*this - v).Length();
     }
 
-    inline void SetValue( const Number x, const Number y, const Number z, const Number w )
+    inline void SetValue(const Number x, const Number y, const Number z, const Number w)
     {
         mValues[0] = x;
         mValues[1] = y;
@@ -226,16 +226,16 @@ public:
         Vec4 absv = Absolute();
         U8 max = absv.MaxAxis();
 
-        if ( absv.mValues[max] > 0 )
+        if (absv.mValues[max] > 0)
         {
-            assert( absv[max] != 0.0f );
-            assert( Length() != 0.0f );
+            assert(absv[max] != 0.0f);
+            assert(Length() != 0.0f);
 
             *this /= absv.mValues[max];
             return *this /= Length();
         }
 
-        SetValue( 1.0f, 0.0f, 0.0f, 0.0f );
+        SetValue(1.0f, 0.0f, 0.0f, 0.0f);
         return *this;
     }
 
@@ -244,15 +244,15 @@ public:
         return *this /= Length();
     }
 
-    inline Vec4 Lerp( const Vec4 &v, const Number t ) const
+    inline Vec4 Lerp(const Vec4 &v, const Number t) const
     {
-        return Vec4( mValues[0] + ( v.mValues[0] - mValues[0] ) * t, mValues[1] + ( v.mValues[1] - mValues[1] ) * t,
-                     mValues[2] + ( v.mValues[2] - mValues[2] ) * t, mValues[3] + ( v.mValues[3] - mValues[3] ) * t );
+        return Vec4(mValues[0] + (v.mValues[0] - mValues[0]) * t, mValues[1] + (v.mValues[1] - mValues[1]) * t,
+                    mValues[2] + (v.mValues[2] - mValues[2]) * t, mValues[3] + (v.mValues[3] - mValues[3]) * t);
     }
 
     inline Vec4 Absolute() const
     {
-        return Vec4( Mathf::Abs( mValues[0] ), Mathf::Abs( mValues[1] ), Mathf::Abs( mValues[2] ), Mathf::Abs( mValues[3] ) );
+        return Vec4(Mathf::Abs(mValues[0]), Mathf::Abs(mValues[1]), Mathf::Abs(mValues[2]), Mathf::Abs(mValues[3]));
     }
 
     inline U8 MinAxis() const
@@ -260,9 +260,9 @@ public:
         U8 axis = 0;
         Number minvalue = mValues[0];
 
-        for ( U8 i = 1; i < 4; ++i )
+        for (U8 i = 1; i < 4; ++i)
         {
-            if ( minvalue > mValues[i] )
+            if (minvalue > mValues[i])
             {
                 minvalue = mValues[i];
                 axis = i;
@@ -277,9 +277,9 @@ public:
         U8 axis = 0;
         Number maxvalue = mValues[0];
 
-        for ( U8 i = 1; i < 4; ++i )
+        for (U8 i = 1; i < 4; ++i)
         {
-            if ( maxvalue < mValues[i] )
+            if (maxvalue < mValues[i])
             {
                 maxvalue = mValues[i];
                 axis = i;
@@ -289,7 +289,7 @@ public:
         return axis;
     }
 
-    inline void SetX( const Number x )
+    inline void SetX(const Number x)
     {
         mValues[0] = x;
     }
@@ -299,7 +299,7 @@ public:
         return mValues[0];
     }
 
-    inline void SetY( const Number y )
+    inline void SetY(const Number y)
     {
         mValues[1] = y;
     }
@@ -309,7 +309,7 @@ public:
         return mValues[1];
     }
 
-    inline void SetZ( const Number z )
+    inline void SetZ(const Number z)
     {
         mValues[2] = z;
     }
@@ -319,7 +319,7 @@ public:
         return mValues[2];
     }
 
-    inline void SetW( const Number w )
+    inline void SetW(const Number w)
     {
         mValues[3] = w;
     }
@@ -331,7 +331,7 @@ public:
 
     inline void SetZero()
     {
-        SetValue( 0.0f, 0.0f, 0.0f, 0.0f );
+        SetValue(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     inline bool IsZero() const
@@ -346,17 +346,17 @@ public:
 
     inline void Clear()
     {
-        SetValue( 0.0f, 0.0f, 0.0f, 0.0f );
+        SetValue(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     static inline Vec4 GetZero()
     {
-        return Vec4( 0.0f, 0.0f, 0.0f, 0.0f );
+        return Vec4(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     static inline Vec4 GetOne()
     {
-        return Vec4( 1.0f, 1.0f, 1.0f, 1.0f );
+        return Vec4(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
 
@@ -367,65 +367,65 @@ private:
 };
 
 template< class Number >
-inline Vec4< Number > operator+( const Vec4< Number > &v1, const Vec4< Number > &v2 )
+inline Vec4< Number > operator+(const Vec4< Number > &v1, const Vec4< Number > &v2)
 {
-    return Vec4< Number >( v1.mValues[0] + v2.mValues[0],
-                           v1.mValues[1] + v2.mValues[1],
-                           v1.mValues[2] + v2.mValues[2],
-                           v1.mValues[3] + v2.mValues[3] );
+    return Vec4< Number >(v1.mValues[0] + v2.mValues[0],
+                          v1.mValues[1] + v2.mValues[1],
+                          v1.mValues[2] + v2.mValues[2],
+                          v1.mValues[3] + v2.mValues[3]);
 }
 
 template< class Number >
-inline Vec4< Number > operator*( const Vec4< Number > &v1, const Vec4< Number > &v2 )
+inline Vec4< Number > operator*(const Vec4< Number > &v1, const Vec4< Number > &v2)
 {
-    return Vec4< Number >( v1.mValues[0] * v2.mValues[0],
-                           v1.mValues[1] * v2.mValues[1],
-                           v1.mValues[2] * v2.mValues[2],
-                           v1.mValues[3] * v2.mValues[3] );
+    return Vec4< Number >(v1.mValues[0] * v2.mValues[0],
+                          v1.mValues[1] * v2.mValues[1],
+                          v1.mValues[2] * v2.mValues[2],
+                          v1.mValues[3] * v2.mValues[3]);
 }
 
 template< class Number >
-inline Vec4< Number > operator-( const Vec4< Number > &v1, const Vec4< Number > &v2 )
+inline Vec4< Number > operator-(const Vec4< Number > &v1, const Vec4< Number > &v2)
 {
-    return Vec4< Number >( v1.mValues[0] - v2.mValues[0],
-                           v1.mValues[1] - v2.mValues[1],
-                           v1.mValues[2] - v2.mValues[2],
-                           v1.mValues[3] - v2.mValues[3] );
+    return Vec4< Number >(v1.mValues[0] - v2.mValues[0],
+                          v1.mValues[1] - v2.mValues[1],
+                          v1.mValues[2] - v2.mValues[2],
+                          v1.mValues[3] - v2.mValues[3]);
 }
 
 template< class Number >
-inline Vec4< Number > operator-( const Vec4< Number >  &v )
+inline Vec4< Number > operator-(const Vec4< Number >  &v)
 {
-    return Vec4< Number > ( -v.mValues[0], -v.mValues[1], -v.mValues[2], -v.mValues[3] );
+    return Vec4< Number > (-v.mValues[0], -v.mValues[1], -v.mValues[2], -v.mValues[3]);
 }
 
 template< class Number >
-inline Vec4< Number >  operator*( const Vec4< Number >  &v, const Number s )
+inline Vec4< Number >  operator*(const Vec4< Number >  &v, const Number s)
 {
-    return Vec4< Number > ( v.mValues[0] * s, v.mValues[1] * s, v.mValues[2] * s, v.mValues[3] * s );
+    return Vec4< Number > (v.mValues[0] * s, v.mValues[1] * s, v.mValues[2] * s, v.mValues[3] * s);
 }
 
 template< class Number >
-Vec4< Number >  operator*( const Number s, const Vec4< Number >  &v )
+Vec4< Number >  operator*(const Number s, const Vec4< Number >  &v)
 {
     return v * s;
 }
 
 template< class Number >
-inline Vec4< Number >  operator/( const Vec4< Number >  &v, const Number s )
+inline Vec4< Number >  operator/(const Vec4< Number >  &v, const Number s)
 {
-    assert( s != 0.0f );
+    assert(s != 0.0f);
 
-    return v * ( Number( 1.0 ) / s );
+    return v * (Number(1.0) / s);
 }
 
 template< class Number >
-inline Vec4< Number >  operator/( const Vec4< Number >  &v1, const Vec4< Number >  &v2 )
+inline Vec4< Number >  operator/(const Vec4< Number >  &v1, const Vec4< Number >  &v2)
 {
-    return Vec4< Number > ( v1.mValues[0] / v2.mValues[0],
-                            v1.mValues[1] / v2.mValues[1],
-                            v1.mValues[2] / v2.mValues[2],
-                            v1.mValues[3] / v2.mValues[3] );
+    return Vec4< Number > (v1.mValues[0] / v2.mValues[0],
+                           v1.mValues[1] / v2.mValues[1],
+                           v1.mValues[2] / v2.mValues[2],
+                           v1.mValues[3] / v2.mValues[3]);
 }
 
 #endif

@@ -43,6 +43,6 @@ namespace MathUtil
     Vec3 DualQuaternionTransform( const Vec3 &pt, const DualQuaternion &DQ );
 }
 
-*/ 
+*/
 
 #endif

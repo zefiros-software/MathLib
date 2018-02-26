@@ -108,159 +108,159 @@ namespace Mathf
     template< class Number >
     inline Number GetPi()
     {
-        return ( Number )M_PI;
+        return (Number)M_PI;
     }
 
     template< class Number >
     inline Number Get2Pi()
     {
-        return ( Number )M_PI_2;
+        return (Number)M_PI_2;
     }
 
     template< class Number >
     inline Number GetSqrt2()
     {
-        return ( Number )M_SQRT2;
+        return (Number)M_SQRT2;
     }
 
     template< class Number >
     inline Number GetE()
     {
-        return ( Number )M_E;
+        return (Number)M_E;
     }
 
     template< class Number >
     inline Number GetLog2E()
     {
-        return ( Number )M_LOG2E;
+        return (Number)M_LOG2E;
     }
 
     template< class Number >
     inline Number GetLog10E()
     {
-        return ( Number )M_LOG10E;
+        return (Number)M_LOG10E;
     }
 
     template< class Number >
     inline Number GetLn2()
     {
-        return ( Number )M_LN2;
+        return (Number)M_LN2;
     }
 
     template< class Number >
     inline Number GetLn10()
     {
-        return ( Number )M_LN10;
+        return (Number)M_LN10;
     }
 
-    F32 Acos( const F32 f );
-    F32 Asin( const F32 f );
-    F32 Atan( const F32 f );
-    F32 Atan2( const F32 x, const F32 y );
-    F32 Cos( const F32 f );
-    F32 Sin( const F32 f );
-    F32 Tan( const F32 f );
+    F32 Acos(const F32 f);
+    F32 Asin(const F32 f);
+    F32 Atan(const F32 f);
+    F32 Atan2(const F32 x, const F32 y);
+    F32 Cos(const F32 f);
+    F32 Sin(const F32 f);
+    F32 Tan(const F32 f);
 
-    F64 Acos( const F64 f );
-    F64 Asin( const F64 f );
-    F64 Atan( const F64 f );
-    F64 Atan2( const F64 x, const F64 y );
-    F64 Cos( const F64 f );
-    F64 Sin( const F64 f );
-    F64 Tan( const F64 f );
+    F64 Acos(const F64 f);
+    F64 Asin(const F64 f);
+    F64 Atan(const F64 f);
+    F64 Atan2(const F64 x, const F64 y);
+    F64 Cos(const F64 f);
+    F64 Sin(const F64 f);
+    F64 Tan(const F64 f);
 
-    F32 Ceil( const F32 f );
-    F32 Floor( const F32 f );
+    F32 Ceil(const F32 f);
+    F32 Floor(const F32 f);
 
-    F64 Ceil( const F64 f );
-    F64 Floor( const F64 f );
+    F64 Ceil(const F64 f);
+    F64 Floor(const F64 f);
 
-    F32 Round( const F32 f );
-    F64 Round( const F64 f );
+    F32 Round(const F32 f);
+    F64 Round(const F64 f);
 
-    F32 Trunc( const F32 f );
-    F64 Trunc( const F64 f );
+    F32 Trunc(const F32 f);
+    F64 Trunc(const F64 f);
 
-    F32 Log( const F32 f );
-    F32 Log2( const F32 f );
-    F64 Log( const F64 f );
-    F64 Log2( const F64 f );
-    U32 Log2( const U32 f );
-    U32 Log2( U64 n );
-    F32 Log10( const F32 f );
-    F64 Log10( const F64 f );
+    F32 Log(const F32 f);
+    F32 Log2(const F32 f);
+    F64 Log(const F64 f);
+    F64 Log2(const F64 f);
+    U32 Log2(const U32 f);
+    U32 Log2(U64 n);
+    F32 Log10(const F32 f);
+    F64 Log10(const F64 f);
 
-    F32 Pow( const F32 f, const F32 exp );
-    F64 Pow( const F64 f, const F64 exp );
+    F32 Pow(const F32 f, const F32 exp);
+    F64 Pow(const F64 f, const F64 exp);
 
-    F32 Rint( const F32 x );
-    F64 Rint( const F64 x );
+    F32 Rint(const F32 x);
+    F64 Rint(const F64 x);
 
-    F32 Sqrt( const F32 f );
-    F64 Sqrt( const F64 f );
+    F32 Sqrt(const F32 f);
+    F64 Sqrt(const F64 f);
 
     template< class Number >
-    inline Number Clamp( const Number f, const Number min, const Number max )
+    inline Number Clamp(const Number f, const Number min, const Number max)
     {
-        return f < min ? min : ( f > max ? max : f );
+        return f < min ? min : (f > max ? max : f);
     }
 
     template< class Number >
-    inline Number RadToDeg( const Number f )
+    inline Number RadToDeg(const Number f)
     {
         return f * 180.0f / GetPi< Number >();
     }
 
     template< class Number >
-    inline Number DegToRad( const Number f )
+    inline Number DegToRad(const Number f)
     {
         return f * GetPi< Number >() / 180.0f;
     }
 
     template< class Number >
-    inline Number Lerp( const Number a, const Number b, const Number t )
+    inline Number Lerp(const Number a, const Number b, const Number t)
     {
-        return a + ( b - a ) * t;
+        return a + (b - a) * t;
     }
 
-    bool IsPow2( const U32 n );
+    bool IsPow2(const U32 n);
 
-    U32 NextPow2( const U32 x );
+    U32 NextPow2(const U32 x);
 
     template< class Number >
-    inline Number Square( Number a )
+    inline Number Square(Number a)
     {
         return a * a;
     }
 
-    F32 Abs( const F32 f );
-    S32 Abs( const S32 f );
+    F32 Abs(const F32 f);
+    S32 Abs(const S32 f);
 
-    F64 Abs( const F64 f );
-    S64 Abs( const S64 f );
+    F64 Abs(const F64 f);
+    S64 Abs(const S64 f);
 
     template< class Number >
-    inline bool Equal( const Number a, const Number b )
+    inline bool Equal(const Number a, const Number b)
     {
-        return Abs( a - b ) <= GetEpsilon< Number >();
+        return Abs(a - b) <= GetEpsilon< Number >();
     }
 
     template< typename Number >
-    inline Number GetMin( const Number &a, const Number &b )
+    inline Number GetMin(const Number &a, const Number &b)
     {
         return a < b ? a : b;
     }
 
     template< typename Number >
-    inline Number GetMax( const Number &a, const Number &b )
+    inline Number GetMax(const Number &a, const Number &b)
     {
         return a > b ? a : b;
     }
 
     template< typename Number >
-    inline Number Rcp( const Number &_a )
+    inline Number Rcp(const Number &_a)
     {
-        return ( Number )1.0 / _a;
+        return (Number)1.0 / _a;
     }
 }
 

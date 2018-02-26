@@ -35,13 +35,13 @@
 
 namespace LibStruct
 {
-    void *_InternalAlignedMalloc( size_t bytes, size_t alignment );
+    void *_InternalAlignedMalloc(size_t bytes, size_t alignment);
 
-    void _InternalAlignedFree( void *ptr );
+    void _InternalAlignedFree(void *ptr);
 
-    void *ZefAlignedMalloc( size_t bytes, size_t alignment );
+    void *ZefAlignedMalloc(size_t bytes, size_t alignment);
 
-    void ZefAlignedFree( void *ptr );
+    void ZefAlignedFree(void *ptr);
 }
 
 #endif
