@@ -1,4 +1,4 @@
 development:
   modules:
-    - name: Zefiros-Software/Zefiros-Defaults
+    - name: Zefiros-Software/Defaults
       version: '@head'
