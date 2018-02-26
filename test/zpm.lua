@@ -29,6 +29,4 @@ workspace "MathLib-ZPM"
 	zefiros.setTestZPMDefaults( "math" )
     
 	project "math-zpm-test"
-        zpm.uses {
-            "Zefiros-Software/MathLib"
-        }
+        zpm.uses "Zefiros-Software/MathLib"
