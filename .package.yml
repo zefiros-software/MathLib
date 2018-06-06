@@ -2,3 +2,7 @@ development:
   modules:
     - name: Zefiros-Software/Defaults
       version: '@head'
+settings:
+  scalar: 
+    default: double
+    reduce: first

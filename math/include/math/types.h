@@ -32,7 +32,6 @@
 
 #include <stdint.h>
 
-typedef uint8_t byte;
 
 /**
  * A signed 8 bit integer.
@@ -131,12 +130,12 @@ typedef double F64;
  *      1.7E @f$ \pm @f$ 308 (15 digits)
  */
 
-#ifdef REAL_PRECISION_SINGLE
-typedef F32 Real;
-#elif REAL_PRECISION_DOUBLE
-typedef F64 Real;
+#ifdef SCALAR_PRECISION_SINGLE
+typedef F32 Scalar;
+#elif SCALAR_PRECISION_DOUBLE
+typedef F64 Scalar;
 #else
-#define REAL_UNDEFINED
+#   define REAL_UNDEFINED
 #endif
 
 /// @}

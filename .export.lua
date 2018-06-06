@@ -31,9 +31,17 @@ project "MathLib"
 
     files {
         "math/src/**.cpp"
+        "math/include/**.h"
     } 
 
     zpm.export [[
         includedirs "math/include/"
-        cppdialect "C++11"
+
+        if zpm.setting("scalar") == "double" then
+            defines "SCALAR_PRECISION_SINGLE"
+        else
+            defines "SCALAR_PRECISION_DOUBLE"
+        end
+
+        cppdialect "C++14"
     ]]
