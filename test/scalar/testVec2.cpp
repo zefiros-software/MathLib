@@ -26,525 +26,597 @@
 
 #include "gtest/gtest.h"
 
-#include "helper.h"
-
 #include "math/types.h"
-#include "math/scalar/vec2.h"
-#include "math/scalar/vec2i.h"
+#include "math/vec2.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
 #include <string>
 
-template< class Type >
+template< class tT >
 struct Vector2DTest
 {
     static void TestConstructAndAccess()
     {
-        Vec2< Type > testConst;
-        Vec2< Type > testConst1((Type) 20.22);
-        Vec2< Type > testConst2((Type) 10.11, (Type) 30.33);
+        Vector2< tT > testConst;
+        ASSERT_TRUE(Mathf::Equal(testConst[0], (tT) 0.0));
+        ASSERT_TRUE(Mathf::Equal(testConst[1], (tT) 0.0));
+        Vector2< tT > testConst1((tT) 20.22);
+        Vector2< tT > testConst2((tT) 10.11, (tT) 30.33);
 
-        ASSERT_REAL_EQ(testConst1[0], (Type) 20.22);
-        ASSERT_REAL_EQ(testConst1[1], (Type) 20.22);
+        ASSERT_TRUE(Mathf::Equal(testConst1[0], (tT) 20.22));
+        ASSERT_TRUE(Mathf::Equal(testConst1[1], (tT) 20.22));
 
-        ASSERT_REAL_EQ(testConst2[0], (Type) 10.11);
-        ASSERT_REAL_EQ(testConst2[1], (Type) 30.33);
+        ASSERT_TRUE(Mathf::Equal(testConst2[0], (tT) 10.11));
+        ASSERT_TRUE(Mathf::Equal(testConst2[1], (tT) 30.33));
 
-        // const version
-        const Type val1 = testConst2[0];
-        const Type val2 = testConst2[1];
+        const tT val1 = testConst2[0];
+        const tT val2 = testConst2[1];
 
-        ASSERT_REAL_EQ(val1, (Type) 10.11);
-        ASSERT_REAL_EQ(val2, (Type) 30.33);
+        ASSERT_TRUE(Mathf::Equal(val1, (tT) 10.11));
+        ASSERT_TRUE(Mathf::Equal(val2, (tT) 30.33));
 
-        // mod
-        testConst2[0] = 50.55;
-        testConst2[1] = 60.66;
+        testConst2[0] = (tT)50.55;
+        testConst2[1] = (tT)60.66;
 
-        ASSERT_REAL_EQ(testConst2[0], (Type) 50.55);
-        ASSERT_REAL_EQ(testConst2[1], (Type) 60.66);
+        ASSERT_TRUE(Mathf::Equal(testConst2[0], (tT) 50.55));
+        ASSERT_TRUE(Mathf::Equal(testConst2[1], (tT) 60.66));
     }
 
     static void TestIntegerCasts()
     {
-        Vec2I vec1(10, 20);
+        Vec2i vec1(10, 20);
 
-        Vec2< Type > vec2(vec1);
+        Vector2< tT > vec2(vec1);
 
-        ASSERT_REAL_EQ(vec2[0], (Type) 10);
-        ASSERT_REAL_EQ(vec2[1], (Type) 20);
+        ASSERT_TRUE(Mathf::Equal(vec2[0], (tT) 10));
+        ASSERT_TRUE(Mathf::Equal(vec2[1], (tT) 20));
 
-        Vec2I vec3 = vec2.ToVec2I();
+        Vec2i vec3 = vec2.ToVec2i();
 
-        ASSERT_EQ(vec3[0], (Type) 10);
-        ASSERT_EQ(vec3[1], (Type) 20);
+        ASSERT_EQ(vec3[0], (tT) 10);
+        ASSERT_EQ(vec3[1], (tT) 20);
     }
 
     static void TestAssignment()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(30.33, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(30.33, 40.44);
+        const Vector2< tT > vec3(30.33, 40.44);
 
         vec1 = vec2;
 
-        ASSERT_REAL_EQ(vec1[0], (Type) 30.33);
-        ASSERT_REAL_EQ(vec1[1], (Type) 40.44);
+        ASSERT_TRUE(Mathf::Equal(vec1[0], (tT) 30.33));
+        ASSERT_TRUE(Mathf::Equal(vec1[1], (tT) 40.44));
+        ASSERT_TRUE(Mathf::Equal(vec1.Data()[0], (tT) 30.33));
+        ASSERT_TRUE(Mathf::Equal(vec1.Data()[1], (tT) 40.44));
+        ASSERT_TRUE(Mathf::Equal(vec3[0], (tT) 30.33));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], (tT) 40.44));
+        ASSERT_TRUE(Mathf::Equal(vec3.Data()[0], (tT) 30.33));
+        ASSERT_TRUE(Mathf::Equal(vec3.Data()[1], (tT) 40.44));
     }
 
     static void TestMinAssignment()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(30.33, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(30.33, 40.44);
 
         vec2 -= vec1;
 
-        ASSERT_REAL_EQ(vec2[0], (Type)(30.33 - 10.11));
-        ASSERT_REAL_EQ(vec2[1], (Type)(40.44 - 20.22));
+        ASSERT_TRUE(Mathf::Equal(vec2[0], (tT)30.33 - (tT)10.11));
+        ASSERT_TRUE(Mathf::Equal(vec2[1], (tT)40.44 - (tT)20.22));
     }
 
     static void TestPlusAssignment()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(30.33, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(30.33, 40.44);
 
         vec2 += vec1;
 
-        ASSERT_REAL_EQ(vec2[0], (Type)(30.33 + 10.11));
-        ASSERT_REAL_EQ(vec2[1], (Type)(40.44 + 20.22));
+        ASSERT_TRUE(Mathf::Equal(vec2[0], (tT)30.33 + (tT)10.11));
+        ASSERT_TRUE(Mathf::Equal(vec2[1], (tT)40.44 + (tT) 20.22));
     }
 
     static void TestMulAssignment()
     {
-        Vec2< Type > vec1(30.33, 40.44);
+        Vector2< tT > vec1(30.33, 40.44);
 
-        vec1 *= 10.11;
+        vec1 *= (tT)10.11;
 
-        ASSERT_REAL_EQ(vec1[0], (Type)(30.33 * 10.11));
-        ASSERT_REAL_EQ(vec1[1], (Type)(40.44 * 10.11));
+        ASSERT_TRUE(Mathf::Equal(vec1[0], (tT)30.33 * (tT)10.11));
+        ASSERT_TRUE(Mathf::Equal(vec1[1], (tT)40.44 * (tT)10.11));
     }
 
     static void TestDivAssignment()
     {
-        Vec2< Type > vec1(30.33, 40.44);
+        Vector2< tT > vec1(30.33, 40.44);
 
-        vec1 /= 10.11;
+        vec1 /= (tT)10.11;
 
-        ASSERT_REAL_EQ(vec1[0], (Type)(30.33 / 10.11));
-        ASSERT_REAL_EQ(vec1[1], (Type)(40.44 / 10.11));
+        ASSERT_TRUE(Mathf::Equal(vec1[0], (tT)30.33 / (tT)10.11));
+        ASSERT_TRUE(Mathf::Equal(vec1[1], (tT)40.44 / (tT)10.11));
     }
 
     static void TestEquality()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(30.33, 40.44);
-        Vec2< Type > vec3(30.33, 40.44);
-        Vec2< Type > vec4(0.0, 0.0);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(30.33, 40.44);
+        Vector2< tT > vec3(30.33, 40.44);
+        Vector2< tT > vec4(0.0, 0.0);
+        Vector2< tT > vec5(30.33, 41.44);
+        Vector2< tT > vec6(0.0, 40.45);
 
         ASSERT_TRUE(vec2 == vec3);
+        ASSERT_TRUE(vec2 != vec5);
         ASSERT_TRUE(vec1 != vec3);
         ASSERT_TRUE(vec4.IsZero());
+        ASSERT_FALSE(vec5.IsZero());
+        ASSERT_FALSE(vec6.IsZero());
         ASSERT_TRUE(vec4.IsFuzzyZero());
     }
 
-    static void TestSetValue()
+    static void TestSet()
     {
-        Vec2< Type > vec1(10.11, 20.22);
+        Vector2< tT > vec1(10.11, 20.22);
 
-        vec1.SetValue(30.33, 44.44);
+        vec1.Set((tT)30.33, (tT)44.44);
 
-        ASSERT_REAL_EQ(vec1[0], (Type) 30.33);
-        ASSERT_REAL_EQ(vec1[1], (Type) 44.44);
+        ASSERT_TRUE(Mathf::Equal(vec1[0], (tT) 30.33));
+        ASSERT_TRUE(Mathf::Equal(vec1[1], (tT) 44.44));
 
-        vec1.SetX(50.55);
-        vec1.SetY(60.66);
+        vec1.X((tT)50.55);
+        vec1.Y((tT)60.66);
 
-        ASSERT_REAL_EQ(vec1.GetX(), (Type) 50.55);
-        ASSERT_REAL_EQ(vec1.GetY(), (Type) 60.66);
+        ASSERT_TRUE(Mathf::Equal(vec1.X(), (tT) 50.55));
+        ASSERT_TRUE(Mathf::Equal(vec1.Y(), (tT) 60.66));
 
-        vec1.SetZero();
+        vec1.Clear();
 
-        ASSERT_REAL_EQ(vec1[0], (Type) 0.0);
-        ASSERT_REAL_EQ(vec1[1], (Type) 0.0);
+        ASSERT_TRUE(Mathf::Equal(vec1[0], (tT) 0.0));
+        ASSERT_TRUE(Mathf::Equal(vec1[1], (tT) 0.0));
 
-        Vec2< Type > vec2(10.11, 20.22);
+        Vector2< tT > vec2(10.11, 20.22);
         vec2.Clear();
 
-        ASSERT_REAL_EQ(vec2[0], (Type) 0.0);
-        ASSERT_REAL_EQ(vec2[1], (Type) 0.0);
+        ASSERT_TRUE(Mathf::Equal(vec2[0], (tT) 0.0));
+        ASSERT_TRUE(Mathf::Equal(vec2[1], (tT) 0.0));
     }
 
     static void TestDot()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(30.33, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(30.33, 40.44);
 
-        const Type dotr = vec1.Dot(vec2);
+        const tT dotr = vec1.Dot(vec2);
 
-        ASSERT_REAL_EQ(dotr, (Type)(10.11 * 30.33 + 20.22 * 40.44));
+        ASSERT_TRUE(Mathf::Equal(dotr, (tT)10.11 * (tT)30.33 + (tT)20.22 * (tT)40.44));
     }
 
     static void TestLength()
     {
-        Vec2< Type > vec1(10.11, 20.22);
+        Vector2< tT > vec1(10.11, 20.22);
 
-        const Type l2 = vec1.Length2();
-        const Type l  = vec1.Length();
+        const Scalar l2 = vec1.Length2();
+        const Scalar l  = vec1.Length();
 
-        ASSERT_REAL_EQ(l2, (Type)(10.11 * 10.11 + 20.22 * 20.22));
-        ASSERT_REAL_EQ(l, (Type) Mathf::Sqrt(10.11 * 10.11 + 20.22 * 20.22));
+        ASSERT_TRUE(Mathf::Equal((tT)l2, (tT)10.11 * (tT)10.11 + (tT)20.22 * (tT)20.22));
+        ASSERT_TRUE(Mathf::Equal((tT)l, (tT)Mathf::Sqrt((F64)((tT)10.11 * (tT)10.11 + (tT)20.22 * (tT)20.22))));
     }
 
     static void TestDistance()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(30.33, 60.66);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(30.33, 60.66);
 
-        const Type dx = 30.33 - 10.11;
-        const Type dy = 60.66 - 20.22;
+        const tT dx = (tT)30.33 - (tT)10.11;
+        const tT dy = (tT)60.66 - (tT)20.22;
 
-        const Type d2 = vec1.Distance2(vec2);
-        const Type d  = vec1.Distance(vec2);
+        const Scalar d2 = vec1.Distance2(vec2);
+        const Scalar d  = vec1.Distance(vec2);
 
-        ASSERT_REAL_EQ(d2, (Type)(dx * dx + dy * dy));
-        ASSERT_REAL_EQ(d, (Type) Mathf::Sqrt(dx * dx + dy * dy));
+        ASSERT_TRUE(Mathf::Equal((tT)d2, dx * dx + dy * dy));
+        ASSERT_TRUE(Mathf::Equal((tT)d, (tT)Mathf::Sqrt((F64)(dx * dx + dy * dy))));
     }
 
     static void TestNormalise()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        const Type l_1  = vec1.Length();
+        Vector2< tT > vec1(10.11, 20.22);
+        const Scalar l_1  = vec1.Length();
 
         vec1.Normalise();
-        ASSERT_REAL_EQ(vec1[0], (Type)(10.11 / l_1));
-        ASSERT_REAL_EQ(vec1[1], (Type)(20.22 / l_1));
+        ASSERT_TRUE(Mathf::Equal(vec1[0], (tT)(10.11 / l_1)));
+        ASSERT_TRUE(Mathf::Equal(vec1[1], (tT)(20.22 / l_1)));
 
-        Vec2< Type > vec2(10.11, 20.22);
-        const Type l_2  = vec2.Length();
+        Vector2< tT > vec2(0.0, 2.22);
+        const Scalar l_2 = vec2.Length();
 
         vec2.SafeNormalise();
-        ASSERT_REAL_EQ(vec2[0], (Type)(10.11 / l_2));
-        ASSERT_REAL_EQ(vec2[1], (Type)(20.22 / l_2));
+        ASSERT_TRUE(Mathf::Equal(vec2[0], (tT)(0.0 / l_2)));
+        ASSERT_TRUE(Mathf::Equal(vec2[1], (tT)(2.22 / l_2)));
+
+        Vector2< tT > vec3;
+        vec3.SafeNormalise();
+        ASSERT_TRUE(Mathf::Equal(vec3[0], (tT)1.0));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], (tT)0.0));
     }
 
     static void TestStatics()
     {
-        Vec2< Type > vec1 = Vec2< Type >::GetZero();
-        Vec2< Type > vec2 = Vec2< Type >::GetOne();
-        Vec2< Type > vec3 = Vec2< Type >::GetUp();
-        Vec2< Type > vec4 = Vec2< Type >::GetDown();
-        Vec2< Type > vec5 = Vec2< Type >::GetLeft();
-        Vec2< Type > vec6 = Vec2< Type >::GetRight();
+        Vector2< tT > vec1 = Vector2< tT >::Zeros();
+        Vector2< tT > vec2 = Vector2< tT >::Ones();
+        Vector2< tT > vec3 = Vector2< tT >::Up();
+        Vector2< tT > vec4 = Vector2< tT >::Down();
+        Vector2< tT > vec5 = Vector2< tT >::Left();
+        Vector2< tT > vec6 = Vector2< tT >::Right();
 
-        ASSERT_REAL_EQ(vec1[0], (Type) 0.0);
-        ASSERT_REAL_EQ(vec1[1], (Type) 0.0);
+        ASSERT_TRUE(Mathf::Equal(vec1[0], (tT) 0.0));
+        ASSERT_TRUE(Mathf::Equal(vec1[1], (tT) 0.0));
 
-        ASSERT_REAL_EQ(vec2[0], (Type) 1.0);
-        ASSERT_REAL_EQ(vec2[1], (Type) 1.0);
+        ASSERT_TRUE(Mathf::Equal(vec2[0], (tT) 1.0));
+        ASSERT_TRUE(Mathf::Equal(vec2[1], (tT) 1.0));
 
-        ASSERT_REAL_EQ(vec3[0], (Type) 0.0);
-        ASSERT_REAL_EQ(vec3[1], (Type) 1.0);
+        ASSERT_TRUE(Mathf::Equal(vec3[0], (tT) 0.0));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], (tT) 1.0));
 
-        ASSERT_REAL_EQ(vec4[0], (Type) 0.0);
-        ASSERT_REAL_EQ(vec4[1], (Type) - 1.0);
+        ASSERT_TRUE(Mathf::Equal(vec4[0], (tT) 0.0));
+        ASSERT_TRUE(Mathf::Equal(vec4[1], (tT) - 1.0));
 
-        ASSERT_REAL_EQ(vec5[0], (Type) - 1.0);
-        ASSERT_REAL_EQ(vec5[1], (Type) 0.0);
+        ASSERT_TRUE(Mathf::Equal(vec5[0], (tT) - 1.0));
+        ASSERT_TRUE(Mathf::Equal(vec5[1], (tT) 0.0));
 
-        ASSERT_REAL_EQ(vec6[0], (Type) 1.0);
-        ASSERT_REAL_EQ(vec6[1], (Type) 0.0);
+        ASSERT_TRUE(Mathf::Equal(vec6[0], (tT) 1.0));
+        ASSERT_TRUE(Mathf::Equal(vec6[1], (tT) 0.0));
 
     }
 
     static void TestLerp()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(30.33, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(30.33, 40.44);
 
-        Vec2< Type > vec3 = vec1.Lerp(vec2, 0.4);
+        Vector2< tT > vec3 = vec1.Lerp(vec2, (tT)0.4);
 
-        ASSERT_REAL_EQ(vec3[0], (Type)(10.11 + (30.33 - 10.11) * 0.4));
-        ASSERT_REAL_EQ(vec3[1], (Type)(20.22 + (40.44 - 20.22) * 0.4));
+        ASSERT_TRUE(Mathf::Equal(vec3[0], (tT)10.11 + ((tT)30.33 - (tT)10.11) * (tT)0.4));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], (tT)20.22 + ((tT)40.44 - (tT)20.22) * (tT)0.4));
     }
 
     static void TestNLerp()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(30.33, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(30.33, 40.44);
 
-        Vec2< Type > vec3 = vec1.Nlerp(vec2, 0.4);
+        Vector2< tT > vec3 = vec1.Nlerp(vec2, (tT)0.4);
 
-        const Type dx = (Type)(10.11 + (30.33 - 10.11) * 0.4);
-        const Type dy = (Type)(20.22 + (40.44 - 20.22) * 0.4);
+        const tT dx = (tT)10.11 + ((tT)30.33 - (tT)10.11) * (tT)0.4;
+        const tT dy = (tT)20.22 + ((tT)40.44 - (tT)20.22) * (tT)0.4;
 
-        const Type l = Mathf::Sqrt(dx * dx + dy * dy);
+        const tT l = (tT)Mathf::Sqrt((F64)(dx * dx + dy * dy));
 
-        ASSERT_REAL_EQ(vec3[0], dx / l);
-        ASSERT_REAL_EQ(vec3[1], dy / l);
+        ASSERT_TRUE(Mathf::Equal(vec3[0], dx / l));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], dy / l));
     }
 
     static void TestAbs()
     {
-        Vec2< Type > vec1(-10.11, -20.22);
-        Vec2< Type > vec2 = vec1.Absolute();
+        Vector2< tT > vec1(-10.11, -20.22);
+        Vector2< tT > vec2 = vec1.Absolute();
 
-        ASSERT_REAL_EQ(vec2[0], (Type) 10.11);
-        ASSERT_REAL_EQ(vec2[1], (Type) 20.22);
+        ASSERT_TRUE(Mathf::Equal(vec2[0], (tT) 10.11));
+        ASSERT_TRUE(Mathf::Equal(vec2[1], (tT) 20.22));
     }
 
     static void TestAngle()
     {
-        Vec2< Type > vec1(2.5, 0.0);
-        Vec2< Type > vec2(-1.0, 1.0);
+        Vector2< tT > vec1(2.5, 0.0);
+        Vector2< tT > vec2(-1.0, 1.0);
 
-        const Type a = vec1.Angle(vec2);
+        const Scalar a = vec1.Angle(vec2);
 
-        ASSERT_REAL_EQ(a, (Type)(0.75 * Mathf::GetPi< Type >()));
+        ASSERT_TRUE(Mathf::Equal(a, (Scalar)(0.75f * Mathf::Pi< Scalar >())));
     }
 
     static void TestRotate()
     {
-        Vec2< Type > vec1(1.0, 0.0);
-        Vec2< Type > vec2(-1.0, -1.0);
+        Vector2< tT > vec1(1.0, 0.0);
+        Vector2< tT > vec2(0.0, 1.0);
         vec2.Normalise();
 
-        Vec2< Type > vec3 = vec1.Rotate(1.25 * Mathf::GetPi< Type >());
+        Vector2< tT > vec3 = vec1.Rotate(0.5f * Mathf::Pi< Scalar >());
 
-        ASSERT_REAL_EQ(vec3[0], vec2[0]);
-        ASSERT_REAL_EQ(vec3[1], vec2[1]);
+        ASSERT_TRUE(Mathf::Equal(vec3[0], vec2[0]));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], vec2[1]));
     }
 
     static void TestAxis()
     {
-        Vec2< Type > vec1(1.0, -1.0);
+        Vector2< tT > vec1(1.0, -1.0);
 
         const U32 min = vec1.MinAxis();
         const U32 max = vec1.MaxAxis();
 
-        ASSERT_EQ(min, 1);
-        ASSERT_EQ(max, 0);
+        ASSERT_EQ(min, 1u);
+        ASSERT_EQ(max, 0u);
+
+        Vector2< tT > vec2(-1.0, 1.0);
+
+        const U32 min2 = vec2.MinAxis();
+        const U32 max2 = vec2.MaxAxis();
+
+        ASSERT_EQ(min2, 0u);
+        ASSERT_EQ(max2, 1u);
     }
 
     static void TestPlus()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(20.22, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(20.22, 40.44);
 
-        Vec2< Type > vec3 = vec2 + vec1;
+        Vector2< tT > vec3 = vec2 + vec1;
 
-        ASSERT_REAL_EQ(vec3[0], (Type)(20.22 + 10.11));
-        ASSERT_REAL_EQ(vec3[1], (Type)(40.44 + 20.22));
+        ASSERT_TRUE(Mathf::Equal(vec3[0], (tT)20.22 + (tT)10.11));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], (tT)40.44 + (tT)20.22));
     }
 
     static void TestMin()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(20.22, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(20.22, 40.44);
 
-        Vec2< Type > vec3 = vec2 - vec1;
+        Vector2< tT > vec3 = vec2 - vec1;
 
-        ASSERT_REAL_EQ(vec3[0], (Type)(20.22 - 10.11));
-        ASSERT_REAL_EQ(vec3[1], (Type)(40.44 - 20.22));
+        ASSERT_TRUE(Mathf::Equal(vec3[0], (tT)(20.22 - 10.11)));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], (tT)(40.44 - 20.22)));
     }
 
     static void TestNeg()
     {
-        Vec2< Type > vec1(10.11, 20.22);
+        Vector2< tT > vec1(10.11, 20.22);
 
-        Vec2< Type > vec3 = -vec1;
+        Vector2< tT > vec3 = -vec1;
 
-        ASSERT_REAL_EQ(vec3[0], (Type)(-10.11));
-        ASSERT_REAL_EQ(vec3[1], (Type)(-20.22));
+        ASSERT_TRUE(Mathf::Equal(vec3[0], (tT)(-10.11)));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], (tT)(-20.22)));
     }
 
     static void TestMul()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(20.22, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(20.22, 40.44);
 
-        Vec2< Type > vec3 = vec2 * vec1;
+        Vector2< tT > vec3 = vec2 * vec1;
 
-        ASSERT_REAL_EQ(vec3[0], (Type)(20.22 * 10.11));
-        ASSERT_REAL_EQ(vec3[1], (Type)(40.44 * 20.22));
+        ASSERT_TRUE(Mathf::Equal(vec3[0], (tT)20.22 * (tT)10.11));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], (tT)40.44 * (tT)20.22));
 
-        Vec2< Type > vec4 = vec2 * (Type) 50.55;
+        Vector2< tT > vec4 = vec2 * (tT) 50.55;
 
-        ASSERT_REAL_EQ(vec4[0], (Type)(20.22 * 50.55));
-        ASSERT_REAL_EQ(vec4[1], (Type)(40.44 * 50.55));
+        ASSERT_TRUE(Mathf::Equal(vec4[0], (tT)20.22 * (tT)50.55));
+        ASSERT_TRUE(Mathf::Equal(vec4[1], (tT)40.44 * (tT)50.55));
 
-        Vec2< Type > vec5 = (Type) 60.66 * vec2;
+        Vector2< tT > vec5 = (tT) 60.66 * vec2;
 
-        ASSERT_REAL_EQ(vec5[0], (Type)(20.22 * 60.66));
-        ASSERT_REAL_EQ(vec5[1], (Type)(40.44 * 60.66));
+        ASSERT_TRUE(Mathf::Equal(vec5[0], (tT)20.22 * (tT)60.66));
+        ASSERT_TRUE(Mathf::Equal(vec5[1], (tT)40.44 * (tT)60.66));
     }
 
     static void TestDiv()
     {
-        Vec2< Type > vec1(10.11, 20.22);
-        Vec2< Type > vec2(20.22, 40.44);
+        Vector2< tT > vec1(10.11, 20.22);
+        Vector2< tT > vec2(20.22, 40.44);
 
-        Vec2< Type > vec3 = vec2 / vec1;
+        Vector2< tT > vec3 = vec2 / vec1;
 
-        ASSERT_REAL_EQ(vec3[0], (Type)(20.22 / 10.11));
-        ASSERT_REAL_EQ(vec3[1], (Type)(40.44 / 20.22));
+        ASSERT_TRUE(Mathf::Equal(vec3[0], (tT)(20.22 / 10.11)));
+        ASSERT_TRUE(Mathf::Equal(vec3[1], (tT)(40.44 / 20.22)));
 
-        Vec2< Type > vec4 = vec2 / (Type) 50.55;
+        Vector2< tT > vec4 = vec2 / (tT) 50.55;
 
-        ASSERT_REAL_EQ(vec4[0], (Type)(20.22 / 50.55));
-        ASSERT_REAL_EQ(vec4[1], (Type)(40.44 / 50.55));
+        ASSERT_TRUE(Mathf::Equal(vec4[0], (tT)(20.22 / 50.55)));
+        ASSERT_TRUE(Mathf::Equal(vec4[1], (tT)(40.44 / 50.55)));
     }
 };
 
 
-TEST(P(Vec2Test), ConstructAndAccess)
+TEST(Vec2Test, ConstructAndAccess)
 {
     Vector2DTest< F32 >::TestConstructAndAccess();
     Vector2DTest< F64 >::TestConstructAndAccess();
+    Vector2DTest< S32 >::TestConstructAndAccess();
+    Vector2DTest< S64 >::TestConstructAndAccess();
 }
 
-TEST(P(Vec2Test), IntegerCast)
+TEST(Vec2Test, IntegerCast)
 {
     Vector2DTest< F32 >::TestIntegerCasts();
     Vector2DTest< F64 >::TestIntegerCasts();
+    Vector2DTest< S32 >::TestIntegerCasts();
+    Vector2DTest< S64 >::TestIntegerCasts();
 }
 
-TEST(P(Vec2Test), Assignment)
+TEST(Vec2Test, Assignment)
 {
     Vector2DTest< F32 >::TestAssignment();
     Vector2DTest< F64 >::TestAssignment();
+    Vector2DTest< S32 >::TestAssignment();
+    Vector2DTest< S64 >::TestAssignment();
 }
 
-TEST(P(Vec2Test), MinAssignment)
+TEST(Vec2Test, MinAssignment)
 {
     Vector2DTest< F32 >::TestMinAssignment();
     Vector2DTest< F64 >::TestMinAssignment();
+    Vector2DTest< S32 >::TestMinAssignment();
+    Vector2DTest< S64 >::TestMinAssignment();
 }
 
-TEST(P(Vec2Test), PlusAssignment)
+TEST(Vec2Test, PlusAssignment)
 {
     Vector2DTest< F32 >::TestPlusAssignment();
     Vector2DTest< F64 >::TestPlusAssignment();
+    Vector2DTest< S32 >::TestPlusAssignment();
+    Vector2DTest< S64 >::TestPlusAssignment();
 }
 
-TEST(P(Vec2Test), MulAssignment)
+TEST(Vec2Test, MulAssignment)
 {
     Vector2DTest< F32 >::TestMulAssignment();
     Vector2DTest< F64 >::TestMulAssignment();
+    Vector2DTest< S32 >::TestMulAssignment();
+    Vector2DTest< S64 >::TestMulAssignment();
 }
 
-TEST(P(Vec2Test), DivAssignment)
+TEST(Vec2Test, DivAssignment)
 {
     Vector2DTest< F32 >::TestDivAssignment();
     Vector2DTest< F64 >::TestDivAssignment();
+    Vector2DTest< S32 >::TestDivAssignment();
+    Vector2DTest< S64 >::TestDivAssignment();
 }
 
-TEST(P(Vec2Test), Equality)
+TEST(Vec2Test, Equality)
 {
     Vector2DTest< F32 >::TestEquality();
     Vector2DTest< F64 >::TestEquality();
+    Vector2DTest< S32 >::TestEquality();
+    Vector2DTest< S64 >::TestEquality();
 }
 
-TEST(P(Vec2Test), SetValue)
+TEST(Vec2Test, Set)
 {
-    Vector2DTest< F32 >::TestSetValue();
-    Vector2DTest< F64 >::TestSetValue();
+    Vector2DTest< F32 >::TestSet();
+    Vector2DTest< F64 >::TestSet();
+    Vector2DTest< S32 >::TestSet();
+    Vector2DTest< S64 >::TestSet();
 }
 
-TEST(P(Vec2Test), Dot)
+TEST(Vec2Test, Dot)
 {
     Vector2DTest< F32 >::TestDot();
     Vector2DTest< F64 >::TestDot();
+    Vector2DTest< S32 >::TestDot();
+    Vector2DTest< S64 >::TestDot();
 }
 
-TEST(P(Vec2Test), Length)
+TEST(Vec2Test, Length)
 {
     Vector2DTest< F32 >::TestLength();
     Vector2DTest< F64 >::TestLength();
+    Vector2DTest< S32 >::TestLength();
+    Vector2DTest< S64 >::TestLength();
 }
 
-TEST(P(Vec2Test), Distance)
+TEST(Vec2Test, Distance)
 {
     Vector2DTest< F32 >::TestDistance();
     Vector2DTest< F64 >::TestDistance();
+    Vector2DTest< S32 >::TestDistance();
+    Vector2DTest< S64 >::TestDistance();
 }
 
-TEST(P(Vec2Test), Normalise)
+TEST(Vec2Test, Normalise)
 {
     Vector2DTest< F32 >::TestNormalise();
     Vector2DTest< F64 >::TestNormalise();
+    Vector2DTest< S32 >::TestNormalise();
+    Vector2DTest< S64 >::TestNormalise();
 }
 
-TEST(P(Vec2Test), Statics)
+TEST(Vec2Test, Statics)
 {
     Vector2DTest< F32 >::TestStatics();
     Vector2DTest< F64 >::TestStatics();
+    Vector2DTest< S32 >::TestStatics();
+    Vector2DTest< S64 >::TestStatics();
 }
 
-TEST(P(Vec2Test), Lerp)
+TEST(Vec2Test, Lerp)
 {
     Vector2DTest< F32 >::TestLerp();
     Vector2DTest< F64 >::TestLerp();
+    Vector2DTest< S32 >::TestLerp();
+    Vector2DTest< S64 >::TestLerp();
 }
 
-TEST(P(Vec2Test), Nlerp)
+TEST(Vec2Test, Nlerp)
 {
     Vector2DTest< F32 >::TestNLerp();
     Vector2DTest< F64 >::TestNLerp();
+    Vector2DTest< S32 >::TestNLerp();
+    Vector2DTest< S64 >::TestNLerp();
 }
 
-TEST(P(Vec2Test), Abs)
+TEST(Vec2Test, Abs)
 {
     Vector2DTest< F32 >::TestAbs();
     Vector2DTest< F64 >::TestAbs();
+    Vector2DTest< S32 >::TestAbs();
+    Vector2DTest< S64 >::TestAbs();
 }
 
-TEST(P(Vec2Test), Angle)
+TEST(Vec2Test, Angle)
 {
     Vector2DTest< F32 >::TestAngle();
     Vector2DTest< F64 >::TestAngle();
+    Vector2DTest< S32 >::TestAngle();
+    Vector2DTest< S64 >::TestAngle();
 }
 
-TEST(P(Vec2Test), Rotate)
+TEST(Vec2Test, Rotate)
 {
     Vector2DTest< F32 >::TestRotate();
     Vector2DTest< F64 >::TestRotate();
+    Vector2DTest< S32 >::TestRotate();
+    Vector2DTest< S64 >::TestRotate();
 }
 
-TEST(P(Vec2Test), Axis)
+TEST(Vec2Test, Axis)
 {
     Vector2DTest< F32 >::TestAxis();
     Vector2DTest< F64 >::TestAxis();
+    Vector2DTest< S32 >::TestAxis();
+    Vector2DTest< S64 >::TestAxis();
 }
 
-TEST(P(Vec2Test), Plus)
+TEST(Vec2Test, Plus)
 {
     Vector2DTest< F32 >::TestPlus();
     Vector2DTest< F64 >::TestPlus();
+    Vector2DTest< S32 >::TestPlus();
+    Vector2DTest< S64 >::TestPlus();
 }
 
-TEST(P(Vec2Test), Min)
+TEST(Vec2Test, Min)
 {
     Vector2DTest< F32 >::TestMin();
     Vector2DTest< F64 >::TestMin();
+    Vector2DTest< S32 >::TestMin();
+    Vector2DTest< S64 >::TestMin();
 }
 
-TEST(P(Vec2Test), Neg)
+TEST(Vec2Test, Neg)
 {
     Vector2DTest< F32 >::TestNeg();
     Vector2DTest< F64 >::TestNeg();
+    Vector2DTest< S32 >::TestNeg();
+    Vector2DTest< S64 >::TestNeg();
 }
 
-TEST(P(Vec2Test), Mul)
+TEST(Vec2Test, Mul)
 {
     Vector2DTest< F32 >::TestMul();
     Vector2DTest< F64 >::TestMul();
+    Vector2DTest< S32 >::TestMul();
+    Vector2DTest< S64 >::TestMul();
 }
 
-TEST(P(Vec2Test), Div)
+TEST(Vec2Test, Div)
 {
     Vector2DTest< F32 >::TestDiv();
     Vector2DTest< F64 >::TestDiv();
+    Vector2DTest< S32 >::TestDiv();
+    Vector2DTest< S64 >::TestDiv();
 }
 
 

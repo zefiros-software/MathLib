@@ -130,12 +130,10 @@ typedef double F64;
  *      1.7E @f$ \pm @f$ 308 (15 digits)
  */
 
-#ifdef SCALAR_PRECISION_SINGLE
+#if defined(SCALAR_PRECISION_SINGLE)
 typedef F32 Scalar;
-#elif SCALAR_PRECISION_DOUBLE
+#else defined(SCALAR_PRECISION_DOUBLE) || !defined(SCALAR_PRECISION_SINGLE)
 typedef F64 Scalar;
-#else
-#   define REAL_UNDEFINED
 #endif
 
 /// @}

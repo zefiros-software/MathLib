@@ -29,9 +29,7 @@
 #include "helper.h"
 
 #include "math/types.h"
-#include "math/scalar/vec3.h"
-#include "math/scalar/vec2i.h"
-#include "math/scalar/vec3i.h"
+#include "math/vec3.h"
 
 #include <stdlib.h>
 #include <stdio.h>

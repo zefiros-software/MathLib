@@ -29,10 +29,7 @@
 #include "helper.h"
 
 #include "math/types.h"
-#include "math/scalar/vec4.h"
-#include "math/scalar/vec2i.h"
-#include "math/scalar/vec3i.h"
-#include "math/scalar/vec4i.h"
+#include "math/vec4.h"
 
 #include <stdlib.h>
 #include <stdio.h>

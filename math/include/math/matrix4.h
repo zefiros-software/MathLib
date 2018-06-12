@@ -28,8 +28,8 @@
 #ifndef __ENGINE_MATRIX4_H__
 #define __ENGINE_MATRIX4_H__
 
-#include "math/scalar/matrix3.h"
-#include "math/scalar/vec4.h"
+#include "math/matrix3.h"
+#include "math/vec4.h"
 
 #include <assert.h>
 #include <cstddef>
@@ -37,12 +37,11 @@
 template< class Number >
 class Matrix4;
 
-typedef Matrix4< F32 > Matrix4f;
-typedef Matrix4< F64 > Matrix4d;
-
-#ifndef REAL_UNDEFINED
-typedef Matrix4< Real > Matrix4r;
-#endif
+typedef Matrix4< F32 > Mat4f;
+typedef Matrix4< F64 > Mat4d;
+typedef Matrix4< S32 > Mat4i;
+typedef Matrix4< U32 > Mat4u;
+typedef Matrix4< Scalar > Mat4;
 
 template< class Number >
 class Matrix4
@@ -51,7 +50,7 @@ class Matrix4
     friend Matrix4 operator-(const Matrix4 &m1, const Matrix4 &m2);
     friend Matrix4 operator*(const Matrix4 &m1, const Matrix4 &m2);
     friend Matrix4 operator*(const Matrix4 &m, const Number s);
-    friend Vec4< Number > operator*(const Matrix4 &m, const Vec4< Number > &v);
+    friend Vector4< Number > operator*(const Matrix4 &m, const Vector4< Number > &v);
 
 public:
 
@@ -67,7 +66,7 @@ public:
         SetValue(a11, a12, a13, a14, a21, a22, a23, a24, a31, a32, a33, a34, a41, a42, a43, a44);
     }
 
-    inline Matrix4(const Vec4< Number > &v1, const Vec4< Number > &v2, const Vec4< Number > &v3, const Vec4< Number > &v4)
+    inline Matrix4(const Vector4< Number > &v1, const Vector4< Number > &v2, const Vector4< Number > &v3, const Vector4< Number > &v4)
     {
         mValues[0] = v1;
         mValues[1] = v2;
@@ -142,12 +141,12 @@ public:
         return !(*this == m);
     }
 
-    inline Vec4< Number > &operator[](const size_t axis)
+    inline Vector4< Number > &operator[](const size_t axis)
     {
         return mValues[ axis ];
     }
 
-    inline const Vec4< Number > operator[](const size_t axis) const
+    inline const Vector4< Number > operator[](const size_t axis) const
     {
         return mValues[ axis ];
     }
@@ -162,7 +161,7 @@ public:
         return &mValues[0][0];
     }
 
-    inline void SetColumn(const U8 column, const Vec4< Number > &v)
+    inline void SetColumn(const U8 column, const Vector4< Number > &v)
     {
         mValues[0][column] = v[0];
         mValues[1][column] = v[1];
@@ -170,22 +169,22 @@ public:
         mValues[3][column] = v[3];
     }
 
-    inline Vec4< Number > GetColumn(const U8 column) const
+    inline Vector4< Number > GetColumn(const U8 column) const
     {
-        return Vec4< Number >(mValues[0][column], mValues[1][column], mValues[2][column], mValues[3][column]);
+        return Vector4< Number >(mValues[0][column], mValues[1][column], mValues[2][column], mValues[3][column]);
     }
 
-    inline void SetRow(const U8 row, const Vec4< Number > &v)
+    inline void SetRow(const U8 row, const Vector4< Number > &v)
     {
         mValues[row] = v;
     }
 
-    inline Vec4< Number > GetRow(const U8 row) const
+    inline Vector4< Number > GetRow(const U8 row) const
     {
         return mValues[row];
     }
 
-    inline Matrix4 Scale(const Vec4< Number > &v) const
+    inline Matrix4 Scale(const Vector4< Number > &v) const
     {
         return Matrix4(mValues[0][0] * v[0], mValues[0][1] * v[1], mValues[0][2] * v[2], mValues[0][3] * v[3],
                        mValues[1][0] * v[0], mValues[1][1] * v[1], mValues[1][2] * v[2], mValues[1][3] * v[3],
@@ -293,7 +292,7 @@ public:
         mValues[3].SetValue(a41, a42, a43, a44);
     }
 
-    inline void Compose(const Vec3< Number > &scaling, const Quaternion< Number > &rotation, const Vec3< Number > &translation)
+    inline void Compose(const Vector3< Number > &scaling, const Quaternion< Number > &rotation, const Vector3< Number > &translation)
     {
         SetIdentity();
 
@@ -302,9 +301,9 @@ public:
         mValues[2][3] = translation[2];
 
         Matrix3< Number > rotMatrix(rotation);
-        Vec3< Number > row0 = rotMatrix.GetRow(0) * scaling[0];
-        Vec3< Number > row1 = rotMatrix.GetRow(1) * scaling[1];
-        Vec3< Number > row2 = rotMatrix.GetRow(2) * scaling[2];
+        Vector3< Number > row0 = rotMatrix.GetRow(0) * scaling[0];
+        Vector3< Number > row1 = rotMatrix.GetRow(1) * scaling[1];
+        Vector3< Number > row2 = rotMatrix.GetRow(2) * scaling[2];
 
         mValues[0][0] = row0[0];
         mValues[0][1] = row0[1];
@@ -319,21 +318,21 @@ public:
         mValues[2][2] = row2[2];
     }
 
-    inline void Decompose(Vec3< Number > &scaling, Quaternion< Number > &rotation, Vec3< Number > &translation) const
+    inline void Decompose(Vector3< Number > &scaling, Quaternion< Number > &rotation, Vector3< Number > &translation) const
     {
         translation.SetX(mValues[3].GetX());
-        translation.SetY(mValues[3].GetY());
-        translation.SetZ(mValues[3].GetZ());
+        translation.Y(mValues[3].GetY());
+        translation.Z(mValues[3].GetZ());
 
         //const aiMatrix4x4t<TNumber>& _this = *this;
 
-        Vec3< Number > Row1(mValues[0].GetX(), mValues[0].GetY(), mValues[0].GetZ());
-        Vec3< Number > Row2(mValues[1].GetX(), mValues[1].GetY(), mValues[1].GetZ());
-        Vec3< Number > Row3(mValues[2].GetX(), mValues[2].GetY(), mValues[2].GetZ());
+        Vector3< Number > Row1(mValues[0].GetX(), mValues[0].GetY(), mValues[0].GetZ());
+        Vector3< Number > Row2(mValues[1].GetX(), mValues[1].GetY(), mValues[1].GetZ());
+        Vector3< Number > Row3(mValues[2].GetX(), mValues[2].GetY(), mValues[2].GetZ());
 
         scaling.SetX(Row1.Length());
-        scaling.SetY(Row2.Length());
-        scaling.SetZ(Row3.Length());
+        scaling.Y(Row2.Length());
+        scaling.Z(Row3.Length());
 
         Number determ = GetDeterminant();
 
@@ -369,14 +368,15 @@ public:
                                  mValues[2][0], mValues[2][1], mValues[2][2]);
     }
 
-    inline const Vec4< Number > &operator[](const U8 row) const
+    inline const Vector4< Number > &operator[](const U8 row) const
     {
         return mValues[row];
     }
 
     inline Matrix4 GetZero()
     {
-        return Matrix4(Vec4< Number >::GetZero(), Vec4< Number >::GetZero(), Vec4< Number >::GetZero(), Vec4< Number >::GetZero());
+        return Matrix4(Vector4< Number >::GetZero(), Vector4< Number >::GetZero(), Vector4< Number >::GetZero(),
+                       Vector4< Number >::GetZero());
     }
 
     inline Matrix4 GetIdentity()
@@ -389,24 +389,24 @@ public:
 
 private:
 
-    Vec4< Number > mValues[4];
+    Vector4< Number > mValues[4];
 
-    inline Number Dotx(const Vec4< Number > &v) const
+    inline Number Dotx(const Vector4< Number > &v) const
     {
         return mValues[0][0] * v[0] + mValues[1][0] * v[1] + mValues[2][0] * v[2] + mValues[3][0] * v[3];
     }
 
-    inline Number Doty(const Vec4< Number > &v) const
+    inline Number Doty(const Vector4< Number > &v) const
     {
         return mValues[0][1] * v[0] + mValues[1][1] * v[1] + mValues[2][1] * v[2] + mValues[3][1] * v[3];
     }
 
-    inline Number Dotz(const Vec4< Number > &v) const
+    inline Number Dotz(const Vector4< Number > &v) const
     {
         return mValues[0][2] * v[0] + mValues[1][2] * v[1] + mValues[2][2] * v[2] + mValues[3][2] * v[3];
     }
 
-    inline Number Dotw(const Vec4< Number > &v) const
+    inline Number Dotw(const Vector4< Number > &v) const
     {
         return mValues[0][3] * v[0] + mValues[1][3] * v[1] + mValues[2][3] * v[2] + mValues[3][3] * v[3];
     }
@@ -464,9 +464,9 @@ inline Matrix4< Number > operator*(const Matrix4< Number > &m, const Number s)
 }
 
 template< class Number >
-inline Vec4< Number > operator*(const Matrix4< Number > &m, const Vec4< Number > &v)
+inline Vector4< Number > operator*(const Matrix4< Number > &m, const Vector4< Number > &v)
 {
-    return Vec4< Number >(m.mValues[0].Dot(v), m.mValues[1].Dot(v), m.mValues[2].Dot(v), m.mValues[3].Dot(v));
+    return Vector4< Number >(m.mValues[0].Dot(v), m.mValues[1].Dot(v), m.mValues[2].Dot(v), m.mValues[3].Dot(v));
 }
 
 #endif

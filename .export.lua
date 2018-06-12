@@ -30,7 +30,7 @@ project "MathLib"
     kind "StaticLib"       
 
     files {
-        "math/src/**.cpp"
+        "math/src/**.cpp",
         "math/include/**.h"
     } 
 

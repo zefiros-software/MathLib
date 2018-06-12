@@ -29,8 +29,8 @@
 #include "helper.h"
 
 #include "math/types.h"
-#include "math/scalar/vec3.h"
-#include "math/scalar/matrix3.h"
+#include "math/vec3.h"
+#include "math/matrix3.h"
 
 #include <stdlib.h>
 #include <stdio.h>

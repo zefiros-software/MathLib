@@ -28,8 +28,8 @@
 #ifndef __ENGINE_MATRIX3_H__
 #define __ENGINE_MATRIX3_H__
 
-#include "math/scalar/vec3.h"
-#include "math/scalar/quaternion.h"
+#include "math/vec3.h"
+#include "math/quaternion.h"
 
 #include <assert.h>
 #include <cstddef>
@@ -37,12 +37,11 @@
 template< class Number >
 class Matrix3;
 
-typedef Matrix3< F32 > Matrix3f;
-typedef Matrix3< F64 > Matrix3d;
-
-#ifndef REAL_UNDEFINED
-typedef Matrix3< Real > Matrix3r;
-#endif
+typedef Matrix3< F32 > Mat3f;
+typedef Matrix3< F64 > Mat3d;
+typedef Matrix3< S32 > Mat3i;
+typedef Matrix3< U32 > Mat3u;
+typedef Matrix3< Scalar > Mat3;
 
 template< class Number >
 class Matrix3
@@ -60,7 +59,7 @@ class Matrix3
     friend Matrix3< T > operator*(const Matrix3< T > &m, const T s);
 
     template< class T >
-    friend Vec3< T > operator*(const Matrix3< T > &m, const Vec3< T > &v);
+    friend Vector3< T > operator*(const Matrix3< T > &m, const Vector3< T > &v);
 
 public:
 
@@ -87,7 +86,7 @@ public:
         mValues[2] = other.mValues[2];
     }
 
-    inline Matrix3(const Vec3< Number > &v1, const Vec3< Number > &v2, const Vec3< Number > &v3)
+    inline Matrix3(const Vector3< Number > &v1, const Vector3< Number > &v2, const Vector3< Number > &v3)
     {
         mValues[0] = v1;
         mValues[1] = v2;
@@ -140,12 +139,12 @@ public:
         return !(*this == m);
     }
 
-    inline Vec3< Number > &operator[](const size_t axis)
+    inline Vector3< Number > &operator[](size_t axis)
     {
         return mValues[ axis ];
     }
 
-    inline const Vec3< Number > operator[](const size_t axis) const
+    inline const Vector3< Number > operator[](size_t axis) const
     {
         return mValues[ axis ];
     }
@@ -160,24 +159,24 @@ public:
         return &mValues[0][0];
     }
 
-    inline void SetColumn(const U8 column, const Vec3< Number > &v)
+    inline void SetColumn(const U8 column, const Vector3< Number > &v)
     {
         mValues[0][column] = v[0];
         mValues[1][column] = v[1];
         mValues[2][column] = v[2];
     }
 
-    inline Vec3< Number > GetColumn(const U8 column) const
+    inline Vector3< Number > GetColumn(const U8 column) const
     {
-        return Vec3< Number >(mValues[0][column], mValues[1][column], mValues[2][column]);
+        return Vector3< Number >(mValues[0][column], mValues[1][column], mValues[2][column]);
     }
 
-    inline void SetRow(const U8 row, const Vec3< Number > &v)
+    inline void SetRow(const U8 row, const Vector3< Number > &v)
     {
         mValues[row] = v;
     }
 
-    inline Vec3< Number > GetRow(const U8 row) const
+    inline Vector3< Number > GetRow(const U8 row) const
     {
         return mValues[row];
     }
@@ -269,12 +268,12 @@ public:
                  -sp, cp * sr, cp * cr);
     }
 
-    inline Vec3< Number > GetEuler() const
+    inline Vector3< Number > GetEuler() const
     {
         return GetRotation().GetAxis();
     }
 
-    inline Matrix3 Scale(const Vec3< Number > &v) const
+    inline Matrix3 Scale(const Vector3< Number > &v) const
     {
         return Matrix3(mValues[0][0] * v[0], mValues[0][1] * v[1], mValues[0][2] * v[2],
                        mValues[1][0] * v[0], mValues[1][1] * v[1], mValues[1][2] * v[2],
@@ -350,7 +349,7 @@ public:
 
     static inline Matrix3 GetZero()
     {
-        return Matrix3(Vec3< Number >::GetZero(), Vec3< Number >::GetZero(), Vec3< Number >::GetZero());
+        return Matrix3(Vector3< Number >::GetZero(), Vector3< Number >::GetZero(), Vector3< Number >::GetZero());
     }
 
     static inline Matrix3 GetIdentity()
@@ -362,19 +361,19 @@ public:
 
 private:
 
-    Vec3< Number > mValues[3];
+    Vector3< Number > mValues[3];
 
-    inline Number Dotx(const Vec3< Number > &v) const
+    inline Number Dotx(const Vector3< Number > &v) const
     {
         return mValues[0][0] * v[0] + mValues[1][0] * v[1] + mValues[2][0] * v[2];
     }
 
-    inline Number Doty(const Vec3< Number > &v) const
+    inline Number Doty(const Vector3< Number > &v) const
     {
         return mValues[0][1] * v[0] + mValues[1][1] * v[1] + mValues[2][1] * v[2];
     }
 
-    inline Number Dotz(const Vec3< Number > &v) const
+    inline Number Dotz(const Vector3< Number > &v) const
     {
         return mValues[0][2] * v[0] + mValues[1][2] * v[1] + mValues[2][2] * v[2];
     }
@@ -427,9 +426,9 @@ Matrix3< Number > operator*(const Matrix3< Number > &m, const Number s)
 }
 
 template< class Number >
-Vec3< Number > operator*(const Matrix3< Number > &m, const Vec3< Number > &v)
+Vector3< Number > operator*(const Matrix3< Number > &m, const Vector3< Number > &v)
 {
-    return Vec3< Number >(m.mValues[0].Dot(v), m.mValues[1].Dot(v), m.mValues[2].Dot(v));
+    return Vector3< Number >(m.mValues[0].Dot(v), m.mValues[1].Dot(v), m.mValues[2].Dot(v));
 }
 
 #endif

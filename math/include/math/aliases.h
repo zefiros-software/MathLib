@@ -31,7 +31,7 @@
 #include "math/scalar/vec3.h"
 #include "math/scalar/vec4.h"
 
-typedef Vec4 Color4;
-typedef Vec3 Color3;
+typedef Vector4 Color4;
+typedef Vector3 Color3;
 
 #endif
